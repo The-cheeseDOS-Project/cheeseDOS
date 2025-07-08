@@ -19,7 +19,7 @@ name: Build and Release cheeseDOS ISO
 on:
   push:
     branches:
-      - main
+      - rtc-test
     paths-ignore:
       - '**/*.md'
 
