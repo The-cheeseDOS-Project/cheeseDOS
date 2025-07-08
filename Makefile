@@ -25,7 +25,7 @@ ISO_DIR = iso
 BOOT_DIR = $(ISO_DIR)/boot
 GRUB_DIR = $(BOOT_DIR)/grub
 GRUB_CFG = grub.cfg
-OBJS = boot.o kernel.o shell.o vga.o keyboard.o ramdisk.o calc.o string.o rtc.o io.o
+OBJS = boot.o kernel.o shell.o vga.o keyboard.o ramdisk.o calc.o string.o rtc.o
 
 RM = rm -f
 RMDIR = rm -rf
@@ -56,11 +56,7 @@ calc.o: calc.c calc.h
 string.o: string.c string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Still testing this
-rtc.o: rtc.c rtc.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-io.o: io.c io.h
+rtc.o: rtc.c rtc.h io.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(KERNEL): $(OBJS) link.ld
