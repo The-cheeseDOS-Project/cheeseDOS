@@ -56,6 +56,7 @@ calc.o: calc.c calc.h
 string.o: string.c string.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Still testing this
 rtc.o: rtc.c rtc.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
