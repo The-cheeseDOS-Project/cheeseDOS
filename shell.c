@@ -126,11 +126,9 @@ static void print_name_callback(const char *name, uint32_t inode) {
     }
 }
 
-static void handle_time_command() {
+static void handle_rtc_command() { // Renamed from handle_time_command
     rtc_time_t current_time;
     read_rtc_time(&current_time);
-
-    print("Current RTC Date & Time: ");
 
     if (current_time.month < 10) putchar('0');
     print_uint(current_time.month);
@@ -143,8 +141,20 @@ static void handle_time_command() {
     print_uint(current_time.year);
     print(" ");
 
-    if (current_time.hour < 10) putchar('0');
-    print_uint(current_time.hour);
+    uint8_t display_hour = current_time.hour;
+    const char* ampm = "AM";
+
+    if (display_hour >= 12) {
+        ampm = "PM";
+        if (display_hour > 12) {
+            display_hour -= 12;
+        }
+    } else if (display_hour == 0) {
+        display_hour = 12;
+    }
+
+    if (display_hour < 10) putchar('0');
+    print_uint(display_hour);
     putchar(':');
 
     if (current_time.minute < 10) putchar('0');
@@ -153,6 +163,7 @@ static void handle_time_command() {
 
     if (current_time.second < 10) putchar('0');
     print_uint(current_time.second);
+    print(ampm);
     print("\n");
 }
 
@@ -177,7 +188,7 @@ void shell_execute(const char* cmd) {
     }
 
     if (kstrcmp(command, "hlp") == 0) {
-        print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, time\n");
+        print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc\n"); // Changed 'time' to 'rtc'
     } else if (kstrcmp(command, "ver") == 0) {
         print("cheeseDOS alpha\n");
     } else if (kstrcmp(command, "hi") == 0) {
@@ -354,8 +365,8 @@ void shell_execute(const char* cmd) {
             return;
         }
         current_dir_inode_no = new_dir->inode_no;
-    } else if (kstrcmp(command, "time") == 0) {
-        handle_time_command();
+    } else if (kstrcmp(command, "rtc") == 0) { // Changed 'time' to 'rtc'
+        handle_rtc_command();
     }
     else {
         print(cmd);
