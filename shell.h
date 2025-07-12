@@ -20,6 +20,7 @@
 #define SHELL_H
 
 #define MAX_CMD_LEN 64
+#define MAX_CMD_COUNT 16
 
 void shell_run(void);
 void shell_prompt(void);
