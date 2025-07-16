@@ -38,7 +38,7 @@ cheeseDOS alpha
 
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
-| Processor   | 486 (386 should work but not tested) or newer x86-compatible processor (including x86_64) |
+| Processor   | i486 (i386SX should work but not tested) or newer x86-compatible processor (including x86_64) |
 | Memory      | 2MB or higher                                                      |
 | Keyboard    | PS/2 QWERTY keyboard (Some USB keyboards may not work)             |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |

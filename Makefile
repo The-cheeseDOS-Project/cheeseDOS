@@ -70,7 +70,7 @@ $(ISO): $(KERNEL)
 	--directory=/usr/lib/grub/i386-pc \
 	--install-modules="multiboot" \
 	--fonts="" --themes="" --locales="" \
-	-o cdos.iso \
+	-o $(ISO) \
 	iso
 
 write: $(ISO)
