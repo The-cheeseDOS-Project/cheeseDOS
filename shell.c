@@ -175,36 +175,36 @@ typedef struct {
     command_func_t func;
 } shell_command_t;
 
-static void cmd_hlp(const char* args) {
+static void hlp(const char* args) {
     (void)args;
     print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc\n");
 }
 
-static void cmd_ver(const char* args) {
+static void ver(const char* args) {
     (void)args;
     print("cheeseDOS alpha\n");
 }
 
-static void cmd_hi(const char* args) {
+static void hi(const char* args) {
     (void)args;
     print("Hello, world!\n");
 }
 
-static void cmd_cls(const char* args) {
+static void cls(const char* args) {
     (void)args;
     clear_screen();
 }
 
-static void cmd_say(const char* args) {
+static void say(const char* args) {
     if (args) print(args);
     print("\n");
 }
 
-static void cmd_sum(const char* args) {
+static void sum(const char* args) {
     calc_command(args ? args : "");
 }
 
-static void cmd_ls(const char* args) {
+static void ls(const char* args) {
     (void)args;
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
     if (!dir) {
@@ -214,7 +214,7 @@ static void cmd_ls(const char* args) {
     ramdisk_readdir(dir, print_name_callback);
 }
 
-static void cmd_see(const char* args) {
+static void see(const char* args) {
     if (!args) {
         print("Usage: see <filename>\n");
         return;
@@ -245,7 +245,7 @@ static void cmd_see(const char* args) {
     print("\n");
 }
 
-static void cmd_add(const char* args) {
+static void add(const char* args) {
     if (!args) {
         print("Usage: add <filename> \"text to add\"\n");
         return;
@@ -329,7 +329,7 @@ static void cmd_add(const char* args) {
     print("Text added\n");
 }
 
-static void cmd_rem(const char* args) {
+static void rem(const char* args) {
     if (!args) {
         print("Usage: rem <filename>\n");
         return;
@@ -342,7 +342,7 @@ static void cmd_rem(const char* args) {
     }
 }
 
-static void cmd_mkd(const char* args) {
+static void mkd(const char* args) {
     if (!args) {
         print("Usage: mkd <dirname>\n");
         return;
@@ -355,7 +355,7 @@ static void cmd_mkd(const char* args) {
     }
 }
 
-static void cmd_cd(const char* args) {
+static void cd(const char* args) {
     if (!args) {
         print("Usage: cd <dirname>\n");
         return;
@@ -382,25 +382,25 @@ static void cmd_cd(const char* args) {
     current_dir_inode_no = new_dir->inode_no;
 }
 
-static void cmd_rtc(const char* args) {
+static void rtc(const char* args) {
     (void)args;
     handle_rtc_command();
 }
 
 static shell_command_t commands[] = {
-    {"hlp", cmd_hlp},
-    {"ver", cmd_ver},
-    {"hi", cmd_hi},
-    {"cls", cmd_cls},
-    {"say", cmd_say},
-    {"sum", cmd_sum},
-    {"ls", cmd_ls},
-    {"see", cmd_see},
-    {"add", cmd_add},
-    {"rem", cmd_rem},
-    {"mkd", cmd_mkd},
-    {"cd", cmd_cd},
-    {"rtc", cmd_rtc},
+    {"hlp", hlp},
+    {"ver", ver},
+    {"hi", hi},
+    {"cls", cls},
+    {"say", say},
+    {"sum", sum},
+    {"ls", ls},
+    {"see", see},
+    {"add", add},
+    {"rem", rem},
+    {"mkd", mkd},
+    {"cd", cd},
+    {"rtc", rtc},
     {NULL, NULL}
 };
 
