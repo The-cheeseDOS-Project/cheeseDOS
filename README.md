@@ -1,4 +1,4 @@
-h## Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
+## Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
 
 ## Thank you for visting the cheeseDOS GitHub page!
 
