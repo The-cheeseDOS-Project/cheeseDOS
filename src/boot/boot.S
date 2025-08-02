@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.section .note.GNU-stack,"",@progbits
+.intel_syntax  noprefix  
 .section .text
 .align 4
 .long 0x1BADB002
 .long 0
 .long -(0x1BADB002)
+
+.global stack_top
 
 .global _start
 _start:

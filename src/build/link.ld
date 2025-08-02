@@ -20,8 +20,8 @@ ENTRY(_start)
 
 MEMORY
 {
-  CODE (rx)  : ORIGIN = 0x00100000, LENGTH = 32K
-  DATA (rw)  : ORIGIN = 0x00180000, LENGTH = 16K
+  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 32K
+  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 32K
 }
 
 SECTIONS
@@ -40,5 +40,6 @@ SECTIONS
   .bss : {
     *(.bss*)
     *(COMMON)
+    . = ALIGN(16);
   } > DATA
 }
