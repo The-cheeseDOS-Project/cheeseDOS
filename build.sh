@@ -93,7 +93,7 @@ function build {
   objcopy -O binary -j .text "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.bin"
 
 
-  $LD $LDFLAGS -T src/build/link.ld -o "$KERNEL" "${OBJS[@]}"
+  $LD $LDFLAGS -z max-page-size=512 -T src/build/link.ld -o "$KERNEL" "${OBJS[@]}"
   objcopy --only-keep-debug "$KERNEL" "$KERNEL_DBG"
   strip -sv "$KERNEL"
   src/loader/check_elf "$KERNEL"

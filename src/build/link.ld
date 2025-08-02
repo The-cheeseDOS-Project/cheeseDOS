@@ -42,4 +42,8 @@ SECTIONS
     *(COMMON)
     . = ALIGN(16);
   } > DATA
+
+  /DISCARD/ : {
+    *(.eh_frame*)
+  }
 }
