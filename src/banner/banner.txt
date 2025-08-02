@@ -11,4 +11,4 @@
 [94m       |  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  |[0m
 [95m       |______||______||______||______||______||______||______||______|[0m
                                                                 
-[93mcheeseDOS is a x86, fully GNU GPLed, custom C written, super small, under 800KB live CLI based DOS like OS that loads into RAM.[0m
+[93mcheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live CLI based DOS like OS that loads into RAM.[0m
