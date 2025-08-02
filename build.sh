@@ -92,6 +92,7 @@ function build {
 
   if test "${BUILD_FLOPPY:-1}" -eq 1; then
     cat "$BUILD_DIR/loader.bin" "$KERNEL" > "$FLOPPY"
+    truncate "$FLOPPY" -s '1474560' # This makes QEMU assume the correct geometry
   fi
 
   rm -rf "$BUILD_DIR"
