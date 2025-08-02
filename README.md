@@ -1,4 +1,4 @@
-## I really need help making its own bootloader so if you know how to make one and are willing to, if so then please make a PR
+## Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
 
 ## Thank you for visting the cheeseDOS GitHub page!
 
