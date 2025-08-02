@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-name: Build and Release cheeseDOS ISO
+name: Build and Release cheeseDOS IMG
 
 on:
   push:
@@ -43,11 +43,11 @@ jobs:
          sudo chmod +x ./build.sh
          ./build.sh
 
-      - name: Upload ISO artifact
+      - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cheeseDOS-iso
-          path: cdos.iso
+          name: cheeseDOS-img
+          path: cdos.img
 
       - name: Generate build number
         id: gentag
@@ -75,10 +75,10 @@ jobs:
           echo "Failed to generate unique tag" >&2
           exit 1
 
-      - name: Create GitHub Release and Upload ISO
+      - name: Create GitHub Release and Upload IMG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.gentag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
-          gh release create "$TAG" cdos.iso --title "$TITLE" --notes "Rolling alpha cheeseDOS builds"
+          gh release create "$TAG" cdos.img --title "$TITLE" --notes "Rolling alpha cheeseDOS builds"

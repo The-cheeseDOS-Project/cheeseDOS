@@ -16,9 +16,7 @@
 
 *.o
 kernel.elf
-/cdos.iso
 /cdos.img
-/iso/
 /build/
 *~
 *.swp

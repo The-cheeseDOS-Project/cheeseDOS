@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# NOTE: Change this over to bash or C
+
 import argparse
 import struct
 import dataclasses
