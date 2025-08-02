@@ -23,9 +23,7 @@ RUN apt update -y && \
     apt install -y --no-install-recommends \
         gcc \
         gcc-multilib \
-        grub-pc-bin \
-        xorriso \
-        mtools
+        python3
 
 WORKDIR /
 CMD ["make build && chmod 775 *"]

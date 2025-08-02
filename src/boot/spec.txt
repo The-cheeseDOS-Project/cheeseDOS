@@ -1,0 +1,18 @@
+CheeseLDR is a single-sector bootloader for a small subset of Multiboot v1 spec.
+
+It does not require any multiboot signature to be present. It loads ELF files directly. The ELF files
+should be placed starting on the second sector of the  loppy, after the boot sector.
+
+Limitations:
+ - Each ELF segment must be < 64k
+ - Segments must be loaded within conventional memory
+ - ELF segments headers must fit into first 512b
+ - Assumes 1.44 MB floppy
+
+Handoff interface:
+ - Multiboot spec-like environment (32-bit PE)
+ - All segments setup per Multiboot spec
+ - No multiboot information structure passed to kernel
+ - Loader jumps the entry point defined in ELF
+ - Stack is guaranteed to be setup, esp = 0x7C00
+ - 0x7E00 occupied by temporary GDT

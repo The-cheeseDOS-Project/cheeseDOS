@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+
+# NOTE: Change this over to bash or C
+
+import argparse
+import struct
+import dataclasses
+import sys
+
+@dataclasses.dataclass
+class Segment:
+    STRUCT = struct.Struct('<IIIIIIII')
+    type: int
+    offset: int
+    vaddr: int
+    paddr: int
+    filesz: int
+    memsz: int
+    flags: int
+    align: int
+
+class Range:
+    start: int
+    size: int
+    end: int
+
+    @staticmethod
+    def of_size(start, size):
+        r = Range()
+        r.start = start
+        r.size = size
+        r.end = start + size
+        return r
+
+    @staticmethod
+    def of(start, end):
+        assert end >= start
+        r = Range()
+        r.start = start
+        r.size = end - start
+        r.end = end
+        return r
+    
+    def __contains__(self, sub):
+        return sub.start >= self.start and sub.end <= self.end
+
+    def __str__(self):
+        return f'{self.size:#x} - {self.end:#x}'
+
+parser = argparse.ArgumentParser()
+parser.add_argument('elf')
+parser.add_argument('-v', '--verbose', action='store_true')
+args = parser.parse_args()
+fail = False
+
+def check(context, text, val, **kwargs):
+    global fail
+    if val:
+        if args.verbose:
+            print(f'[OK]    {context}: {text}')
+    else:
+        fail = False
+        print(f'[FAIL] {context}: {text}')
+        if len(kwargs):
+            print(kwargs)
+
+ALLOWED_MEM = Range.of(0x8000, 0x80000)
+SECT = 512
+
+with open(args.elf, 'rb') as f:
+    f.seek(0x1C)
+    ph_off, = struct.unpack('<I', f.read(4))
+    f.seek(0x2C)
+    ph_num, = struct.unpack('<H', f.read(2))
+    ph_range = Range.of_size(ph_off, ph_num*Segment.STRUCT.size)
+    check('headers', 'segment headers fit into first sector', ph_range.end <= 512, segment_headers = ph_range)
+
+    f.seek(ph_off)
+    for i in range(ph_num):
+        seg = Segment(*Segment.STRUCT.unpack(f.read(Segment.STRUCT.size)))
+        mem_range = Range.of_size(seg.paddr, seg.memsz)
+        ctx = f'segment {seg.paddr:#x}'
+        if seg.type != 1:
+            continue
+
+        check(ctx, 'segment is in allowed memory range', mem_range in ALLOWED_MEM, allowed = ALLOWED_MEM, segment=mem_range)
+        check(ctx, 'segment start is sector aligned', seg.paddr % 512 == 0, paddr = seg.paddr)
+        check(ctx, 'segment is < 64k', mem_range.size <= 64*1024, size = mem_range.size)
+
+
+
+if fail:
+    sys.exit(1)
