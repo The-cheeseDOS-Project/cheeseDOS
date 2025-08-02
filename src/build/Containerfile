@@ -22,8 +22,7 @@ RUN apt update -y && \
     apt full-upgrade -y && \
     apt install -y --no-install-recommends \
         gcc \
-        gcc-multilib \
-        python3
+        gcc-multilib
 
 WORKDIR /
 CMD ["make build && chmod 775 *"]
