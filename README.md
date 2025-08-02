@@ -12,7 +12,7 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 ## CheeseDOS Features
 
 - 512B CheeseFS RAM Disk
-- Run's on computers from 1986 (if they have a i386DX) and onwards
+- Run's on computers from 1986 (if they have a i386 class cpu) and onwards
 - Quite a bit of commands
 - AND MORE!
 
@@ -26,7 +26,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
-| Processor   | i386DX or newer x86-compatible processor (including x86_64)        |
+| Processor   | i386 class or newer x86-compatible processor (including x86_64)        |
 | Storage     | Only 1.44MB Floppy Booting is supported (for now)                  |
 | Keyboard    | PS/2 QWERTY keyboard (Some USB keyboards may not work)             |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |
