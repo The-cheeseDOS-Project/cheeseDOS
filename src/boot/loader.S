@@ -1,6 +1,6 @@
 /*
- * cheeseLDR - single sector x86 ELF loader
- * Copyright (C) 2025  Roman Kapl
+ * cheeseLDR - single sector x86 ELF loader for cheeseDOS
+ * Copyright (C) 2025 Roman Kapl
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 
 .intel_syntax noprefix
 .code16
@@ -230,9 +229,9 @@ jmp hlt
 #### Data
 
 msg_banner:
-.ascii "CheeseLDR\r\n\0"
+.ascii "Loading cheeseDOS...\r\n\0"
 msg_error:
-.ascii "Read Error\0"
+.ascii "Read error, please reboot and try again.\0"
 
 gdt_code:
     .word 0xFFFF # limit
