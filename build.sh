@@ -36,7 +36,7 @@ CFLAGS="-m32 -ffreestanding -O2 -Wall -Wextra \
 -fno-stack-protector -fno-builtin-strcpy -fno-builtin-strncpy \
 -march=i386 $INCLUDES"
 
-LDFLAGS="-m elf_i386 -T src/build/link.ld"
+LDFLAGS="-m elf_i386"
 
 BUILD_DIR=build
 ISO_DIR="$BUILD_DIR/iso"
@@ -44,7 +44,9 @@ BOOT_DIR="$ISO_DIR/boot"
 GRUB_DIR="$BOOT_DIR/grub"
 
 KERNEL="$BUILD_DIR/kernel.elf"
+KERNEL_DBG="$BUILD_DIR/kernel.debug.elf"
 ISO="cdos.iso"
+FLOPPY="cdos.img"
 GRUB_CFG=src/boot/grub.cfg
 
 OBJS=(
@@ -82,22 +84,35 @@ function build {
   build_object src/calc/calc.c "$BUILD_DIR/calc.o"
   build_object src/libraries/string/string.c "$BUILD_DIR/string.o"
   build_object src/rtc/rtc.c "$BUILD_DIR/rtc.o"
-
+  
   objcopy -I binary -O elf32-i386 -B i386 \
-    src/banner/banner.txt "$BUILD_DIR/banner.o"
+          src/banner/banner.txt "$BUILD_DIR/banner.o"
 
-  $LD $LDFLAGS -o "$KERNEL" "${OBJS[@]}"
+  $AS --32 -I src/loader -o "$BUILD_DIR/loader.o" src/loader/loader.S
+  $LD $LDFLAGS -T src/loader/loader.ld -o "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.o"
+  objcopy -O binary -j .text "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.bin"
+
+
+  $LD $LDFLAGS -z max-page-size=512 -T src/build/link.ld -o "$KERNEL" "${OBJS[@]}"
+  objcopy --only-keep-debug "$KERNEL" "$KERNEL_DBG"
   strip -sv "$KERNEL"
+  src/loader/check_elf "$KERNEL"
 
-  mkdir -p "$GRUB_DIR"
-  cp "$GRUB_CFG" "$GRUB_DIR/"
-  cp "$KERNEL" "$BOOT_DIR/"
-
-  grub-mkrescue \
-    --directory=/usr/lib/grub/i386-pc \
-    --install-modules="multiboot" \
-    -o "$ISO" \
-    "$ISO_DIR"
+  if test "${BUILD_FLOPPY:-1}" -eq 1; then
+    cat "$BUILD_DIR/loader.bin" "$KERNEL" > "$FLOPPY"
+    truncate "$FLOPPY" -s '1474560' # This makes QEMU assume the correct geometry
+  fi
+  if test "${BUILD_ISO:-1}" -eq 1; then
+    mkdir -p "$GRUB_DIR"
+    cp "$GRUB_CFG" "$GRUB_DIR/"
+    cp "$KERNEL" "$BOOT_DIR/"
+    grub-mkrescue \
+      --directory=/usr/lib/grub/i386-pc \
+      --install-modules="multiboot" \
+      --fonts="" --themes="" --locales="" \
+      -o "$ISO" \
+      "$ISO_DIR"
+  fi
 
   rm -rf "$BUILD_DIR"
 }
