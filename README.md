@@ -47,5 +47,3 @@ You can download the latest IMG from the [Releases](https://github.com/The-chees
 - **Contributing Guide**: [CONTRIBUTING.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/CONTRIBUTING.md)
 - **GPL v3 Licese**: [LICENSE](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/LICENSE)
 - **Security Policy**: [SECURITY.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/SECURITY.md)
-
-[Local mirror](https://cheesedos.h4ck.me)
