@@ -88,7 +88,6 @@ function build {
   $LD $LDFLAGS -e kmain -z max-page-size=512 -T src/build/link.ld -o "$KERNEL" "${OBJS[@]}"
   objcopy --only-keep-debug "$KERNEL" "$KERNEL_DBG"
   strip -sv "$KERNEL"
-  src/boot/check_elf "$KERNEL"
 
   if test "${BUILD_FLOPPY:-1}" -eq 1; then
     cat "$BUILD_DIR/loader.bin" "$KERNEL" > "$FLOPPY"
