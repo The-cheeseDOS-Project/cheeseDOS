@@ -27,7 +27,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
 | Processor   | i386DX or newer x86-compatible processor (including x86_64)        |
-| Storage     | Only Floppy Booting is supported (for now)                         |
+| Storage     | Only 1.44MB Floppy Booting is supported (for now)                  |
 | Keyboard    | PS/2 QWERTY keyboard (Some USB keyboards may not work)             |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |
 
