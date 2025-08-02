@@ -149,5 +149,5 @@ case "$1" in
   deps) deps ;;
   burn) burn ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|build|run|write|clean|deps|burn}" ;;
+  *) echo "Usage: $0 {all|build|run|clean|deps}" ;;
 esac
