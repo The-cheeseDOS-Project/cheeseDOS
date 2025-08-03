@@ -39,9 +39,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Cleanup Podman tmp
-        run: |
-          sudo rm -rf /tmp/storage-run-1001/containers /tmp/storage-run-1001/libpod/tmp || true
+      #- name: Cleanup Podman tmp
+      #  run: |
+      #    sudo rm -rf /tmp/storage-run-1001/containers /tmp/storage-run-1001/libpod/tmp || true
 
       - name: Build with Podman
         run: |
