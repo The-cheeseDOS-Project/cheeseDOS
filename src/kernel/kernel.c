@@ -21,7 +21,7 @@
 #include "shell.h"
 #include "ramdisk.h"
 
-void kernel_main() {
+void kmain() {
     clear_screen();
     ramdisk_init();
     shell_run();
