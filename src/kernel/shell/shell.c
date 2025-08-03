@@ -296,14 +296,6 @@ static void ban(const char* args) {
     print_ansi((const char*)_binary_src_banner_banner_txt_start);
     set_text_color(default_text_fg_color, default_text_bg_color);
     int key;
-    print("\nPress 'e' to exit to shell");
-    while (1) {
-        key = keyboard_getchar();
-        if (key == 'e' || key == 'E') {
-            clear_screen();
-            break;
-        }
-    }
 }
 
 typedef void (*command_func_t)(const char* args);
@@ -700,7 +692,7 @@ void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
-    clear_screen();
+    print(" Done!\n\n");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
     while (1) {

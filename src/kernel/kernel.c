@@ -22,7 +22,10 @@
 #include "ramdisk.h"
 
 void kmain() {
+    print("Loading kernel... Done !\nLoading ramdisk...");
     ramdisk_init();
+    print(" Done!\n");
+    print("Loading shell...");
     shell_run();
 
     while (1)

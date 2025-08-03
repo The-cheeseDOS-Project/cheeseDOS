@@ -50,7 +50,40 @@ mov ss, cx
 mov sp, STACK_TOP
 
 mov ds, cx
+
+mov ax, 0xB800
+mov es, ax
+xor di, di
+mov ah, 0x0F
+mov al, ' '
+mov cx, 2000
+
+.clear_loop:
+stosw
+loop .clear_loop
+
+mov dx, 0x03D4
+mov al, 0x0F
+out dx, al
+mov dx, 0x03D5
+mov al, 0
+out dx, al
+
+mov dx, 0x03D4
+mov al, 0x0E
+out dx, al
+mov dx, 0x03D5
+mov al, 0
+out dx, al
+
 mov si, offset msg_banner
+
+mov ah, 0x02
+mov bh, 0x00
+mov dh, 0x00
+mov dl, 0x00
+int 0x10
+
 call print
 
 # setup ds to point to ELF_HDR_LOAD
@@ -229,9 +262,9 @@ jmp hlt
 #### Data
 
 msg_banner:
-.ascii "Loading cheeseDOS...\r\n\0"
+.ascii "Loading kernel...\r\n\0"
 msg_error:
-.ascii "Read error, please reboot and try again.\0"
+.ascii "Failed! Please reboot and try again...\0"
 
 gdt_code:
     .word 0xFFFF # limit

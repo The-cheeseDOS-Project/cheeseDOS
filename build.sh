@@ -16,33 +16,41 @@
 
 set -e
 
-CC=gcc
-AS=as
-LD=ld
-SU=sudo
+SU=sudo # Change to doas if you dont use sudo
+CC=gcc # Don't change!
+AS=as # Don't change!!
+LD=ld # Don't change!!!
 
-INCLUDES="-Isrc/kernel \
--Isrc/kernel/shell \
--Isrc/kernel/ramdisk \
--Isrc/drivers \
--Isrc/drivers/vga \
--Isrc/drivers/keyboard \
--Isrc/libraries/string \
--Isrc/calc \
--Isrc/rtc \
--Isrc/banner"
+FLOPPY=cdos.img
 
-CFLAGS="-m32 -ffreestanding -O2 -Wall -Wextra \
--fno-stack-protector -fno-builtin-strcpy -fno-builtin-strncpy \
--march=i386 $INCLUDES"
-
-LDFLAGS="-m elf_i386 -z noexecstack"
-
+SRC_DIR=src
 BUILD_DIR=build
+
 KERNEL="$BUILD_DIR/kernel.elf"
-KERNEL_DBG="$BUILD_DIR/kernel.debug.elf"
-FLOPPY="cdos.img"
-GRUB_CFG=src/boot/grub.cfg
+
+BANNER_DIR="$SRC_DIR/banner"
+BOOT_DIR="$SRC_DIR/boot"
+CALC_DIR="$SRC_DIR/calc"
+DRIVERS_DIR="$SRC_DIR/drivers"
+KEYBRD_DIR="$DRIVERS_DIR/keyboard"
+VGA_DIR="$DRIVERS_DIR/vga"
+KERNEL_DIR="$SRC_DIR/kernel"
+RAMDISK_DIR="$KERNEL_DIR/ramdisk"
+SHELL_DIR="$KERNEL_DIR/shell"
+LIB_DIR="$SRC_DIR/libraries"
+STRING_DIR="$LIB_DIR/string"
+RTC_DIR="$SRC_DIR/rtc"
+
+INCLUDES="-I$KERNEL_DIR \
+  -I$SHELL_DIR \
+  -I$RAMDISK_DIR \
+  -I$DRIVERS_DIR \
+  -I$VGA_DIR \
+  -I$KEYBRD_DIR \
+  -I$STRING_DIR \
+  -I$CALC_DIR \
+  -I$RTC_DIR \
+  -I$BANNER_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -56,54 +64,110 @@ OBJS=(
   "$BUILD_DIR/banner.o"
 )
 
+BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
+MARCH=i386 # i386 is 32-bit and is backward compatible with i486, i586, i686 and most x86_64 cpus
+OPT=fast # Change to 2 or 3 if you have stability issues
+
+FLAGS="-ffreestanding \
+       -Wall \
+       -Wextra \
+       -fno-stack-protector \
+       -fno-builtin-strcpy \
+       -fno-builtin-strncpy"
+
+CFLAGS="-m$BITS \
+        -march=$MARCH \
+        -O$OPT \
+        $FLAGS \
+        $INCLUDES"
+LDFLAGS="-m \
+         elf_$MARCH \
+         -z \
+         noexecstack"
+
 build_object() {
   $CC $CFLAGS -c "$1" -o "$2"
 }
 
 function all {
+  start_time=$(date +%s.%N)
+  
+  echo The cheeseDOS Build System
+  echo
+  echo BITS=$BITS
+  echo MARCH=$MARCH
+  echo OPT=$OPT
+  echo
+
   clean
   mkdir -p "$BUILD_DIR"
+  echo Made directory: "$BUILD_DIR"
+  echo
 
-  build_object src/kernel/kernel.c "$BUILD_DIR/kernel.o"
-  build_object src/kernel/shell/shell.c "$BUILD_DIR/shell.o"
-  build_object src/drivers/vga/vga.c "$BUILD_DIR/vga.o"
-  build_object src/drivers/keyboard/keyboard.c "$BUILD_DIR/keyboard.o"
-  build_object src/kernel/ramdisk/ramdisk.c "$BUILD_DIR/ramdisk.o"
-  build_object src/calc/calc.c "$BUILD_DIR/calc.o"
-  build_object src/libraries/string/string.c "$BUILD_DIR/string.o"
-  build_object src/rtc/rtc.c "$BUILD_DIR/rtc.o"
-  
+  build_object "$KERNEL_DIR/kernel.c" "$BUILD_DIR/kernel.o"
+  echo Built kernel.o
+  build_object "$SHELL_DIR/shell.c" "$BUILD_DIR/shell.o"
+  echo Built shell.o
+  build_object "$VGA_DIR/vga.c" "$BUILD_DIR/vga.o"
+  echo Built vga.o
+  build_object "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
+  echo Built keyboard.o
+  build_object "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
+  echo Built ramdisk.o
+  build_object "$CALC_DIR/calc.c" "$BUILD_DIR/calc.o"
+  echo Built calc.o
+  build_object "$STRING_DIR/string.c" "$BUILD_DIR/string.o"
+  echo Built string.o
+  build_object "$RTC_DIR/rtc.c" "$BUILD_DIR/rtc.o"
+  echo Built rtc.o
+
   objcopy -I binary -O elf32-i386 -B i386 \
-          src/banner/banner.txt "$BUILD_DIR/banner.o"
+          "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
+  echo Built banner.o
 
-  $AS --32 -I src/boot -o "$BUILD_DIR/loader.o" src/boot/loader.S
-  $LD $LDFLAGS -T src/boot/loader.ld -o "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.o"
+  echo
+  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/loader.o" "$BOOT_DIR/loader.S"
+  echo Assembled cheeseLDR
+  $LD $LDFLAGS -T "$BOOT_DIR/loader.ld" -o "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.o"
+  echo Linked cheeseLDR
   objcopy -O binary -j .text "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.bin"
+  echo "Converted loader.elf to loader.bin"
+  echo
 
-  $LD $LDFLAGS -e kmain -z max-page-size=512 -T src/kernel/kernel.ld -o "$KERNEL" "${OBJS[@]}"
-  objcopy --only-keep-debug "$KERNEL" "$KERNEL_DBG"
+  $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
+  echo Linked kernel
   strip -sv "$KERNEL"
+  echo Stripped kernel
 
   if test "${BUILD_FLOPPY:-1}" -eq 1; then
     cat "$BUILD_DIR/loader.bin" "$KERNEL" > "$FLOPPY"
-    truncate "$FLOPPY" -s '1474560' # This makes QEMU assume the correct geometry
+    echo "Made $FLOPPY with kernel"
+    truncate "$FLOPPY" -s '1474560'
+    echo
+    echo "Added padding to $FLOPPY"  
   fi
 
+  echo
   rm -rf "$BUILD_DIR"
+  echo "Cleaned up: "$BUILD_DIR""
+  
+  end_time=$(date +%s.%N)
+  elapsed=$(echo "$end_time - $start_time" | bc)
 
-  echo Done!
+  printf "\nBuild completed in %.3f seconds, Floppy image is $FLOPPY\n" "$elapsed"
 }
 
 function run {
   qemu-system-i386 -fda $FLOPPY -m 1M -cpu 486
 }
 
-#function write {
-#  lsblk
-#  read -p "Enter target device (e.g. sdb): " dev
-#  echo "Writing to /dev/$dev ..."
-#  $SU dd if="$ISO" of="/dev/$dev" bs=4M status=progress && sync
-#}
+function write {
+  lsblk
+  read -p "Enter target device (e.g. fd0): " dev
+  echo "Writing to /dev/$dev ..."
+  $SU dd if="$ISO" of="/dev/$dev" bs=4M status=progress && sync
+  echo Done!
+}
 
 function deps {
   if command -v apt &> /dev/null; then
@@ -126,13 +190,9 @@ function deps {
   fi
 }
 
-#function burn {
-#  echo "Burning '$ISO' to /dev/sr0..."
-#  $SU wodim dev=/dev/sr0 -v -data "$ISO"
-#}
-
 function clean {
   rm -rf "$BUILD_DIR" "$FLOPPY"
+  echo "Cleaned up: "$BUILD_DIR" "$FLOPPY""
 }
 
 case "$1" in
