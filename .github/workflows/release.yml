@@ -43,7 +43,7 @@ jobs:
       #  run: |
       #    sudo rm -rf /tmp/storage-run-1001/containers /tmp/storage-run-1001/libpod/tmp || true
 
-      - name: Build with Podman
+      - name: Build
         run: |
          chmod +x ./build.sh
          ./build.sh
