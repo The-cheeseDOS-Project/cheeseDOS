@@ -16,7 +16,7 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 - Quite a bit of commands
 - AND MORE!
 
-![`ban` command](https://github.com/user-attachments/assets/91d54ac5-49fa-4161-88d3-2b8566484199)
+![`ban` command](https://github.com/user-attachments/assets/caf8c714-b6e1-4bf5-bb2f-09af870027d4)
 
 ## Building
 
