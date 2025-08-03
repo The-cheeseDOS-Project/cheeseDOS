@@ -700,6 +700,7 @@ void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
+    clear_screen();
     print_prompt();
     prompt_start_vga_pos = get_cursor();
     while (1) {

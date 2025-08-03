@@ -22,7 +22,6 @@
 #include "ramdisk.h"
 
 void kmain() {
-    clear_screen();
     ramdisk_init();
     shell_run();
 
