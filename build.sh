@@ -85,7 +85,7 @@ function build {
   $LD $LDFLAGS -T src/boot/loader.ld -o "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.o"
   objcopy -O binary -j .text "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.bin"
 
-  $LD $LDFLAGS -e kmain -z max-page-size=512 -T src/build/link.ld -o "$KERNEL" "${OBJS[@]}"
+  $LD $LDFLAGS -e kmain -z max-page-size=512 -T src/kernel/kernel.ld -o "$KERNEL" "${OBJS[@]}"
   objcopy --only-keep-debug "$KERNEL" "$KERNEL_DBG"
   strip -sv "$KERNEL"
 
