@@ -18,9 +18,9 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 
 ![`ban` command](https://github.com/user-attachments/assets/37b4aabf-4355-4449-92d5-07924beba984)
 
-## Building
+## Getting Started
 
-For instructions on building from source, refer to the [Build and Run Guide](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run).
+You can download the latest IMG from the [Releases](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases) page. Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#writing).
 
 ## System Requirements (for booting on real hardware)
 
@@ -31,9 +31,9 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 | Keyboard    | PS/2 QWERTY keyboard (Some USB keyboards may not work)             |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |
 
-## Getting Started
+## Building
 
-You can download the latest IMG from the [Releases](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases) page.
+For instructions on building from source, refer to the [Build and Run Guide](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run).
 
 ## Documentation
 
