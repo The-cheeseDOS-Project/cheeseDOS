@@ -20,13 +20,13 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 
 ## Getting Started
 
-You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest) page. Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#writing).
+You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest). Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#writing).
 
 ## System Requirements (for booting on real hardware)
 
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
-| Processor   | i386 class or newer x86-compatible processor (including x86_64)        |
+| Processor   | i386 class or newer x86-compatible processor (including x86_64)    |
 | Storage     | Only 1.44MB Floppy Booting is supported (for now)                  |
 | Keyboard    | PS/2 QWERTY keyboard (Some USB keyboards may not work)             |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |
