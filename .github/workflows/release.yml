@@ -39,9 +39,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Cleanup Podman tmp
+        run: |
+          sudo rm -rf /tmp/storage-run-1001/containers /tmp/storage-run-1001/libpod/tmp || true
+
       - name: Build with Podman
         run: |
-         sudo chmod +x ./build.sh
+         chmod +x ./build.sh
          ./build.sh
 
       - name: Upload IMG artifact
