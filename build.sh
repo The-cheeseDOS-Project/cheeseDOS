@@ -61,11 +61,6 @@ build_object() {
 }
 
 function all {
-  podman build -t cheesedos-build src/build
-  podman run --name cheesedos-builder --rm -v "$(pwd)":/src:z -w /src cheesedos-build bash "$0" build
-}
-
-function build {
   clean
   mkdir -p "$BUILD_DIR"
 
@@ -113,21 +108,21 @@ function run {
 function deps {
   if command -v apt &> /dev/null; then
     echo "Detected apt-based system. Installing dependencies..."
-    $SU apt-get update && $SU apt-get install -y git podman qemu-system-x86
+    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc gcc-multilib binutils
   elif command -v dnf &> /dev/null; then
     echo "Detected dnf-based system. Installing dependencies..."
-    $SU dnf update -y && $SU dnf install -y git podman qemu-system-x86
+    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc gcc-g++ gcc-toolset binutils
   elif command -v zypper &> /dev/null; then
     echo "Detected SUSE-based system. Installing dependencies..."
-    $SU zypper refresh && $SU zypper install -y git podman qemu-x86
+    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc gcc-32bit binutils
   elif command -v pacman &> /dev/null; then
     echo "Detected Arch-based system. Installing dependencies..."
-    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm git podman qemu
+    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc multilib-devel binutils
   elif command -v portage &> /dev/null; then
     echo "Detected Gentoo-based system. Installing dependencies..."
-    $SU emerge --sync && $SU emerge dev-vcs/git app-containers/podman app-emulation/qemu
+    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
   else
-    echo "Your distro is not supported by cheeseDOS, please seek: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
+    echo "Your distro is not supported by cheeseDOS, please see: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
   fi
 }
 
