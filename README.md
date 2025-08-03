@@ -35,8 +35,6 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 
 You can download the latest IMG from the [Releases](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases) page.
 
-[Here's](https://github.com/The-cheeseDOS-Project/cDOS-writer/releases/latest) a litte program I wrote for linux that can automatically get the latest iso and burn/image it.
-
 ## Documentation
 
 - **The cheeseDOS wiki**: [The cheeseDOS wiki](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki)
