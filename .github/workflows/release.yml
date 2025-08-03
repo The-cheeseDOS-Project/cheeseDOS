@@ -26,6 +26,7 @@ on:
       - .gitignore
       - '.github/ISSUE_TEMPLATE/**'
       - build.sh
+      - 'src/boot/specs.txt'
 
 permissions:
   contents: write
