@@ -90,8 +90,6 @@ build_object() {
 }
 
 function all {
-  start_time=$(date +%s.%N)
-  
   echo The cheeseDOS Build System
   echo
   echo BITS=$BITS
@@ -151,10 +149,7 @@ function all {
   rm -rf "$BUILD_DIR"
   echo "Cleaned up: "$BUILD_DIR""
   
-  end_time=$(date +%s.%N)
-  elapsed=$(echo "$end_time - $start_time" | awk '{printf "%.2f", $1}')
-
-  printf "\nBuild completed in %.3f seconds, Floppy image is $FLOPPY\n" "$elapsed"
+  printf "\nBuild completed, Floppy image is $FLOPPY\n" "$elapsed"
 }
 
 function run {
@@ -165,7 +160,7 @@ function write {
   lsblk
   read -p "Enter target device (e.g. fd0): " dev
   echo "Writing to /dev/$dev ..."
-  $SU dd if="$ISO" of="/dev/$dev" bs=4M status=progress && sync
+  $SU dd if="$FLOPPY" of="/dev/$dev" bs=4M status=progress && sync
   echo Done!
 }
 
