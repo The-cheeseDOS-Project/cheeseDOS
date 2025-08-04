@@ -295,7 +295,6 @@ static void ban(const char* args) {
     set_cursor_pos(0);
     print_ansi((const char*)_binary_src_banner_banner_txt_start);
     set_text_color(default_text_fg_color, default_text_bg_color);
-    int key;
 }
 
 typedef void (*command_func_t)(const char* args);
