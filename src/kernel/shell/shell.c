@@ -291,6 +291,14 @@ static void print_ansi(const char* ansi_str) {
     }
 }
 
+void print_int(int n) {
+    if (n < 0) {
+        print("-");
+        n = -n;
+    }
+    print_uint((unsigned int)n);
+}
+
 static void ban(const char* args) {
     (void)args;
     clear_screen();
@@ -336,9 +344,40 @@ static void sum(const char* args) {
 }
 
 static void bep(const char* args) {
-    (void)args;
-    print("Playing 720hz for 360 cycles...");
-    beep(720, 360);
+    int hz = 720;
+    int cyc = 360;
+
+    char num1[16] = {0};
+    char num2[16] = {0};
+    int i = 0, j = 0;
+
+    while (args[i] && args[i] != ' ' && i < 15) {
+        num1[i] = args[i];
+        i++;
+    }
+    if (args[i] == ' ') i++;
+
+    while (args[i] && j < 15) {
+        num2[j++] = args[i++];
+    }
+
+    hz = 0;
+    for (i = 0; num1[i] >= '0' && num1[i] <= '9'; ++i)
+        hz = hz * 10 + (num1[i] - '0');
+
+    cyc = 0;
+    for (i = 0; num2[i] >= '0' && num2[i] <= '9'; ++i)
+        cyc = cyc * 10 + (num2[i] - '0');
+
+    if (hz == 0) hz = 720;
+    if (cyc == 0) cyc = 360;
+
+    print("Playing ");
+    print_uint((unsigned int)hz);
+    print("hz for ");
+    print_uint((unsigned int)cyc);
+    print(" cycles...");
+    beep(hz, cyc);
     print(" Done!\n");
 }
 
