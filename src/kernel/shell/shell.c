@@ -24,6 +24,7 @@
 #include "string.h"
 #include "banner.h"
 #include "rtc.h"
+#include "beep.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -306,7 +307,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep");
 }
 
 static void ver(const char* args) {
@@ -331,6 +332,13 @@ static void say(const char* args) {
 
 static void sum(const char* args) {
     calc_command(args ? args : "");
+}
+
+static void bep(const char* args) {
+    (void)args;
+    print("Playing 720hz for 360 cycles...");
+    beep(720, 360);
+    print(" Done!\n");
 }
 
 static void ls(const char* args) {
@@ -652,6 +660,7 @@ static shell_command_t commands[] = {
     {"rtc", rtc},
     {"clr", clr},
     {"ban", ban},
+    { "bep", bep },
     {NULL, NULL}
 };
 

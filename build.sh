@@ -32,6 +32,7 @@ BANNER_DIR="$SRC_DIR/banner"
 BOOT_DIR="$SRC_DIR/boot"
 CALC_DIR="$SRC_DIR/calc"
 DRIVERS_DIR="$SRC_DIR/drivers"
+BEEP_DIR="$DRIVERS_DIR/beep"
 KEYBRD_DIR="$DRIVERS_DIR/keyboard"
 VGA_DIR="$DRIVERS_DIR/vga"
 KERNEL_DIR="$SRC_DIR/kernel"
@@ -50,7 +51,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$STRING_DIR \
   -I$CALC_DIR \
   -I$RTC_DIR \
-  -I$BANNER_DIR"
+  -I$BANNER_DIR \
+  -I$BEEP_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -62,6 +64,7 @@ OBJS=(
   "$BUILD_DIR/string.o"
   "$BUILD_DIR/rtc.o"
   "$BUILD_DIR/banner.o"
+  "$BUILD_DIR/beep.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -118,6 +121,8 @@ function all {
   echo Built string.o
   build_object "$RTC_DIR/rtc.c" "$BUILD_DIR/rtc.o"
   echo Built rtc.o
+  build_object "$BEEP_DIR/beep.c" "$BUILD_DIR/beep.o"
+  echo Built beep.o
 
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
@@ -156,7 +161,12 @@ MEM=1M
 CPU=486
 
 function run {
-  qemu-system-$MARCH -fda $FLOPPY -m $MEM -cpu $CPU
+  qemu-system-$MARCH \
+  -audiodev pa,id=snd0 \
+  -machine pcspk-audiodev=snd0 \
+  -fda $FLOPPY \
+  -m $MEM \
+  -cpu $CPU
 }
 
 function write {
