@@ -668,12 +668,12 @@ static void clr(const char* arg) {
         print("\nUsage: clr <color>\n");
         return;
     }
-    if (kstrcmp(arg, "DARKBLUE") == 0) new_fg_color = COLOR_DARKBLUE;
+    if (kstrcmp(arg, "darkblue") == 0) new_fg_color = COLOR_DARKBLUE;
     else if (kstrcmp(arg, "darkgreen") == 0) new_fg_color = COLOR_DARKGREEN;
     else if (kstrcmp(arg, "darkcyan") == 0) new_fg_color = COLOR_DARKCYAN;
     else if (kstrcmp(arg, "darkred") == 0) new_fg_color = COLOR_DARKRED;
     else if (kstrcmp(arg, "magenta") == 0) new_fg_color = COLOR_MAGENTA;
-    else if (kstrcmp(arg, "yellow") == 0) new_fg_color = COLOR_YELLOW;
+    else if (kstrcmp(arg, "brown") == 0) new_fg_color = COLOR_BROWN;
     else if (kstrcmp(arg, "lightgrey") == 0) new_fg_color = COLOR_LIGHT_GREY;
     else if (kstrcmp(arg, "darkgrey") == 0) new_fg_color = COLOR_DARK_GREY;
     else if (kstrcmp(arg, "blue") == 0) new_fg_color = COLOR_BLUE;
