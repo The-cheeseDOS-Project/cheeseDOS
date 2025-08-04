@@ -152,15 +152,18 @@ function all {
   printf "\nBuild completed, Floppy image is $FLOPPY\n" "$elapsed"
 }
 
+MEM=1M
+CPU=486
+
 function run {
-  qemu-system-i386 -fda $FLOPPY -m 1M -cpu 486
+  qemu-system-$MARCH -fda $FLOPPY -m $MEM -cpu $CPU
 }
 
 function write {
   lsblk
   read -p "Enter target device (e.g. fd0): " dev
   echo "Writing to /dev/$dev ..."
-  $SU dd if="$FLOPPY" of="/dev/$dev" bs=4M status=progress && sync
+  $SU dd if="$FLOPPY" of="/dev/$dev" bs=512 conv=notrunc status=progress && sync
   echo Done!
 }
 
