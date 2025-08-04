@@ -152,7 +152,7 @@ function all {
   echo "Cleaned up: "$BUILD_DIR""
   
   end_time=$(date +%s.%N)
-  elapsed=$(echo "$end_time - $start_time" | bc)
+  elapsed=$(echo "$end_time - $start_time" | awk '{printf "%.2f", $1}')
 
   printf "\nBuild completed in %.3f seconds, Floppy image is $FLOPPY\n" "$elapsed"
 }
