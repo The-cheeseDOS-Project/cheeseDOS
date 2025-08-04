@@ -25,6 +25,7 @@
 #include "banner.h"
 #include "rtc.h"
 #include "beep.h"
+#include "acpi.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -307,7 +308,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res");
 }
 
 static void ver(const char* args) {
@@ -339,6 +340,18 @@ static void bep(const char* args) {
     print("Playing 720hz for 360 cycles...");
     beep(720, 360);
     print(" Done!\n");
+}
+
+static void off(const char* args) {
+    (void)args;
+    print("Shutting down... Goodbye!");
+    shutdown();
+}
+
+static void res(const char* args) {
+    (void)args;
+    print("Rebooting... See you later!");
+    reboot();
 }
 
 static void ls(const char* args) {
@@ -661,6 +674,8 @@ static shell_command_t commands[] = {
     {"clr", clr},
     {"ban", ban},
     { "bep", bep },
+    { "off", off },
+    { "res", res },
     {NULL, NULL}
 };
 

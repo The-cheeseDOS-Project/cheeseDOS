@@ -32,6 +32,7 @@ BANNER_DIR="$SRC_DIR/banner"
 BOOT_DIR="$SRC_DIR/boot"
 CALC_DIR="$SRC_DIR/calc"
 DRIVERS_DIR="$SRC_DIR/drivers"
+ACPI_DIR="$DRIVERS_DIR/acpi"
 BEEP_DIR="$DRIVERS_DIR/beep"
 KEYBRD_DIR="$DRIVERS_DIR/keyboard"
 VGA_DIR="$DRIVERS_DIR/vga"
@@ -52,7 +53,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$CALC_DIR \
   -I$RTC_DIR \
   -I$BANNER_DIR \
-  -I$BEEP_DIR"
+  -I$BEEP_DIR \
+  -I$ACPI_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -65,6 +67,7 @@ OBJS=(
   "$BUILD_DIR/rtc.o"
   "$BUILD_DIR/banner.o"
   "$BUILD_DIR/beep.o"
+  "$BUILD_DIR/acpi.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -123,6 +126,8 @@ function all {
   echo Built rtc.o
   build_object "$BEEP_DIR/beep.c" "$BUILD_DIR/beep.o"
   echo Built beep.o
+  build_object "$ACPI_DIR/acpi.c" "$BUILD_DIR/acpi.o"
+  echo Built acpi.o
 
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
