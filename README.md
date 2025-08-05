@@ -19,13 +19,6 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 
 ![cheeseDOS on the Compaq Deskpro 386 (theoretically)](https://github.com/user-attachments/assets/0ea09c6f-7a9a-4148-b9c6-9d8251c6ec9b)
 
-## cheeseDOS Features
-
-- 512B cheeseFS RAM Disk
-- Run's on computers from 1986 (if they have a i386 class cpu) and onwards
-- Quite a bit of commands
-- AND MORE!
-
 ![`ban` command](https://github.com/user-attachments/assets/878da25a-20ca-4889-a173-5b3517f210c1)
 
 ## Getting Started
