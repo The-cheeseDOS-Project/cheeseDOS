@@ -46,3 +46,16 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - **Security Policy**: [SECURITY.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/SECURITY.md)
 
 Shout out to [rkapl](https://github.com/rkapl) for [cheeseLDR](https://github.com/The-cheeseDOS-Project/cheeseDOS/tree/main/src/boot)!
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⣶⣶⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣄⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⣤⣀⣀⣀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠋⣉⣠⡄⠀
+⠀⠀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⢉⣉⣤⣤⣶⣶⣿⣿⣿⣿⡇⠀
+⠀⠀⢀⣠⣾⡿⢋⣡⣤⣄⠉⢉⣁⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀
+⠀⠐⢋⣉⣠⠀⢾⣿⣿⡿⠃⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀
+⠀⣿⣿⣿⣿⣧⣄⣉⣁⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠉⠛⢿⣿⣿⡇⠀
+⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠾⡿⠇⣸⣿⣿⡇⠀
+⠀⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠛⠿⣿⣿⣿⣷⣦⣤⣾⡿⠿⠟⠃⠀
+⠀⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠈⠿⠛⠋⠉⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⡿⠿⠗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣀⣤⠾⠿⠛⠛⠉⠉
