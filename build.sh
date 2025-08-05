@@ -24,7 +24,7 @@ AS=as # Don't change!!
 LD=ld # Don't change!!!
 
 FLOPPY=cdos.img
-CDROM=cdos.iso
+CDROM=NULL
 ISO_ROOT=iso_root
 
 SRC_DIR=src
@@ -193,11 +193,11 @@ function all {
   echo
 
   echo -n "Assembling bootloader..."
-  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
+  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/1.44mb-floppy.o" "$BOOT_DIR/1.44mb-floppy.S"
   echo " Done!"
   
   echo -n "Linking bootloader..."
-  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
+  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/1.44mb-floppy.o"
   echo " Done!"
   
   echo -n "Converting boot.elf into boot.bin..."
