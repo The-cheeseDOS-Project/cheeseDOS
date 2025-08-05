@@ -42,6 +42,7 @@ SHELL_DIR="$SRC_DIR/shell"
 LIB_DIR="$SRC_DIR/libraries"
 STRING_DIR="$LIB_DIR/string"
 RTC_DIR="$SRC_DIR/rtc"
+TIMER_DIR="$SRC_DIR/timer"
 
 INCLUDES="-I$KERNEL_DIR \
   -I$SHELL_DIR \
@@ -54,7 +55,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$RTC_DIR \
   -I$BANNER_DIR \
   -I$BEEP_DIR \
-  -I$ACPI_DIR"
+  -I$ACPI_DIR \
+  -I$TIMER_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -68,6 +70,7 @@ OBJS=(
   "$BUILD_DIR/banner.o"
   "$BUILD_DIR/beep.o"
   "$BUILD_DIR/acpi.o"
+  "$BUILD_DIR/timer.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -128,6 +131,8 @@ function all {
   echo Built beep.o
   build_object "$ACPI_DIR/acpi.c" "$BUILD_DIR/acpi.o"
   echo Built acpi.o
+  build_object "$TIMER_DIR/timer.c" "$BUILD_DIR/timer.o"
+  echo Built timer.o
 
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"

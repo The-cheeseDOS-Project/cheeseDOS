@@ -17,6 +17,7 @@
  */
 
 #include <stdint.h>
+#include "timer.h"
 
 static inline void outb(uint16_t port, uint8_t val) {
     __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
@@ -28,8 +29,8 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-void beep(uint32_t frequency, uint32_t cycles) {
-    if (frequency < 20 || frequency > 20000 || cycles == 0) return;
+void beep(uint32_t frequency, uint32_t duration_ms) {
+    if (frequency < 20 || frequency > 20000 || duration_ms == 0) return;
 
     uint32_t divisor = 1193180 / frequency;
 
@@ -38,12 +39,11 @@ void beep(uint32_t frequency, uint32_t cycles) {
     outb(0x42, (divisor >> 8) & 0xFF);
 
     uint8_t val = inb(0x61);
-    if ((val & 0x03) != 0x03)
-        outb(0x61, val | 0x03);
+    outb(0x61, val | 0x03);
 
-    volatile uint32_t delay = cycles * (1193180 / frequency);
-    for (volatile uint32_t i = 0; i < delay; i++);
+    uint32_t start = timer_millis();
+    while ((timer_millis() - start) < duration_ms);
 
-    val = inb(0x61) & 0xFC;
-    outb(0x61, val);
+    val = inb(0x61);
+    outb(0x61, val & ~0x03);
 }

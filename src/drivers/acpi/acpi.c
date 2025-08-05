@@ -15,18 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 #include <stdint.h>
 #include <stddef.h>
 
-#define SLP_TYP (5 << 10)  
-#define SLP_EN  (1 << 13)  
+#define SLP_TYP (5 << 10)
+#define SLP_EN  (1 << 13)
 
 static inline void outw(uint16_t port, uint16_t val) {
-    __asm__ __volatile__("outw %0, %1" : : "a"(val), "Nd"(port));
+    __asm__ volatile ("outw %0, %1" : : "a"(val), "Nd"(port));
 }
 
-static uint16_t pm1a_cnt = 0;  
+static uint16_t pm1a_cnt = 0;
 
 struct RSDPDescriptor {
     char     Signature[8];
@@ -63,13 +63,13 @@ struct FADT {
     uint32_t PM1a_EVT_BLK;
     uint32_t PM1b_EVT_BLK;
     uint32_t PM1a_CNT_BLK;
-
 };
 
 int acpi_checksum(uint8_t* ptr, size_t len) {
     uint8_t sum = 0;
-    for (size_t i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++) {
         sum += ptr[i];
+    }
     return sum == 0;
 }
 
@@ -81,9 +81,9 @@ int find_acpi() {
 
             struct ACPISDTHeader* rsdt = (struct ACPISDTHeader*)(uintptr_t)rsdp->RsdtAddress;
             if (!__builtin_memcmp(rsdt->Signature, "RSDT", 4)) {
-                int entryCount = (rsdt->Length - sizeof(struct ACPISDTHeader)) / 4;
+                size_t entryCount = (rsdt->Length - sizeof(struct ACPISDTHeader)) / 4;
                 uint32_t* entries = (uint32_t*)((uintptr_t)rsdt + sizeof(struct ACPISDTHeader));
-                for (int i = 0; i < entryCount; i++) {
+                for (size_t i = 0; i < entryCount; i++) {
                     struct ACPISDTHeader* hdr = (struct ACPISDTHeader*)(uintptr_t)entries[i];
                     if (!__builtin_memcmp(hdr->Signature, "FACP", 4)) {
                         struct FADT* fadt = (struct FADT*)hdr;
@@ -98,22 +98,11 @@ int find_acpi() {
 }
 
 void shutdown() {
+    uint16_t ports[] = { 0xB004, 0x604, 0x4004, 0x600 };
+    uint16_t values[] = { 0x2000, 0x3400, 0x34 };
 
-    uint16_t ports[] = {
-        0xB004, 
-        0x604,  
-        0x4004, 
-        0x600   
-    };
-
-    uint16_t values[] = {
-        0x2000, 
-        0x3400, 
-        0x34    
-    };
-
-    for (int i = 0; i < sizeof(ports)/sizeof(ports[0]); i++) {
-        for (int j = 0; j < sizeof(values)/sizeof(values[0]); j++) {
+    for (size_t i = 0; i < sizeof(ports) / sizeof(ports[0]); i++) {
+        for (size_t j = 0; j < sizeof(values) / sizeof(values[0]); j++) {
             outw(ports[i], values[j]);
         }
     }
@@ -124,5 +113,5 @@ void shutdown() {
 }
 
 void reboot() {
-    outw(0x64, 0xFE);  
+    outw(0x64, 0xFE);
 }

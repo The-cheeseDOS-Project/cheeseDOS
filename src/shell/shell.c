@@ -27,6 +27,7 @@
 #include "beep.h"
 #include "acpi.h"
 #include "io.h"
+#include "timer.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -345,7 +346,7 @@ static void sum(const char* args) {
 }
 
 static void dly(const char* args) {
-    int cycles = 1000;
+    uint32_t ms = 1000;
 
     char buf[16] = {0};
     int i = 0;
@@ -355,27 +356,18 @@ static void dly(const char* args) {
         i++;
     }
 
-    print("Delaying for ");
-    print_uint((unsigned int)cycles);
-    print(" cycles...");
-
-    cycles = 0;
+    ms = 0;
     for (i = 0; buf[i]; ++i)
-        cycles = cycles * 10 + (buf[i] - '0');
+        ms = ms * 10 + (buf[i] - '0');
 
-    for (volatile int j = 0; j < cycles; ++j) {
-        __asm__ __volatile__("nop");
-    }
-    
+    timer_delay(ms);
+
     print(" Done!\n");
 }
 
+
 void spd(const char* args) {
     (void)args;
-
-    #define PIT_CMD   0x43
-    #define PIT_CH0   0x40
-    #define PIT_FREQ  1193182 // ~1.193182 MHz
 
     print("This is a W.I.P Debug tool. it's not very accurate. This is only really meant to see if a emulator is underclocking the CPU at all\n\n");
 
@@ -383,18 +375,7 @@ void spd(const char* args) {
     __asm__ __volatile__("rdtsc" : "=a"(start_lo), "=d"(start_hi));
     unsigned int start_tsc = start_lo;
 
-    uint16_t ticks = PIT_FREQ / 20;
-    outb(PIT_CMD, 0x34);
-    outb(PIT_CH0, ticks & 0xFF);
-    outb(PIT_CH0, ticks >> 8);
-
-    uint16_t count;
-    do {
-        outb(PIT_CMD, 0x00);
-        uint8_t lo = inb(PIT_CH0);
-        uint8_t hi = inb(PIT_CH0);
-        count = (hi << 8) | lo;
-    } while (count > 1);
+    timer_delay(50);
 
     unsigned int end_lo, end_hi;
     __asm__ __volatile__("rdtsc" : "=a"(end_lo), "=d"(end_hi));
@@ -408,11 +389,9 @@ void spd(const char* args) {
     print(" MHz\n");
 }
 
-
-
 static void bep(const char* args) {
     int hz = 720;
-    int cyc = 360;
+    int ms = 10;
 
     char num1[16] = {0};
     char num2[16] = {0};
@@ -432,20 +411,14 @@ static void bep(const char* args) {
     for (i = 0; num1[i] >= '0' && num1[i] <= '9'; ++i)
         hz = hz * 10 + (num1[i] - '0');
 
-    cyc = 0;
+    ms = 0;
     for (i = 0; num2[i] >= '0' && num2[i] <= '9'; ++i)
-        cyc = cyc * 10 + (num2[i] - '0');
+        ms = ms * 10 + (num2[i] - '0');
 
     if (hz == 0) hz = 720;
-    if (cyc == 0) cyc = 360;
+    if (ms == 0) ms = 360;
 
-    print("Playing ");
-    print_uint((unsigned int)hz);
-    print("hz for ");
-    print_uint((unsigned int)cyc);
-    print(" cycles...");
-    beep(hz, cyc);
-    print(" Done!\n");
+    beep(hz, ms);
 }
 
 static void off(const char* args) {
