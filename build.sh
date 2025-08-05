@@ -289,19 +289,19 @@ function deps {
   echo "You will need a working GCC, binutils, and a GRUB installation to use all features."
   if command -v apt &> /dev/null; then
     echo "Detected apt-based system. Installing dependencies..."
-    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc gcc-multilib binutils grub-pc-bin xorriso
+    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc binutils
   elif command -v dnf &> /dev/null; then
     echo "Detected dnf-based system. Installing dependencies..."
-    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc gcc-g++ gcc-toolset binutils grub2-efi-x64-cdboot.x86_64 grub2-pc-bin xorriso
+    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc binutils
   elif command -v zypper &> /dev/null; then
     echo "Detected SUSE-based system. Installing dependencies..."
-    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc gcc-32bit binutils grub2 grub2-x86_64-efi xorriso
+    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc binutils
   elif command -v pacman &> /dev/null; then
     echo "Detected Arch-based system. Installing dependencies..."
-    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc multilib-devel binutils grub xorriso
+    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc binutils
   elif command -v portage &> /dev/null; then
     echo "Detected Gentoo-based system. Installing dependencies..."
-    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils sys-boot/grub:2
+    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
   else
     echo "Your distro is not supported by cheeseDOS, please see: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
   fi
