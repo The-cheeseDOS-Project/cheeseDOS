@@ -3,7 +3,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Build][build-shield]][build-url]
-![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS)
+![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)
 
 [forks-shield]: https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge
 [forks-url]: https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members
