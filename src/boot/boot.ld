@@ -16,13 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.equ elf_phoff, 0x1C
-.equ elf_phnum, 0x2C
-.equ elf_entry, 0x18
+ENTRY(start)
 
-.equ elf_seg_type, 0x00
-.equ elf_seg_file_offset, 0x04
-.equ elf_seg_paddr, 0x0C
-.equ elf_seg_filesz, 0x10
-.equ elf_seg_memsz, 0x14
-.equ elf_seg_struct_size, 0x20
+MEMORY
+{
+  CODE (rwx)  : ORIGIN =  0x7c00, LENGTH = 512
+}
+
+SECTIONS
+{
+  . = ORIGIN(CODE);
+  .text : {
+    *(.text)
+  } > CODE
+
+  /DISCARD/ : {
+    *(.note.*)
+  }
+}

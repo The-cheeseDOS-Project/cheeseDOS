@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # cheeseDOS - My x86 DOS
 # Copyright (C) 2025  Connor Thomson
 #
@@ -22,6 +24,8 @@ AS=as # Don't change!!
 LD=ld # Don't change!!!
 
 FLOPPY=cdos.img
+CDROM=cdos.iso
+ISO_ROOT=iso_root
 
 SRC_DIR=src
 BUILD_DIR=build
@@ -138,18 +142,18 @@ function all {
   echo Built timer.o
   build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
   echo Built programs.o
-
+  
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
   echo Built banner.o
 
   echo
-  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/loader.o" "$BOOT_DIR/loader.S"
+  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
   echo Assembled cheeseLDR
-  $LD $LDFLAGS -T "$BOOT_DIR/loader.ld" -o "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.o"
-  echo Linked cheeseLDR
-  objcopy -O binary -j .text "$BUILD_DIR/loader.elf" "$BUILD_DIR/loader.bin"
-  echo "Converted loader.elf to loader.bin"
+  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
+  echo Linked bootloader
+  objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
+  echo "Converted boot.elf to boot.bin"
   echo
 
   $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
@@ -157,31 +161,56 @@ function all {
   strip -sv "$KERNEL"
   echo Stripped kernel
 
-  if test "${BUILD_FLOPPY:-1}" -eq 1; then
-    cat "$BUILD_DIR/loader.bin" "$KERNEL" > "$FLOPPY"
+ if test "${BUILD_FLOPPY:-1}" -eq 1; then
+    cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
     echo "Made $FLOPPY with kernel"
-    truncate "$FLOPPY" -s '1474560'
-    echo
-    echo "Added padding to $FLOPPY"  
+    truncate "$FLOPPY" -s '1474560' # Remove when autodetect disk geometry is added
+    echo "Added padding to $FLOPPY" # Remove when autodetect disk geometry is added
+ fi
+  
+  if test "${BUILD_CDROM:-1}" -eq 1; then
+    mkdir -p "$ISO_ROOT"
+    cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/kernel.elf"
+    cp "$BUILD_DIR/boot.bin" "$ISO_ROOT/boot.bin"
+    echo "Copied kernel and bootloader to ISO root"
+    xorriso -as mkisofs -o "$CDROM" \
+            -b boot.bin \
+            -no-emul-boot \
+            -boot-load-size 4 \
+            -input-charset utf-8 "$ISO_ROOT"
+    echo "Made $CDROM with custom bootloader"
   fi
 
   echo
-  rm -rf "$BUILD_DIR"
-  echo "Cleaned up: "$BUILD_DIR""
+  rm -rf "$BUILD_DIR" "$ISO_ROOT"
+  echo "Cleaned up: "$BUILD_DIR" "$ISO_ROOT""
   
-  printf "\nBuild completed, Floppy image is $FLOPPY\n" "$elapsed"
+  printf "\nBuild completed, floppy image is $FLOPPY, CD-ROM image is $CDROM\n"
 }
 
 MEM=1M
 CPU=486
 
 function run {
+  echo "Run with 'run-floppy' or 'run-cdrom' (run-cdrom is in very early works)"
+}
+
+function run-floppy {
   qemu-system-$MARCH \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
-  -fda $FLOPPY \
-  -m $MEM \
-  -cpu $CPU
+  -fda "$FLOPPY" \
+  -m "$MEM" \
+  -cpu "$CPU"
+}
+
+function run-cdrom {
+  qemu-system-$MARCH \
+  -audiodev pa,id=snd0 \
+  -machine pcspk-audiodev=snd0 \
+  -cdrom "$CDROM" \
+  -m "$MEM" \
+  -cpu "$CPU"
 }
 
 function write {
@@ -193,39 +222,41 @@ function write {
 }
 
 function deps {
+  echo "You will need a working GCC, binutils, and a GRUB installation to use all features."
   if command -v apt &> /dev/null; then
     echo "Detected apt-based system. Installing dependencies..."
-    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc gcc-multilib binutils
+    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc gcc-multilib binutils grub-pc-bin xorriso
   elif command -v dnf &> /dev/null; then
     echo "Detected dnf-based system. Installing dependencies..."
-    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc gcc-g++ gcc-toolset binutils
+    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc gcc-g++ gcc-toolset binutils grub2-efi-x64-cdboot.x86_64 grub2-pc-bin xorriso
   elif command -v zypper &> /dev/null; then
     echo "Detected SUSE-based system. Installing dependencies..."
-    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc gcc-32bit binutils
+    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc gcc-32bit binutils grub2 grub2-x86_64-efi xorriso
   elif command -v pacman &> /dev/null; then
     echo "Detected Arch-based system. Installing dependencies..."
-    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc multilib-devel binutils
+    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc multilib-devel binutils grub xorriso
   elif command -v portage &> /dev/null; then
     echo "Detected Gentoo-based system. Installing dependencies..."
-    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
+    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils sys-boot/grub:2
   else
     echo "Your distro is not supported by cheeseDOS, please see: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
   fi
 }
 
 function clean {
-  rm -rf "$BUILD_DIR" "$FLOPPY"
-  echo "Cleaned up: "$BUILD_DIR" "$FLOPPY""
+  rm -rf "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"
+  echo "Cleaned up: "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT""
 }
 
 case "$1" in
   "") all ;;
   all) all ;;
-  build) build ;;
   run) run ;;
+  run-floppy) run-floppy ;;
+  run-cdrom) run-cdrom ;;
   write) write ;;
   deps) deps ;;
   burn) burn ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|build|run|clean|deps}" ;;
+  *) echo "Usage: $0 {all|run-floppy|run-cdrom|write-floppy|clean|deps}" ;;
 esac
