@@ -259,7 +259,7 @@ function run-floppy {
   qemu-system-$MARCH \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
-  -fda "$FLOPPY" \
+  -drive format=raw,file="$FLOPPY",index=0,if=floppy \
   -m "$MEM" \
   -cpu "$CPU"
 }
