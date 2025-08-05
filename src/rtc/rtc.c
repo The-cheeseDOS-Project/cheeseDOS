@@ -18,6 +18,7 @@
 
 #include "rtc.h"
 #include "io.h"
+#include "stdbool.h"
 
 #define CMOS_ADDRESS      0x70
 #define CMOS_DATA         0x71
