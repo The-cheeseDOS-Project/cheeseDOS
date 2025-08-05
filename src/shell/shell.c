@@ -26,6 +26,7 @@
 #include "rtc.h"
 #include "beep.h"
 #include "acpi.h"
+#include "io.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -316,7 +317,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd.");
 }
 
 static void ver(const char* args) {
@@ -368,6 +369,46 @@ static void dly(const char* args) {
     
     print(" Done!\n");
 }
+
+void spd(const char* args) {
+    (void)args;
+
+    #define PIT_CMD   0x43
+    #define PIT_CH0   0x40
+    #define PIT_FREQ  1193182 // ~1.193182 MHz
+
+    print("This is a W.I.P Debug tool. it's not very accurate. This is only really meant to see if a emulator is underclocking the CPU at all\n\n");
+
+    unsigned int start_lo, start_hi;
+    __asm__ __volatile__("rdtsc" : "=a"(start_lo), "=d"(start_hi));
+    unsigned int start_tsc = start_lo;
+
+    uint16_t ticks = PIT_FREQ / 20;
+    outb(PIT_CMD, 0x34);
+    outb(PIT_CH0, ticks & 0xFF);
+    outb(PIT_CH0, ticks >> 8);
+
+    uint16_t count;
+    do {
+        outb(PIT_CMD, 0x00);
+        uint8_t lo = inb(PIT_CH0);
+        uint8_t hi = inb(PIT_CH0);
+        count = (hi << 8) | lo;
+    } while (count > 1);
+
+    unsigned int end_lo, end_hi;
+    __asm__ __volatile__("rdtsc" : "=a"(end_lo), "=d"(end_hi));
+    unsigned int end_tsc = end_lo;
+
+    unsigned int cycles = end_tsc - start_tsc;
+    unsigned int mhz = cycles / 50000;
+
+    print("~");
+    print_uint(mhz);
+    print(" MHz\n");
+}
+
+
 
 static void bep(const char* args) {
     int hz = 720;
@@ -742,6 +783,7 @@ static shell_command_t commands[] = {
     {"off", off },
     {"res", res },
     {"dly", dly },
+    {"spd", spd },
     {NULL, NULL}
 };
 
