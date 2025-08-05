@@ -46,13 +46,15 @@ RAMDISK_DIR="$SRC_DIR/ramdisk"
 SHELL_DIR="$SRC_DIR/shell"
 PROGRAMS_DIR="$SRC_DIR/programs"
 LIB_DIR="$SRC_DIR/libraries"
+STDBOOL_DIR="$LIB_DIR/stdbool"
 STDDEF_DIR="$LIB_DIR/stddef"
 STDINT_DIR="$LIB_DIR/stdint"
 STRING_DIR="$LIB_DIR/string"
 RTC_DIR="$SRC_DIR/rtc"
 TIMER_DIR="$SRC_DIR/timer"
 
-INCLUDES="-I$KERNEL_DIR \
+INCLUDES=" \
+  -I$KERNEL_DIR \
   -I$SHELL_DIR \
   -I$RAMDISK_DIR \
   -I$DRIVERS_DIR \
@@ -68,7 +70,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$PROGRAMS_DIR \
   -I$STDDEF_DIR \
   -I$STDINT_DIR \
-  -I$UART_DIR"
+  -I$UART_DIR \
+  -I$STDBOOL_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -104,6 +107,7 @@ CFLAGS="-m$BITS \
         -O$OPT \
         $FLAGS \
         $INCLUDES"
+
 LDFLAGS="-m \
          elf_$MARCH \
          -z \

@@ -1,8 +1,26 @@
+/*
+ * cheeseDOS - My x86 DOS
+ * Copyright (C) 2025  Connor Thomson
+ *
+ * This program is free software: you can DARKREDistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "vga.h"
 #include "stdint.h"
-#include "stdio.h"
+#include "stddef.h"
 
-#define SERIAL_COM1_BASE 0x3F8 
+#define SERIAL_COM1_BASE 0x3F8
 
 typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
@@ -30,12 +48,12 @@ void serial_putchar(char c) {
 
 void sprint(const char* str) {
     while (*str) {
-        if (*str == '\n') serial_putchar('\r'); 
+        if (*str == '\n') serial_putchar('\r');
         serial_putchar(*str++);
     }
 }
 
-int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
+int vsnprintf(char *buffer, size_t size, const char *fmt, va_list) {
     size_t i;
     for (i = 0; i < size - 1 && fmt[i]; i++) {
         buffer[i] = fmt[i];
