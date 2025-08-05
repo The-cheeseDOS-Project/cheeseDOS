@@ -289,9 +289,6 @@ static void kyc(const char*) {
     // Print © Notice
     print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Charlie Schmidt, or any of his subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
 
-    beep(262, 120);  // REST
-    beep(262, 120);  // REST
-
     beep(262, 375);  // C4
     beep(330, 375);  // E4
     beep(392, 375);  // G4
