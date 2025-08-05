@@ -363,7 +363,6 @@ static void dly(const char* args) {
     timer_delay(ms);
 }
 
-
 void spd(const char* args) {
     (void)args;
 
