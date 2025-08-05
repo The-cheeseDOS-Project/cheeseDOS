@@ -86,4 +86,4 @@ jobs:
         run: |
           TAG="${{ steps.gentag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
-          gh release create "$TAG" cdos.img --title "$TITLE" --notes "Rolling alpha cheeseDOS builds"
+          gh release create "$TAG" cdos.img --title "$TITLE" --notes-file .github/release.md
