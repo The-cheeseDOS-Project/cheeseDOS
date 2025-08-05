@@ -241,12 +241,23 @@ void print_int(int n) {
     print_uint((unsigned int)n);
 }
 
-static void ban(const char* args) {
-    (void)args;
-    clear_screen();
+// TODO: Fix the weird stray '*'
+static void ban(const char*) {
+//   clear_screen();
     set_cursor_pos(0);
     print_ansi((const char*)_binary_src_banner_banner_txt_start);
     set_text_color(default_text_fg_color, default_text_bg_color);
+//    int key;
+//    print("\nPress 'e' to exit to shell");
+//    int keyboard_getchar(void);
+//
+//    while (1) {
+//        key = keyboard_getchar();
+//        if (key == 'e' || key == 'E') {
+//            clear_screen();
+//            break;
+//        }
+//    }
 }
 
 typedef void (*command_func_t)(const char* args);
