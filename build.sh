@@ -225,33 +225,33 @@ function all {
     truncate "$FLOPPY" -s '1474560' # Remove when autodetect disk geometry is added
     echo " Done!" # Remove when autodetect disk geometry is added
  fi
-  
-  if test "${BUILD_CDROM:-1}" -eq 1; then
-    echo
-    
-    echo -n "Making directory $ISO_ROOT..."
-    mkdir -p "$ISO_ROOT"
-    echo " Done!"
-
-    echo -n "Copying kernel to $ISO_ROOT..."
-    cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/kernel.elf"
-    echo " Done!"
-
-    echo -n "Copying bootloader to $ISO_ROOT..."
-    cp "$BUILD_DIR/boot.bin" "$ISO_ROOT/boot.bin"
-    echo " Done!"
-
-    echo -n "Building $CDROM..."
-        
-    xorriso -as mkisofs -o "$CDROM" \
-            -b boot.bin \
-            -no-emul-boot \
-            -boot-load-size 4 \
-            -input-charset utf-8 "$ISO_ROOT" \
-            > /dev/null 2>&1
-    
-    echo " Done!"
-  fi
+# Comment out the sanity loosing stuffs for now.  
+#  if test "${BUILD_CDROM:-1}" -eq 1; then
+#    echo
+#    
+#    echo -n "Making directory $ISO_ROOT..."
+#    mkdir -p "$ISO_ROOT"
+#    echo " Done!"
+#
+#    echo -n "Copying kernel to $ISO_ROOT..."
+#    cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/kernel.elf"
+#    echo " Done!"
+#
+#    echo -n "Copying bootloader to $ISO_ROOT..."
+#    cp "$BUILD_DIR/boot.bin" "$ISO_ROOT/boot.bin"
+#    echo " Done!"
+#
+#    echo -n "Building $CDROM..."
+#        
+#    xorriso -as mkisofs -o "$CDROM" \
+#            -b boot.bin \
+#            -no-emul-boot \
+#            -boot-load-size 4 \
+#            -input-charset utf-8 "$ISO_ROOT" \
+#            > /dev/null 2>&1
+#    
+#    echo " Done!"
+#  fi
   
   echo
 
