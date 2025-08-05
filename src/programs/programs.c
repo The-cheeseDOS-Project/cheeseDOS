@@ -285,83 +285,89 @@ static void sum(const char* args) {
     calc_command(args ? args : "");
 }
 
-static void kyc(const char*) {
-    // Print © Notice
-    print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Charlie Schmidt, or any of his subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
-
-    beep(262, 375);  // C4
-    beep(330, 375);  // E4
-    beep(392, 375);  // G4
-    beep(330, 375);  // E4
-
-    beep(262, 375);  // C4
-    beep(330, 180);  // E4 (eighth)
-    beep(392, 560);  // G4 (dotted quarter)
-    beep(330, 375);  // E4
-
-    beep(220, 375);  // A3
-    beep(262, 375);  // C4
-    beep(330, 375);  // E4
-    beep(262, 375);  // C4
-
-    beep(220, 375);  // A3
-    beep(262, 180);  // C4 (eighth)
-    beep(330, 560);  // E4 (dotted)
-    beep(262, 375);  // C4
-
-    beep(196, 375);  // G3
-    beep(247, 375);  // B3
-    beep(294, 375);  // D4
-    beep(247, 375);  // B3
-
-    beep(196, 375);  // G3
-    beep(247, 180);  // B3 (eighth)
-    beep(294, 560);  // D4 (dotted)
-    beep(247, 375);  // B3
-
-    // Mid-section loop
-    beep(196, 560);  // G3 (dotted)
-    beep(196, 180);  // G3 (eighth)
-    beep(196, 375);  // G3
-
-    beep(196, 375);
-    beep(196, 375);
-    beep(196, 180);  // G3 (eighth)
-    beep(196, 375);  // G3
-
-    beep(262, 375);  // C4
-    beep(330, 375);  // E4
-    beep(392, 375);  // G4
-    beep(330, 375);  // E4
-
-    beep(262, 375);  // C4
-    beep(330, 180);  // E4 (eighth)
-    beep(392, 560);  // G4 (dotted)
-    beep(330, 375);  // E4
-
-    beep(220, 375);  // A3
-    beep(262, 375);  // C4
-    beep(330, 375);  // E4
-    beep(262, 375);  // C4
-
-    beep(220, 375);  // A3
-    beep(262, 180);  // C4 (eighth)
-    beep(330, 560);  // E4 (dotted)
-    beep(262, 375);  // C4
-
-    beep(196, 375);  // G3
-    beep(247, 375);  // B3
-    beep(294, 375);  // D4
-    beep(247, 375);  // B3
-
-    beep(196, 375);  // G3
-    beep(247, 180);  // B3 (eighth)
-    beep(294, 560);  // D4 (dotted)
-    beep(247, 375);  // B3
-
-    beep(196, 1125); // G3 — finale
+static void mus(const char* song) {
+    if (kstrcmp(song, "keyboard-cat") == 0) {
+            print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Charlie Schmidt, or any of there subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
+            beep(262, 375);  
+            beep(330, 375);  
+            beep(392, 375);  
+            beep(330, 375);  
+            beep(262, 375);  
+            beep(330, 180);  
+            beep(392, 560);  
+            beep(330, 375);  
+            beep(220, 375);  
+            beep(262, 375);  
+            beep(330, 375);  
+            beep(262, 375);  
+            beep(220, 375);  
+            beep(262, 180);  
+            beep(330, 560);  
+            beep(262, 375);  
+            beep(196, 375);  
+            beep(247, 375);  
+            beep(294, 375);  
+            beep(247, 375);  
+            beep(196, 375);  
+            beep(247, 180);  
+            beep(294, 560);  
+            beep(247, 375);  
+            beep(196, 560);  
+            beep(196, 180);  
+            beep(196, 375);  
+            beep(196, 375);
+            beep(196, 375);
+            beep(196, 180);  
+            beep(196, 375);  
+            beep(262, 375);  
+            beep(330, 375);  
+            beep(392, 375);  
+            beep(330, 375);  
+            beep(262, 375);  
+            beep(330, 180);  
+            beep(392, 560);  
+            beep(330, 375);  
+            beep(220, 375);  
+            beep(262, 375);  
+            beep(330, 375);  
+            beep(262, 375);  
+            beep(220, 375);  
+            beep(262, 180);  
+            beep(330, 560);  
+            beep(262, 375);  
+            beep(196, 375);  
+            beep(247, 375);  
+            beep(294, 375);  
+            beep(247, 375);  
+            beep(196, 375);  
+            beep(247, 180);  
+            beep(294, 560);  
+            beep(247, 375);  
+            beep(196, 1125); 
+    } 
+    
+    else if (kstrcmp(song, "nokia") == 0) {
+        print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with NOKIA Corporation, or any of there subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
+            for (int repeat = 0; repeat < 3; repeat++) {
+                beep(659, 333);  
+                beep(587, 333);  
+                beep(370, 500);  
+                beep(415, 500);  
+                beep(554, 333);  
+                beep(494, 333);  
+                beep(294, 500);  
+                beep(330, 500);  
+                beep(494, 333);  
+                beep(440, 333);  
+                beep(262, 500);  
+                beep(330, 500);  
+                beep(440, 1000); 
+                timer_delay(800);
+            }
+        } 
+        else { print("PC Speaker Music player:\nkeyboard-cat\nnokia\n");
+    }
 }
-
 
 static void dly(const char* args) {
     uint32_t ms = 1000;
@@ -825,7 +831,7 @@ static shell_command_t commands[] = {
     {"dly", dly },
     {"spd", spd },
     {"run", run_script},
-    {"kyc", kyc},
+    {"mus", mus},
     {NULL, NULL}
 };
 
