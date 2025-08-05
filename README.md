@@ -45,7 +45,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - **GPL v3 Licese**: [LICENSE](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/LICENSE)
 - **Security Policy**: [SECURITY.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/SECURITY.md)
 
-Shout out to [rkapl](https://github.com/rkapl) for [cheeseLDR](https://github.com/The-cheeseDOS-Project/cheeseDOS/tree/main/src/boot)!
+Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
 
 ```
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⣶⣶⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀
