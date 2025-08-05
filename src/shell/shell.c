@@ -361,8 +361,6 @@ static void dly(const char* args) {
         ms = ms * 10 + (buf[i] - '0');
 
     timer_delay(ms);
-
-    print(" Done!\n");
 }
 
 
