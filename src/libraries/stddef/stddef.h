@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+ 
+#ifndef CHEESEDOS_STDDEF_H
+#define CHEESEDOS_STDDEF_H
 
-#ifndef BANNER_H
-#define BANNER_H
+#define NULL ((void*)0)
 
-#include "stdint.h"
+typedef unsigned int size_t;
+typedef int ptrdiff_t;
 
-extern const uint8_t _binary_src_banner_banner_txt_start[];
-extern const uint8_t _binary_src_banner_banner_txt_end[];
-extern const uint32_t _binary_src_banner_banner_txt_size;
+#define offsetof(type, member) ((size_t)&(((type *)0)->member))
 
 #endif

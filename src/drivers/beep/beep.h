@@ -19,7 +19,7 @@
 #ifndef BEEP_H
 #define BEEP_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 void beep(uint32_t frequency, uint32_t cycles);
 

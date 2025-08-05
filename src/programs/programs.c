@@ -28,8 +28,8 @@
 #include "io.h"
 #include "timer.h"
 #include "shell.h"
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
 static uint32_t current_dir_inode_no = 0;
 static uint8_t default_text_fg_color = COLOR_WHITE;

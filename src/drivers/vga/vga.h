@@ -19,7 +19,7 @@
 #ifndef VGA_H
 #define VGA_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define COLOR_BLACK         0x0
 #define COLOR_DARKBLUE      0x1

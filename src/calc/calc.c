@@ -19,7 +19,7 @@
 #include "calc.h"
 #include "string.h"
 #include "vga.h"
-#include <stdint.h>
+#include "stdint.h"
 
 #define MAX_DIGITS 128
 

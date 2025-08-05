@@ -19,8 +19,8 @@
 #ifndef RAMDISK_H
 #define RAMDISK_H
 
-#include <stdint.h>
-#include <stddef.h>
+#include "stdint.h"
+#include "stddef.h"
 
 #define RAMDISK_FILENAME_MAX 32
 #define RAMDISK_DATA_SIZE_BYTES 48

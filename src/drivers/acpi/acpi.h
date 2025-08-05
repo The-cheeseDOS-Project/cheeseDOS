@@ -19,7 +19,7 @@
 #ifndef CHEESEDOS_ACPI_H
 #define CHEESEDOS_ACPI_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 void shutdown(void);
 void reboot(void);

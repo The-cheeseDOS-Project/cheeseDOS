@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
+#include "stdint.h"
 #include "timer.h"
 
 static inline void outb(uint16_t port, uint8_t val) {

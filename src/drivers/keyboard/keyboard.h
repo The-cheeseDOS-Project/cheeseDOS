@@ -19,7 +19,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define KEY_NULL         ((int)0x00)
 #define KEY_BACKSPACE    ((int)'\b')

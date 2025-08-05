@@ -22,8 +22,8 @@
 #include "string.h"
 #include "programs.h"
 #include "banner.h"
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
 #define INPUT_BUF_SIZE 256
 #define HISTORY_SIZE 32

@@ -19,7 +19,7 @@
 #ifndef RTC_H
 #define RTC_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 typedef struct {
     uint16_t year;
