@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef PROGRAMS_H
+#define PROGRAMS_H
 
-void shell_run();
-void print(const char* str);
-void shell_execute(const char* cmd);
+void execute_command(const char* command, const char* args);
+void print_int(int n);
+void print_ansi(const char* ansi_str);
 
 #endif
