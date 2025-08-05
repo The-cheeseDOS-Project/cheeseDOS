@@ -1,11 +1,11 @@
 ## Thank you for visting the cheeseDOS GitHub page!
 
 ![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)
+[![Repo Size](https://img.shields.io/github/repo-size/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS)
 [![Last Commit](https://img.shields.io/github/last-commit/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/commits/main)
 [![Open Issues](https://img.shields.io/github/issues/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/issues)
 [![Open PRs](https://img.shields.io/github/issues-pr/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/pulls)
 [![Contributors](https://img.shields.io/github/contributors/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/graphs/contributors)
-[![Repo Size](https://img.shields.io/github/repo-size/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS)
 [![Stargazers](https://img.shields.io/github/stars/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/stargazers)
 [![Forks](https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members)
 [![Build](https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/release.yml?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/actions)
