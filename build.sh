@@ -39,6 +39,7 @@ VGA_DIR="$DRIVERS_DIR/vga"
 KERNEL_DIR="$SRC_DIR/kernel"
 RAMDISK_DIR="$SRC_DIR/ramdisk"
 SHELL_DIR="$SRC_DIR/shell"
+PROGRAMS_DIR="$SRC_DIR/programs"
 LIB_DIR="$SRC_DIR/libraries"
 STRING_DIR="$LIB_DIR/string"
 RTC_DIR="$SRC_DIR/rtc"
@@ -56,7 +57,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$BANNER_DIR \
   -I$BEEP_DIR \
   -I$ACPI_DIR \
-  -I$TIMER_DIR"
+  -I$TIMER_DIR \
+  -I$PROGRAMS_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -71,6 +73,7 @@ OBJS=(
   "$BUILD_DIR/beep.o"
   "$BUILD_DIR/acpi.o"
   "$BUILD_DIR/timer.o"
+  "$BUILD_DIR/programs.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -133,6 +136,8 @@ function all {
   echo Built acpi.o
   build_object "$TIMER_DIR/timer.c" "$BUILD_DIR/timer.o"
   echo Built timer.o
+  build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  echo Built programs.o
 
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
