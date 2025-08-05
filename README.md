@@ -1,6 +1,6 @@
 ## Thank you for visting the cheeseDOS GitHub page!
 
-![Forks](https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members)
+[![Forks](https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members)
 [![Stargazers](https://img.shields.io/github/stars/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/stargazers)
 [![Build](https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/release.yml?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/actions)
 ![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)
