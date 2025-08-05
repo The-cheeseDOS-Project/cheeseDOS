@@ -285,6 +285,87 @@ static void sum(const char* args) {
     calc_command(args ? args : "");
 }
 
+static void kyc(const char*) {
+    // Print © Notice
+    print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Charlie Schmidt, or any of his subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
+
+    beep(262, 120);  // REST
+    beep(262, 120);  // REST
+
+    beep(262, 375);  // C4
+    beep(330, 375);  // E4
+    beep(392, 375);  // G4
+    beep(330, 375);  // E4
+
+    beep(262, 375);  // C4
+    beep(330, 180);  // E4 (eighth)
+    beep(392, 560);  // G4 (dotted quarter)
+    beep(330, 375);  // E4
+
+    beep(220, 375);  // A3
+    beep(262, 375);  // C4
+    beep(330, 375);  // E4
+    beep(262, 375);  // C4
+
+    beep(220, 375);  // A3
+    beep(262, 180);  // C4 (eighth)
+    beep(330, 560);  // E4 (dotted)
+    beep(262, 375);  // C4
+
+    beep(196, 375);  // G3
+    beep(247, 375);  // B3
+    beep(294, 375);  // D4
+    beep(247, 375);  // B3
+
+    beep(196, 375);  // G3
+    beep(247, 180);  // B3 (eighth)
+    beep(294, 560);  // D4 (dotted)
+    beep(247, 375);  // B3
+
+    // Mid-section loop
+    beep(196, 560);  // G3 (dotted)
+    beep(196, 180);  // G3 (eighth)
+    beep(196, 375);  // G3
+
+    beep(196, 375);
+    beep(196, 375);
+    beep(196, 180);  // G3 (eighth)
+    beep(196, 375);  // G3
+
+    beep(262, 375);  // C4
+    beep(330, 375);  // E4
+    beep(392, 375);  // G4
+    beep(330, 375);  // E4
+
+    beep(262, 375);  // C4
+    beep(330, 180);  // E4 (eighth)
+    beep(392, 560);  // G4 (dotted)
+    beep(330, 375);  // E4
+
+    beep(220, 375);  // A3
+    beep(262, 375);  // C4
+    beep(330, 375);  // E4
+    beep(262, 375);  // C4
+
+    beep(220, 375);  // A3
+    beep(262, 180);  // C4 (eighth)
+    beep(330, 560);  // E4 (dotted)
+    beep(262, 375);  // C4
+
+    beep(196, 375);  // G3
+    beep(247, 375);  // B3
+    beep(294, 375);  // D4
+    beep(247, 375);  // B3
+
+    beep(196, 375);  // G3
+    beep(247, 180);  // B3 (eighth)
+    beep(294, 560);  // D4 (dotted)
+    beep(247, 375);  // B3
+
+    beep(196, 1125); // G3 — finale
+}
+
+
 static void dly(const char* args) {
     uint32_t ms = 1000;
 
@@ -747,6 +828,7 @@ static shell_command_t commands[] = {
     {"dly", dly },
     {"spd", spd },
     {"run", run_script},
+    {"kyc", kyc},
     {NULL, NULL}
 };
 
