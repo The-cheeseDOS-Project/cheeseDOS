@@ -39,6 +39,7 @@ DRIVERS_DIR="$SRC_DIR/drivers"
 ACPI_DIR="$DRIVERS_DIR/acpi"
 BEEP_DIR="$DRIVERS_DIR/beep"
 KEYBRD_DIR="$DRIVERS_DIR/keyboard"
+UART_DIR="$DRIVERS_DIR/serial"
 VGA_DIR="$DRIVERS_DIR/vga"
 KERNEL_DIR="$SRC_DIR/kernel"
 RAMDISK_DIR="$SRC_DIR/ramdisk"
@@ -66,7 +67,8 @@ INCLUDES="-I$KERNEL_DIR \
   -I$TIMER_DIR \
   -I$PROGRAMS_DIR \
   -I$STDDEF_DIR \
-  -I$STDINT_DIR"
+  -I$STDINT_DIR \
+  -I$UART_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -82,6 +84,7 @@ OBJS=(
   "$BUILD_DIR/acpi.o"
   "$BUILD_DIR/timer.o"
   "$BUILD_DIR/programs.o"
+  "$BUILD_DIR/serial.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -171,6 +174,10 @@ function all {
 
   echo -n "Building programs.o..."
   build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  echo " Done!"
+
+  echo -n "Building serial.o..."
+  build_object "$UART_DIR/serial.c" "$BUILD_DIR/serial.o"
   echo " Done!"
   
   echo -n "Building banner.o..."
@@ -263,6 +270,7 @@ function run-floppy {
   qemu-system-$MARCH \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
+  -serial stdio \
   -drive format=raw,file="$FLOPPY",index=0,if=floppy \
   -m "$MEM" \
   -cpu "$CPU"

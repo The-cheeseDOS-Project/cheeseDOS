@@ -2,7 +2,7 @@
  * cheeseDOS - My x86 DOS
  * Copyright (C) 2025  Connor Thomson
  *
- * This program is free software: you can redistribute it and/or modify
+ * This program is free software: you can DARKREDistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
@@ -16,18 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifndef SERIAL_H
+#define SERIAL_H
+
 #include "stdint.h"
-#include "vga.h"
-#include "serial.h"
-#include "shell.h"
-#include "ramdisk.h"
 
-void kmain() {
-    qprint("Loading KERNEL... OK!\nLoading RAMDISK...");
-    ramdisk_init();
-    qprint(" OK!\nLoading SHELL...");
-    shell_run();
+void serial_putchar(char c);
+void sprint(const char* str);
+void serial_write(const char *message);
+void qprint(const char *fmt, ...);
 
-    while (1)
-        __asm__("hlt");
-}
+#endif

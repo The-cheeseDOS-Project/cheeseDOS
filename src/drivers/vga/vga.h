@@ -40,7 +40,7 @@
 
 #define VGA_COLOR(fg, bg) ((bg << 4) | (fg & 0x0F))
 
-void putchar(char c);
+void vga_putchar(char c);
 void print(const char* str);
 void clear_screen();
 void backspace();
@@ -51,4 +51,4 @@ int get_screen_width();
 int get_screen_height();
 void vga_clear_chars(int start_pos, int count);
 
-#endif 
+#endif

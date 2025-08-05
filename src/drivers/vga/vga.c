@@ -72,7 +72,7 @@ void scroll_screen() {
     }
 }
 
-void putchar(char c) {
+void vga_putchar(char c) {
     uint8_t color_byte = get_vga_color();
     int current_linear_pos;
 
@@ -107,7 +107,7 @@ void putchar(char c) {
 }
 
 void print(const char* str) {
-    while (*str) putchar(*str++);
+    while (*str) vga_putchar(*str++);
 }
 
 void clear_screen() {
@@ -121,7 +121,7 @@ void clear_screen() {
 }
 
 void backspace() {
-    putchar('\b');
+    vga_putchar('\b');
 }
 
 int get_cursor() {

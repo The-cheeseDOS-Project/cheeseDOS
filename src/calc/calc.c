@@ -80,7 +80,7 @@ static void big32_print(const big32_t* num) {
     char buf[MAX_DIGITS * 10];
     int idx = 0;
     if (tmp.size == 0 || (tmp.size == 1 && tmp.digits[0] == 0)) {
-        putchar('0');
+        vga_putchar('0');
         print("\n");
         return;
     }
@@ -94,8 +94,8 @@ static void big32_print(const big32_t* num) {
         buf[idx++] = '0' + rem;
         while (tmp.size > 0 && tmp.digits[tmp.size - 1] == 0) tmp.size--;
     }
-    if (num->sign == -1) putchar('-');
-    for (int i = idx - 1; i >= 0; i--) putchar(buf[i]);
+    if (num->sign == -1) vga_putchar('-');
+    for (int i = idx - 1; i >= 0; i--) vga_putchar(buf[i]);
     print("\n");
 }
 

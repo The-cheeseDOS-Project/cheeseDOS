@@ -22,6 +22,7 @@
 #include "string.h"
 #include "programs.h"
 #include "banner.h"
+#include "serial.h"
 #include "stddef.h"
 #include "stdint.h"
 
@@ -101,7 +102,7 @@ void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
-    print(" Done!\n\n");
+    qprint(" OK!\n\n");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
     while (1) {
@@ -158,11 +159,11 @@ void shell_run() {
         }
         if (c == KEY_ENTER) {
             input[idx] = '\0';
-            putchar('\n');
+            vga_putchar('\n');
             add_history(input);
             shell_execute(input);
             if (get_cursor() % get_screen_width() != 0) {
-                putchar('\n');
+                vga_putchar('\n');
             }
             idx = 0;
             cursor_index = 0;
