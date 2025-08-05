@@ -9,7 +9,7 @@
 [forks-url]: https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members
 [stars-shield]: https://img.shields.io/github/stars/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge
 [stars-url]: https://github.com/The-cheeseDOS-Project/cheeseDOS/stargazers
-[build-shield]: https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/ci.yml?style=for-the-badge
+[build-shield]: https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/release.yml?style=for-the-badge
 [build-url]: https://github.com/The-cheeseDOS-Project/cheeseDOS/actions
 [loc-shield]: https://img.shields.io/tokei/lines/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge
 [loc-url]: https://github.com/The-cheeseDOS-Project/cheeseDOS
