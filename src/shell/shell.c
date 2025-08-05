@@ -316,7 +316,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly.");
 }
 
 static void ver(const char* args) {
@@ -341,6 +341,32 @@ static void say(const char* args) {
 
 static void sum(const char* args) {
     calc_command(args ? args : "");
+}
+
+static void dly(const char* args) {
+    int cycles = 1000;
+
+    char buf[16] = {0};
+    int i = 0;
+
+    while (args[i] && i < 15 && args[i] >= '0' && args[i] <= '9') {
+        buf[i] = args[i];
+        i++;
+    }
+
+    print("Delaying for ");
+    print_uint((unsigned int)cycles);
+    print(" cycles...");
+
+    cycles = 0;
+    for (i = 0; buf[i]; ++i)
+        cycles = cycles * 10 + (buf[i] - '0');
+
+    for (volatile int j = 0; j < cycles; ++j) {
+        __asm__ __volatile__("nop");
+    }
+    
+    print(" Done!\n");
 }
 
 static void bep(const char* args) {
@@ -712,9 +738,10 @@ static shell_command_t commands[] = {
     {"rtc", rtc},
     {"clr", clr},
     {"ban", ban},
-    { "bep", bep },
-    { "off", off },
-    { "res", res },
+    {"bep", bep },
+    {"off", off },
+    {"res", res },
+    {"dly", dly },
     {NULL, NULL}
 };
 
