@@ -96,7 +96,8 @@ FLAGS="-ffreestanding \
        -Wextra \
        -fno-stack-protector \
        -fno-builtin-strcpy \
-       -fno-builtin-strncpy"
+       -fno-builtin-strncpy \
+       -nostdinc"
 
 CFLAGS="-m$BITS \
         -march=$MARCH \
