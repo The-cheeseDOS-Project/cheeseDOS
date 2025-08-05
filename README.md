@@ -17,7 +17,7 @@
 
 cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live CLI based DOS like OS that loads into RAM.
 
-![cheeseDOS on the Compaq Deskpro 386 (theoretically)](https://github.com/user-attachments/assets/0ea09c6f-7a9a-4148-b9c6-9d8251c6ec9b)
+![cheeseDOS on the Compaq Deskpro 386 (theoretically)](https://github.com/user-attachments/assets/f704054b-b440-4bc9-8b53-edbb374194fe)
 
 ![`ban` command](https://github.com/user-attachments/assets/878da25a-20ca-4889-a173-5b3517f210c1)
 
