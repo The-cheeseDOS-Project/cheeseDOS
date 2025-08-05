@@ -16,8 +16,7 @@
 
 *.o
 kernel.elf
-/*.img
-/*.iso
+cdos.img
 /build/
 *~
 *.swp
@@ -37,3 +36,4 @@ notes*
 todo*
 NOTES*
 TODO*
+cdos.iso

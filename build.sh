@@ -114,78 +114,138 @@ function all {
   echo
 
   clean
+  
+  echo -n "Making directory: $BUILD_DIR..."
   mkdir -p "$BUILD_DIR"
-  echo Made directory: "$BUILD_DIR"
+  echo " Done!"
+
   echo
 
+  echo -n "Building kernel.o..."
   build_object "$KERNEL_DIR/kernel.c" "$BUILD_DIR/kernel.o"
-  echo Built kernel.o
+  echo " Done!"
+
+  echo -n "Building shell.o..."
   build_object "$SHELL_DIR/shell.c" "$BUILD_DIR/shell.o"
-  echo Built shell.o
+  echo " Done!"
+
+  echo -n "Building vga.o..."
   build_object "$VGA_DIR/vga.c" "$BUILD_DIR/vga.o"
-  echo Built vga.o
+  echo " Done!"
+
+  echo -n "Building keyboard.o..."
   build_object "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
-  echo Built keyboard.o
+  echo " Done!"
+
+  echo -n "Building ramdisk.o..."
   build_object "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
-  echo Built ramdisk.o
+  echo " Done!"
+
+  echo -n "Building calc.o..."
   build_object "$CALC_DIR/calc.c" "$BUILD_DIR/calc.o"
-  echo Built calc.o
+  echo " Done!"
+
+  echo -n "Building string.o..."
   build_object "$STRING_DIR/string.c" "$BUILD_DIR/string.o"
-  echo Built string.o
+  echo " Done!"
+
+  echo -n "Building rtc.o..."
   build_object "$RTC_DIR/rtc.c" "$BUILD_DIR/rtc.o"
-  echo Built rtc.o
+  echo " Done!"
+
+  echo -n "Building beep.o..."
   build_object "$BEEP_DIR/beep.c" "$BUILD_DIR/beep.o"
-  echo Built beep.o
+  echo " Done!"
+
+  echo -n "Building acpi.o..."
   build_object "$ACPI_DIR/acpi.c" "$BUILD_DIR/acpi.o"
-  echo Built acpi.o
+  echo " Done!"
+
+  echo -n "Building timer.o..."
   build_object "$TIMER_DIR/timer.c" "$BUILD_DIR/timer.o"
-  echo Built timer.o
+  echo " Done!"
+
+  echo -n "Building programs.o..."
   build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  echo Built programs.o
+  echo " Done!"
   
+  echo -n "Building banner.o..."
   objcopy -I binary -O elf32-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
-  echo Built banner.o
+  echo " Done!"
 
   echo
+
+  echo -n "Assembling bootloader..."
   $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
-  echo Assembled cheeseLDR
+  echo " Done!"
+  
+  echo -n "Linking bootloader..."
   $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
-  echo Linked bootloader
+  echo " Done!"
+  
+  echo -n "Converting boot.elf into boot.bin..."
   objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
-  echo "Converted boot.elf to boot.bin"
+  echo " Done!"
+  
   echo
 
+  echo -n "Linking kernel..."
   $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
-  echo Linked kernel
-  strip -sv "$KERNEL"
-  echo Stripped kernel
+  echo " Done!"
+  
+  echo -n "Stripping kernel..."
+  strip -sv "$KERNEL" > /dev/null 2>&1
+  echo " Done!"
+  
+  echo
 
  if test "${BUILD_FLOPPY:-1}" -eq 1; then
+    echo -n "Building $FLOPPY..."
     cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
-    echo "Made $FLOPPY with kernel"
+    echo " Done!"
+    
+    echo -n "Pad $FLOPPY..." # Remove when autodetect disk geometry is added
     truncate "$FLOPPY" -s '1474560' # Remove when autodetect disk geometry is added
-    echo "Added padding to $FLOPPY" # Remove when autodetect disk geometry is added
+    echo " Done!" # Remove when autodetect disk geometry is added
  fi
   
   if test "${BUILD_CDROM:-1}" -eq 1; then
+    echo
+    
+    echo -n "Making directory $ISO_ROOT..."
     mkdir -p "$ISO_ROOT"
+    echo " Done!"
+
+    echo -n "Copying kernel to $ISO_ROOT..."
     cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/kernel.elf"
+    echo " Done!"
+
+    echo -n "Copying bootloader to $ISO_ROOT..."
     cp "$BUILD_DIR/boot.bin" "$ISO_ROOT/boot.bin"
-    echo "Copied kernel and bootloader to ISO root"
+    echo " Done!"
+
+    echo -n "Building $CDROM..."
+        
     xorriso -as mkisofs -o "$CDROM" \
             -b boot.bin \
             -no-emul-boot \
             -boot-load-size 4 \
-            -input-charset utf-8 "$ISO_ROOT"
-    echo "Made $CDROM with custom bootloader"
+            -input-charset utf-8 "$ISO_ROOT" \
+            > /dev/null 2>&1
+    
+    echo " Done!"
   fi
-
-  echo
-  rm -rf "$BUILD_DIR" "$ISO_ROOT"
-  echo "Cleaned up: "$BUILD_DIR" "$ISO_ROOT""
   
-  printf "\nBuild completed, floppy image is $FLOPPY, CD-ROM image is $CDROM\n"
+  echo
+
+  echo -n "Cleaning up..."
+  rm -rf "$BUILD_DIR" "$ISO_ROOT"
+  echo " Done!"
+  
+  echo
+
+  echo "Build completed, Floppy is $FLOPPY and CD-ROM is $CDROM".
 }
 
 MEM=1M
@@ -244,8 +304,9 @@ function deps {
 }
 
 function clean {
+  echo -n "Cleaning up: "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"..."
   rm -rf "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"
-  echo "Cleaned up: "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT""
+  echo " Done!"
 }
 
 case "$1" in

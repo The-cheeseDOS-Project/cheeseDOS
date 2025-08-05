@@ -66,7 +66,7 @@ xor dh, dh
 xor dl, dl
 int 0x10
 
-mov si, offset msg_banner
+mov si, offset msg_loading
 call print
 
 mov si, drives
@@ -233,7 +233,7 @@ print:
 err:
     xor bx, bx
     mov ds, bx
-    mov si, offset msg_error
+    mov si, offset msg_failed
     call print
     jmp halt_loop
 
@@ -253,10 +253,10 @@ dap:
     .long 1
     .long 0
 
-msg_banner:
-    .ascii "Loading kernel...\r\n\0"
-msg_error:
-    .ascii "Failed! Please reboot and try again...\0"
+msg_loading:
+    .ascii "Loading kernel...\r\0"
+msg_failed:
+    .ascii "Loading kernel... Failed!\0"
 
 gdt_code:
     .word 0xFFFF
