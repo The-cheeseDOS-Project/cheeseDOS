@@ -28,6 +28,7 @@
 #include "io.h"
 #include "timer.h"
 #include "keyboard.h"
+// #include "nyan.h"
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -296,90 +297,6 @@ static void say(const char* args) {
 
 static void sum(const char* args) {
     calc_command(args ? args : "");
-}
-
-static void mus(const char* song) {
-    if (kstrcmp(song, "keyboard-cat") == 0) {
-            print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Charlie Schmidt, or any of there subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
-            beep(262, 375);  
-            beep(330, 375);  
-            beep(392, 375);  
-            beep(330, 375);  
-            beep(262, 375);  
-            beep(330, 180);  
-            beep(392, 560);  
-            beep(330, 375);  
-            beep(220, 375);  
-            beep(262, 375);  
-            beep(330, 375);  
-            beep(262, 375);  
-            beep(220, 375);  
-            beep(262, 180);  
-            beep(330, 560);  
-            beep(262, 375);  
-            beep(196, 375);  
-            beep(247, 375);  
-            beep(294, 375);  
-            beep(247, 375);  
-            beep(196, 375);  
-            beep(247, 180);  
-            beep(294, 560);  
-            beep(247, 375);  
-            beep(196, 560);  
-            beep(196, 180);  
-            beep(196, 375);  
-            beep(196, 375);
-            beep(196, 375);
-            beep(196, 180);  
-            beep(196, 375);  
-            beep(262, 375);  
-            beep(330, 375);  
-            beep(392, 375);  
-            beep(330, 375);  
-            beep(262, 375);  
-            beep(330, 180);  
-            beep(392, 560);  
-            beep(330, 375);  
-            beep(220, 375);  
-            beep(262, 375);  
-            beep(330, 375);  
-            beep(262, 375);  
-            beep(220, 375);  
-            beep(262, 180);  
-            beep(330, 560);  
-            beep(262, 375);  
-            beep(196, 375);  
-            beep(247, 375);  
-            beep(294, 375);  
-            beep(247, 375);  
-            beep(196, 375);  
-            beep(247, 180);  
-            beep(294, 560);  
-            beep(247, 375);  
-            beep(196, 1125); 
-    } 
-    
-    else if (kstrcmp(song, "nokia") == 0) {
-        print("NOTICE: We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with NOKIA Corporation, or any of there subsidiaries or affiliates. All references are for informational and artistic purposes only.\n");
-            for (int repeat = 0; repeat < 3; repeat++) {
-                beep(659, 333);  
-                beep(587, 333);  
-                beep(370, 500);  
-                beep(415, 500);  
-                beep(554, 333);  
-                beep(494, 333);  
-                beep(294, 500);  
-                beep(330, 500);  
-                beep(494, 333);  
-                beep(440, 333);  
-                beep(262, 500);  
-                beep(330, 500);  
-                beep(440, 1000); 
-                delay(800);
-            }
-        } 
-        else { print("PC Speaker Music player:\nkeyboard-cat\nnokia\n");
-    }
 }
 
 static void dly(const char* args) {
@@ -1109,6 +1026,10 @@ static void die(const char* args) {
     print("\n");
 }
 
+//static void nyn(const char*) {
+//    nyan();
+//}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1131,11 +1052,11 @@ static shell_command_t commands[] = {
     {"dly", dly },
     {"spd", spd },
     {"run", run_script},
-    {"mus", mus},
     {"txt", txt},
     {"mov", mov},
     {"cop", cop},
     {"die", die},
+//    {"nyn", nyn},
     {NULL, NULL}
 };
 

@@ -51,6 +51,7 @@ STDBOOL_DIR="$LIB_DIR/stdbool"
 STDDEF_DIR="$LIB_DIR/stddef"
 STDINT_DIR="$LIB_DIR/stdint"
 STRING_DIR="$LIB_DIR/string"
+# NYAN_DIR="$SRC_DIR/nyan"
 RTC_DIR="$SRC_DIR/rtc"
 TIMER_DIR="$SRC_DIR/timer"
 
@@ -74,6 +75,7 @@ INCLUDES=" \
   -I$UART_DIR \
   -I$STDBOOL_DIR \
   -I$IO_DIR"
+#  -I$NYAN_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -90,6 +92,7 @@ OBJS=(
   "$BUILD_DIR/timer.o"
   "$BUILD_DIR/programs.o"
   "$BUILD_DIR/serial.o"
+#  "$BUILD_DIR/nyan.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -186,6 +189,10 @@ function all {
   echo -n "Building serial.o..."
   build_object "$UART_DIR/serial.c" "$BUILD_DIR/serial.o"
   echo " Done!"
+
+#  echo -n "Building nyan.o..."
+#  build_object "$NYAN_DIR/nyan.c" "$BUILD_DIR/nyan.o"
+#  echo " Done!"
   
   echo -n "Building banner.o..."
   objcopy -I binary -O elf32-i386 -B i386 \
@@ -257,9 +264,9 @@ function all {
   
   echo
 
-  echo -n "Cleaning up..."
-  rm -rf "$BUILD_DIR" "$ISO_ROOT"
-  echo " Done!"
+#  echo -n "Cleaning up..."
+#  rm -rf "$BUILD_DIR" "$ISO_ROOT"
+#  echo " Done!"
   
   echo
 
