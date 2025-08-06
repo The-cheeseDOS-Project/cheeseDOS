@@ -72,6 +72,14 @@ void scroll_screen() {
     }
 }
 
+void putchar(char ch) {
+    vga_putchar(ch);
+}
+
+void putstr(const char *str) {
+    print(str);
+}
+
 void vga_putchar(char c) {
     uint8_t color_byte = get_vga_color();
     int current_linear_pos;
@@ -124,8 +132,29 @@ void backspace() {
     vga_putchar('\b');
 }
 
+void vga_set_cursor(uint8_t row, uint8_t col) {
+    vga_cursor_x = col;
+    vga_cursor_y = row;
+
+    uint16_t pos = row * SCREEN_WIDTH + col;
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t)(pos & 0xFF));
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+}
+
 int get_cursor() {
     return vga_cursor_y * SCREEN_WIDTH + vga_cursor_x;
+}
+
+void vga_get_cursor(uint8_t *row, uint8_t *col) {
+    outb(0x3D4, 0x0F);
+    uint8_t low = inb(0x3D5);
+    outb(0x3D4, 0x0E);
+    uint8_t high = inb(0x3D5);
+    uint16_t pos = (high << 8) | low;
+    *row = pos / SCREEN_WIDTH;
+    *col = pos % SCREEN_WIDTH;
 }
 
 void set_cursor_pos(int pos) {

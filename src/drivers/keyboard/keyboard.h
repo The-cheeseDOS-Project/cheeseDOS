@@ -26,7 +26,7 @@
 #define KEY_TAB          ((int)'\t')
 #define KEY_ENTER        ((int)'\n')
 #define KEY_ESCAPE       ((int)0x1B)
-#define KEY_SPACE        ((int)' ')  
+#define KEY_SPACE        ((int)' ')
 #define KEY_DELETE       ((int)0x86)
 #define KEY_LEFT         ((int)0x80)
 #define KEY_RIGHT        ((int)0x81)

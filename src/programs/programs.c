@@ -27,6 +27,7 @@
 #include "acpi.h"
 #include "io.h"
 #include "timer.h"
+#include "keyboard.h"
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -269,7 +270,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt.");
 }
 
 static void ver(const char* args) {
@@ -768,6 +769,103 @@ static void clr(const char* arg) {
     print("Color set.\n");
 }
 
+void txt(const char *filename) {
+    if (!filename || *filename == '\0') {
+        putstr("Usage: txt <file>\n");
+        return;
+    }
+
+    char buffer[1024] = {0};
+    size_t index = 0;
+    bool saved = true;
+    bool is_new = false;
+    bool insert_mode = true;
+
+    uint32_t parent_inode = 0;
+
+    cls("");
+
+    ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
+    if (!file) {
+        if (ramdisk_create_file(parent_inode, filename) < 0) {
+            putstr("Error: Failed to create file.\n");
+            return;
+        }
+        file = ramdisk_iget_by_name(parent_inode, filename);
+        if (!file) {
+            putstr("Error: File creation succeeded, but lookup failed.\n");
+            return;
+        }
+        is_new = true;
+    } else {
+        memcpy(buffer, file->data, file->size);
+        index = file->size;
+    }
+
+    putstr(is_new ? "[NEW FILE] " : "[EDITING] ");
+    putstr(filename);
+    putstr("              [ESC = Save & Exit | INSERT = Exit (Without save)]\n");
+    putchar('\n');
+    vga_set_cursor(1, 0);
+
+    for (size_t i = 0; i < index; i++) {
+        putchar(buffer[i]);
+    }
+
+    while (1) {
+        int ch = keyboard_getchar();
+
+        if (ch == 27) break;
+
+        if (ch == KEY_INSERT) {
+            saved = false;
+            break;
+        }
+
+        uint8_t row, col;
+        vga_get_cursor(&row, &col);
+
+        if (ch == 8 && index > 0 && row > 1) {
+            index--;
+            buffer[index] = '\0';
+            putchar(8); putchar(' '); putchar(8);
+        }
+
+        else if (ch == '\r') {
+            if (index < sizeof(buffer) - 1) {
+                buffer[index++] = '\n';
+                putchar('\n');
+            }
+        }
+
+        else if ((ch >= 32 && ch <= 126) && index < sizeof(buffer) - 1 && row >= 1) {
+            if (insert_mode) {
+                buffer[index++] = (char)ch;
+            } else {
+                if (index < sizeof(buffer)) {
+                    buffer[index++] = (char)ch;
+                }
+            }
+            putchar((char)ch);
+
+            if (col >= 79) {
+                putchar('\n');
+            }
+        }
+
+    }
+
+    vga_set_cursor(23, 0);
+    if (saved) {
+        memcpy(file->data, buffer, index);
+        file->size = index;
+        putstr("[SAVED]\n");
+    } else {
+        putstr("[EXIT WITHOUT SAVING]\n");
+    }
+}
+
+
 static void run_script(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -843,6 +941,7 @@ static shell_command_t commands[] = {
     {"spd", spd },
     {"run", run_script},
     {"mus", mus},
+    {"txt", txt},
     {NULL, NULL}
 };
 

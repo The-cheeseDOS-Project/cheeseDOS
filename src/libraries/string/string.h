@@ -21,6 +21,9 @@
 
 #include "stddef.h"
 
+void *memcpy(void *dest, const void *src, size_t n);
+void *memset(void *s, int c, size_t n);
+char *kstrtok(char *str, const char *delim);
 int kstrcmp(const char *s1, const char *s2);
 int kstrncmp(const char *s1, const char *s2, size_t n);
 size_t kstrlen(const char *s);

@@ -186,6 +186,17 @@ void ramdisk_readdir(ramdisk_inode_t *dir, ramdisk_readdir_callback cb) {
     }
 }
 
+ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name) {
+    for (int i = 0; i < 32; i++) {
+        if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED &&
+            inodes[i].parent_inode_no == parent_inode &&
+            strcmp(inodes[i].name, name) == 0) {
+            return &inodes[i];
+        }
+    }
+    return NULL;
+}
+
 int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size) {
     if (buffer_size == 0) {
         return -1;

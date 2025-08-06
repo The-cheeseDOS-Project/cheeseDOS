@@ -74,6 +74,7 @@ int keyboard_getchar() {
             if (sc == 0x50) return KEY_DOWN;
             if (sc == 0x47) return KEY_HOME;
             if (sc == 0x4F) return KEY_END;
+            if (sc == 0x52) return KEY_INSERT;
             if (sc == 0x53) return KEY_DELETE;
 
             continue;

@@ -269,11 +269,13 @@ function all {
 MEM=1M
 CPU=486
 
-function run {
-  echo "Run with 'run-floppy' or 'run-cdrom' (run-cdrom is in very early works)"
-}
+#function run {
+#  echo "Run with 'run-floppy' or 'run-cdrom' (run-cdrom is in very early works)"
+#}
 
-function run-floppy {
+#function run-floppy {
+
+function run {
   qemu-system-$MARCH \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
@@ -283,14 +285,14 @@ function run-floppy {
   -cpu "$CPU"
 }
 
-function run-cdrom {
-  qemu-system-$MARCH \
-  -audiodev pa,id=snd0 \
-  -machine pcspk-audiodev=snd0 \
-  -cdrom "$CDROM" \
-  -m "$MEM" \
-  -cpu "$CPU"
-}
+#function run-cdrom {
+#  qemu-system-$MARCH \
+#  -audiodev pa,id=snd0 \
+#  -machine pcspk-audiodev=snd0 \
+#  -cdrom "$CDROM" \
+#  -m "$MEM" \
+#  -cpu "$CPU"
+#}
 
 function write {
   lsblk

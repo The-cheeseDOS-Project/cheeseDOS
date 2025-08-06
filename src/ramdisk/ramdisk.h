@@ -25,6 +25,8 @@
 #define RAMDISK_FILENAME_MAX 32
 #define RAMDISK_DATA_SIZE_BYTES 48
 
+#define ROOT_INODE 0
+
 typedef enum {
     RAMDISK_INODE_TYPE_UNUSED = 0,
     RAMDISK_INODE_TYPE_FILE = 1,
@@ -58,5 +60,7 @@ int ramdisk_readfile(ramdisk_inode_t *file, uint32_t offset, uint32_t size, char
 int ramdisk_writefile(ramdisk_inode_t *file, uint32_t offset, uint32_t len, const char *buffer);
 
 int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size);
+
+ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name);
 
 #endif
