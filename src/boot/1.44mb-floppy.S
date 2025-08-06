@@ -256,7 +256,7 @@ dap:
 msg_loading:
     .ascii "Loading kernel...\r\0"
 msg_failed:
-    .ascii "Loading kernel... Failed!\0"
+    .ascii "Loading kernel... FAIL!\0"
 
 gdt_code:
     .word 0xFFFF
