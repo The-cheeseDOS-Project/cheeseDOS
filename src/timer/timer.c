@@ -61,7 +61,7 @@ uint32_t timer_millis(void) {
     return elapsed_ms;
 }
 
-void timer_delay(uint32_t ms) {
+void delay(uint32_t ms) {
     uint32_t start = timer_millis();
     while ((timer_millis() - start) < ms);
 }

@@ -23,6 +23,6 @@
 
 void timer_init(void);
 uint32_t timer_millis(void);
-void timer_delay(uint32_t ms);
+void delay(uint32_t ms);
 
 #endif

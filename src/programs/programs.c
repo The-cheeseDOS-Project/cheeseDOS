@@ -375,7 +375,7 @@ static void mus(const char* song) {
                 beep(262, 500);  
                 beep(330, 500);  
                 beep(440, 1000); 
-                timer_delay(800);
+                delay(800);
             }
         } 
         else { print("PC Speaker Music player:\nkeyboard-cat\nnokia\n");
@@ -397,7 +397,7 @@ static void dly(const char* args) {
     for (i = 0; buf[i]; ++i)
         ms = ms * 10 + (buf[i] - '0');
 
-    timer_delay(ms);
+    delay(ms);
 }
 
 void spd(const char* args) {
@@ -409,7 +409,7 @@ void spd(const char* args) {
     __asm__ __volatile__("rdtsc" : "=a"(start_lo), "=d"(start_hi));
     unsigned int start_tsc = start_lo;
 
-    timer_delay(50);
+    delay(50);
 
     unsigned int end_lo, end_hi;
     __asm__ __volatile__("rdtsc" : "=a"(end_lo), "=d"(end_hi));

@@ -21,7 +21,9 @@
 #include "keyboard.h"
 #include "string.h"
 #include "programs.h"
-#include "banner.h"
+#include "beep.h"
+#include "timer.h"
+
 #include "serial.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -103,8 +105,18 @@ void shell_run() {
     int idx = 0;
     int cursor_index = 0;
     qprint(" OK!\n\n");
+    print("\nWelcome to ");
+    shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
+    beep(500, 100);
+    beep(700, 100);
+    beep(1000, 200);
+    beep(850, 100);
+    delay(200);
+    beep(1500, 150);
+    delay(200);
+    beep(1500, 150);
     while (1) {
         int c = keyboard_getchar();
         if (c == KEY_NULL) {
