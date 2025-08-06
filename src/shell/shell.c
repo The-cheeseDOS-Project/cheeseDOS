@@ -109,14 +109,11 @@ void shell_run() {
     shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
+    beep(400, 50);
+    beep(500, 50);
+    beep(800, 100);
     beep(500, 100);
-    beep(700, 100);
-    beep(1000, 200);
-    // beep(850, 100);
-    // delay(200);
-    // beep(1500, 150);
-    // delay(200);
-    // beep(1500, 150);
+    beep(800, 100);
     while (1) {
         int c = keyboard_getchar();
         if (c == KEY_NULL) {
