@@ -919,6 +919,146 @@ static void run_script(const char* args) {
     }
 }
 
+static void mov(const char* args) {
+    if (!args) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Usage: mov <src> <dst>\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    char src[RAMDISK_FILENAME_MAX] = {0};
+    char dst[RAMDISK_FILENAME_MAX] = {0};
+    int i = 0, j = 0;
+    while (args[i] == ' ') i++;
+    while (args[i] && args[i] != ' ' && j < RAMDISK_FILENAME_MAX - 1) {
+        src[j++] = args[i++];
+    }
+    src[j] = '\0';
+    while (args[i] == ' ') i++;
+    j = 0;
+    while (args[i] && j < RAMDISK_FILENAME_MAX - 1) {
+        dst[j++] = args[i++];
+    }
+    dst[j] = '\0';
+
+    if (src[0] == '\0' || dst[0] == '\0') {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Usage: mov <src> <dst>\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+
+    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    if (!dir) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Failed to get current directory\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    ramdisk_inode_t *src_inode = ramdisk_find_inode_by_name(dir, src);
+    if (!src_inode) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Source not found\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    ramdisk_inode_t *dst_inode = ramdisk_find_inode_by_name(dir, dst);
+    if (dst_inode) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Destination already exists\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    size_t len = kstrlen(dst);
+    if (len >= RAMDISK_FILENAME_MAX) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Destination name too long\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    for (size_t k = 0; k < RAMDISK_FILENAME_MAX; ++k) src_inode->name[k] = 0;
+    for (size_t k = 0; k < len; ++k) src_inode->name[k] = dst[k];
+    src_inode->name[len] = 0;
+    print("Moved/Renamed successfully\n");
+}
+
+static void cop(const char* args) {
+    if (!args) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Usage: cop <src> <dst>\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    char src[RAMDISK_FILENAME_MAX] = {0};
+    char dst[RAMDISK_FILENAME_MAX] = {0};
+    int i = 0, j = 0;
+    while (args[i] == ' ') i++;
+    while (args[i] && args[i] != ' ' && j < RAMDISK_FILENAME_MAX - 1) {
+        src[j++] = args[i++];
+    }
+    src[j] = '\0';
+
+    while (args[i] == ' ') i++;
+    j = 0;
+    while (args[i] && j < RAMDISK_FILENAME_MAX - 1) {
+        dst[j++] = args[i++];
+    }
+    dst[j] = '\0';
+
+    if (src[0] == '\0' || dst[0] == '\0') {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Usage: cop <src> <dst>\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+
+    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    if (!dir) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Failed to get current directory\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    ramdisk_inode_t *src_inode = ramdisk_find_inode_by_name(dir, src);
+    if (!src_inode) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Source not found\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    if (src_inode->type != RAMDISK_INODE_TYPE_FILE) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Copy only supports files\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    ramdisk_inode_t *dst_inode = ramdisk_find_inode_by_name(dir, dst);
+    if (dst_inode) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Destination already exists\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    if (ramdisk_create_file(current_dir_inode_no, dst) != 0) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Failed to create destination file\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    dst_inode = ramdisk_find_inode_by_name(dir, dst);
+    if (!dst_inode) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Failed to get destination inode\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+    int bytes = src_inode->size;
+    if (bytes > RAMDISK_DATA_SIZE_BYTES) bytes = RAMDISK_DATA_SIZE_BYTES;
+    for (int k = 0; k < bytes; ++k) dst_inode->data[k] = src_inode->data[k];
+    dst_inode->size = bytes;
+    print("Copied successfully\n");
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -943,6 +1083,8 @@ static shell_command_t commands[] = {
     {"run", run_script},
     {"mus", mus},
     {"txt", txt},
+    {"mov", mov},
+    {"cop", cop},
     {NULL, NULL}
 };
 
