@@ -45,7 +45,8 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - **GPL v3 Licese**: [LICENSE](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/LICENSE)
 - **Security Policy**: [SECURITY.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/SECURITY.md)
 
-Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
-Shout out to curiciouswanderer for just being a cool person!
+### Shoutouts
+- Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
+- Shout out to curiciouswanderer for just being a cool person!
 
 It's all about the pentoims!!
