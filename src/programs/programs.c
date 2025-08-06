@@ -31,6 +31,7 @@
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
+#include "stdbool.h"
 
 static uint32_t current_dir_inode_no = 0;
 static uint8_t default_text_fg_color = COLOR_WHITE;
