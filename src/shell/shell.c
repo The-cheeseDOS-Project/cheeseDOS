@@ -112,11 +112,11 @@ void shell_run() {
     beep(500, 100);
     beep(700, 100);
     beep(1000, 200);
-    beep(850, 100);
-    delay(200);
-    beep(1500, 150);
-    delay(200);
-    beep(1500, 150);
+    // beep(850, 100);
+    // delay(200);
+    // beep(1500, 150);
+    // delay(200);
+    // beep(1500, 150);
     while (1) {
         int c = keyboard_getchar();
         if (c == KEY_NULL) {
