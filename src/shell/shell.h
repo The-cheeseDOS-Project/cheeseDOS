@@ -19,6 +19,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#include "stdbool.h"
+
 void shell_run();
 void print(const char* str);
 bool execute_command(const char* command, const char* args);
