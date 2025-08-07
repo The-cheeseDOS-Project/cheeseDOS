@@ -700,7 +700,7 @@ void putnum(int num) {
         num = -num;
     }
 
-    while (num > 0 && i < sizeof(buf)) {
+    while (num > 0 && i < (int)sizeof(buf)) {
         buf[i++] = '0' + (num % 10);
         num /= 10;
     }
