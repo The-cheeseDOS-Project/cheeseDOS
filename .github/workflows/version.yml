@@ -6,27 +6,31 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   generate_version:
-    needs: generate_version
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
 
       - name: Generate timestamp
         run: |
-          rm -f src/version.txt
           DATE=$(date +"%m%d%y%H%M%S")
           echo "$DATE" > src/version.txt
 
-      - name: Commit version.txt with GitHub Actions identity
+      - name: Commit version.txt
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add src/version.txt
           git commit -m "Update version.txt to $(cat src/version.txt)"
-          git push
+          git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
