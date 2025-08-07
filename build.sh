@@ -316,12 +316,18 @@ function write {
 }
 
 function deps {
-  echo "Checking for required tools: gcc, binutils, qemu..."
+  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64..."
+
+  declare -A pkg_map=(
+    [gcc]="gcc"
+    [ld]="binutils"
+    [qemu-system-x86_64]="qemu-system-x86"
+  )
 
   missing=()
-  for cmd in gcc ld qemu-system-x86_64; do
+  for cmd in "${!pkg_map[@]}"; do
     if ! command -v "$cmd" &> /dev/null; then
-      missing+=("$cmd")
+      missing+=("${pkg_map[$cmd]}")
     fi
   done
 
@@ -336,22 +342,27 @@ function deps {
   if command -v apt &> /dev/null; then
     echo "Detected apt-based system."
     sudo apt-get update
-    sudo apt-get install -y qemu-system-x86 gcc binutils
+    sudo apt-get install -y "${missing[@]}"
   elif command -v dnf &> /dev/null; then
     echo "Detected dnf-based system."
-    sudo dnf install -y qemu-system-x86 gcc binutils
+    sudo dnf install -y "${missing[@]}"
   elif command -v zypper &> /dev/null; then
     echo "Detected SUSE-based system."
-    sudo zypper install -y qemu-x86 gcc binutils
+    sudo zypper install -y "${missing[@]}"
   elif command -v pacman &> /dev/null; then
     echo "Detected Arch-based system."
     sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm qemu gcc binutils
+    sudo pacman -S --noconfirm "${missing[@]}"
   elif command -v emerge &> /dev/null; then
     echo "Detected Gentoo-based system."
-    sudo emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
+    for pkg in "${missing[@]}"; do
+      sudo emerge "$pkg"
+    done
   else
-    echo "Unsupported distro. Please install: gcc, binutils, qemu-system-x86_64 manually."
+    echo "Unsupported distro. Please install manually:"
+    for pkg in "${missing[@]}"; do
+      echo "  - $pkg"
+    done
     echo "See: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
     return 1
   fi
