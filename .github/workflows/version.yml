@@ -8,6 +8,7 @@ on:
 
 jobs:
   generate_version:
+    needs: generate_version
     runs-on: ubuntu-latest
 
     steps:
