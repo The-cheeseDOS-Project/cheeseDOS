@@ -33,6 +33,7 @@ permissions:
 
 jobs:
   build_and_release:
+    needs: generate_version
     runs-on: self-hosted
 
     steps:
