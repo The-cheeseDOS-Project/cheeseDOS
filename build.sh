@@ -270,6 +270,7 @@ function write {
 
 function deps {
   echo "Checking for required tools: gcc, binutils, qemu-system-x86_64..."
+
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
   elif command -v dnf &> /dev/null; then
@@ -281,8 +282,10 @@ function deps {
   elif command -v emerge &> /dev/null; then
     pkg_mgr="emerge"
   else
-    pkg_mgr="unknown"
+    echo "Unsupported distro. Please install manually."
+    return 1
   fi
+
   declare -A pkg_map
   case "$pkg_mgr" in
     apt)
@@ -296,7 +299,7 @@ function deps {
       pkg_map=(
         [gcc]="gcc"
         [ld]="binutils"
-        [qemu-system-x86_64]="qemu-system-x86 qemu-kvm"
+        [qemu-system-x86_64]="qemu-system-x86"
       )
       ;;
     zypper)
@@ -320,30 +323,42 @@ function deps {
         [qemu-system-x86_64]="app-emulation/qemu"
       )
       ;;
-    *)
-      echo "Unsupported distro. Please install manually."
-      return 1
-      ;;
   esac
+
   missing=()
   for cmd in "${!pkg_map[@]}"; do
     if ! command -v "$cmd" &> /dev/null; then
       missing+=("${pkg_map[$cmd]}")
     fi
   done
+
   if [ ${#missing[@]} -eq 0 ]; then
     echo "All dependencies are already installed."
     return 0
   fi
+
   echo "Missing: ${missing[*]}"
   echo "Attempting to install missing dependencies..."
+
   case "$pkg_mgr" in
     apt)
       sudo apt-get update
       sudo apt-get install -y "${missing[@]}"
       ;;
     dnf)
-      sudo dnf install -y "${missing[@]}"
+      install_list=()
+      for pkg in "${missing[@]}"; do
+        if dnf list --quiet available "$pkg" &> /dev/null; then
+          install_list+=("$pkg")
+        else
+          echo "Package not found in repos: $pkg (skipping)"
+        fi
+      done
+      if [ ${#install_list[@]} -gt 0 ]; then
+        sudo dnf install -y "${install_list[@]}"
+      else
+        echo "No installable missing packages found."
+      fi
       ;;
     zypper)
       sudo zypper install -y "${missing[@]}"
@@ -358,49 +373,6 @@ function deps {
       done
       ;;
   esac
-  if command -v apt &> /dev/null; then
-    echo "Detected apt-based system."
-    sudo apt-get update
-    sudo apt-get install -y "${missing[@]}"
-  elif command -v dnf &> /dev/null; then
-   elif command -v dnf &> /dev/null; then
-  echo "Detected dnf-based system."
-  install_list=()
-  for cmd in "${!pkg_map[@]}"; do
-    if ! command -v "$cmd" &> /dev/null; then
-      pkg="${pkg_map[$cmd]}"
-      if dnf list --quiet available "$pkg" &> /dev/null; then
-        install_list+=("$pkg")
-      else
-        echo "Package not found in repos: $pkg (skipping)"
-      fi
-    fi
-  done
-  if [ ${#install_list[@]} -gt 0 ]; then
-    sudo dnf install -y "${install_list[@]}"
-  else
-    echo "No installable missing packages found."
-  fi
-  elif command -v zypper &> /dev/null; then
-    echo "Detected SUSE-based system."
-    sudo zypper install -y "${missing[@]}"
-  elif command -v pacman &> /dev/null; then
-    echo "Detected Arch-based system."
-    sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm "${missing[@]}"
-  elif command -v emerge &> /dev/null; then
-    echo "Detected Gentoo-based system."
-    for pkg in "${missing[@]}"; do
-      sudo emerge "$pkg"
-    done
-  else
-    echo "Unsupported distro. Please install manually:"
-    for pkg in "${missing[@]}"; do
-      echo "  - $pkg"
-    done
-    echo "See: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
-    return 1
-  fi
 }
 
 function clean {
