@@ -23,6 +23,7 @@
 #include "string.h"
 #include "banner.h"
 #include "rtc.h"
+#include "version.h"
 #include "beep.h"
 #include "acpi.h"
 #include "io.h"
@@ -278,7 +279,8 @@ static void hlp(const char* args) {
 
 static void ver(const char* args) {
     (void)args;
-    print("cheeseDOS alpha\n");
+    print("cheeseDOS alpha version ");
+    print(_binary_src_version_version_txt_start);
 }
 
 static void hi(const char* args) {

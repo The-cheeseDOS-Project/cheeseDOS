@@ -43,7 +43,7 @@ jobs:
       - name: Generate timestamp
         run: |
           DATE=$(date +"%m%d%y%H%M%S")
-          echo "$DATE" > src/version.txt
+          echo "$DATE" > src/version/version.txt
 
       - name: Commit version.txt
         run: |

@@ -114,7 +114,6 @@ void shell_run() {
     int cursor_index = 0;
     print(" OK!\n\n");
     sprint(" OK!\n");
-    print("\nWelcome to ");
     shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();

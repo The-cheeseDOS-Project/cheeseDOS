@@ -16,22 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdint.h"
-#include "vga.h"
-#include "serial.h"
-#include "shell.h"
-#include "ramdisk.h"
-#include "version.h"
+#ifndef VERSION_H
+#define VERSION_H
 
-void kmain() {
-    qprint("Loading KERNEL... OK!\n");
-    sprint("cheeseDOS alpha version ");
-    sprint(_binary_src_version_version_txt_start);
-    qprint("Loading RAMDISK...");
-    ramdisk_init();
-    qprint(" OK!\nLoading SHELL...");
-    shell_run();
+extern const char _binary_src_version_version_txt_start[];
+extern const char _binary_src_version_version_txt_end[];
+extern const int  _binary_src_version_version_txt_size;
 
-    while (1)
-        __asm__("hlt");
-}
+#endif

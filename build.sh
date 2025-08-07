@@ -51,9 +51,9 @@ STDBOOL_DIR="$LIB_DIR/stdbool"
 STDDEF_DIR="$LIB_DIR/stddef"
 STDINT_DIR="$LIB_DIR/stdint"
 STRING_DIR="$LIB_DIR/string"
-# NYAN_DIR="$SRC_DIR/nyan"
 RTC_DIR="$SRC_DIR/rtc"
 TIMER_DIR="$SRC_DIR/timer"
+VER_DIR="$SRC_DIR/version"
 
 INCLUDES=" \
   -I$KERNEL_DIR \
@@ -74,8 +74,8 @@ INCLUDES=" \
   -I$STDINT_DIR \
   -I$UART_DIR \
   -I$STDBOOL_DIR \
-  -I$IO_DIR"
-#  -I$NYAN_DIR"
+  -I$IO_DIR \
+  -I$VER_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -92,7 +92,7 @@ OBJS=(
   "$BUILD_DIR/timer.o"
   "$BUILD_DIR/programs.o"
   "$BUILD_DIR/serial.o"
-#  "$BUILD_DIR/nyan.o"
+  "$BUILD_DIR/version.o"
 )
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
@@ -188,6 +188,11 @@ function all {
   build_object "$TIMER_DIR/timer.c" "$BUILD_DIR/timer.o"
   echo " Done!"
 
+  echo -n "Building version.o..."
+  objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
+          "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
+  echo " Done!"
+
   echo -n "Building programs.o..."
   build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
   echo " Done!"
@@ -197,7 +202,7 @@ function all {
   echo " Done!"
   
   echo -n "Building banner.o..."
-  objcopy -I binary -O elf32-i386 -B i386 \
+  objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
   echo " Done!"
 
