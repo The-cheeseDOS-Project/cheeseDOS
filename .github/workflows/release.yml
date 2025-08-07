@@ -39,7 +39,7 @@ jobs:
      
       - name: Generate timestamp
         run: |
-          TAG="v0.1.0-alpha-$(date +'%m%d%y%H%M%S')"
+          TAG="alpha-$(date +'%m%d%y%H%M%S')"
           echo "$TAG" > src/version/version.txt
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
