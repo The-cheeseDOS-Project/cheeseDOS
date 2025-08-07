@@ -132,6 +132,12 @@ function all {
 
   clean
   
+  echo
+
+  deps
+
+  echo
+
   echo -n "Making directory: $BUILD_DIR..."
   mkdir -p "$BUILD_DIR"
   echo " Done!"
@@ -310,24 +316,44 @@ function write {
 }
 
 function deps {
-  echo "You will need a working GCC, binutils, and a GRUB installation to use all features."
+  echo "Checking for required tools: gcc, binutils, qemu..."
+
+  missing=()
+  for cmd in gcc ld qemu-system-x86_64; do
+    if ! command -v "$cmd" &> /dev/null; then
+      missing+=("$cmd")
+    fi
+  done
+
+  if [ ${#missing[@]} -eq 0 ]; then
+    echo "All dependencies are already installed."
+    return 0
+  fi
+
+  echo "Missing: ${missing[*]}"
+  echo "Attempting to install missing dependencies..."
+
   if command -v apt &> /dev/null; then
-    echo "Detected apt-based system. Installing dependencies..."
-    $SU apt-get update && $SU apt-get install -y qemu-system-x86 qemu gcc binutils
+    echo "Detected apt-based system."
+    sudo apt-get update
+    sudo apt-get install -y qemu-system-x86 gcc binutils
   elif command -v dnf &> /dev/null; then
-    echo "Detected dnf-based system. Installing dependencies..."
-    $SU dnf update -y && $SU dnf install -y qemu-system-x86 qemu gcc binutils
+    echo "Detected dnf-based system."
+    sudo dnf install -y qemu-system-x86 gcc binutils
   elif command -v zypper &> /dev/null; then
-    echo "Detected SUSE-based system. Installing dependencies..."
-    $SU zypper refresh && $SU zypper install -y qemu-x86 gcc binutils
+    echo "Detected SUSE-based system."
+    sudo zypper install -y qemu-x86 gcc binutils
   elif command -v pacman &> /dev/null; then
-    echo "Detected Arch-based system. Installing dependencies..."
-    $SU pacman -Syu --noconfirm && $SU pacman -S --noconfirm qemu gcc binutils
-  elif command -v portage &> /dev/null; then
-    echo "Detected Gentoo-based system. Installing dependencies..."
-    $SU emerge --sync && $SU emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
+    echo "Detected Arch-based system."
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm qemu gcc binutils
+  elif command -v emerge &> /dev/null; then
+    echo "Detected Gentoo-based system."
+    sudo emerge app-emulation/qemu sys-devel/gcc sys-devel/binutils
   else
-    echo "Your distro is not supported by cheeseDOS, please see: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
+    echo "Unsupported distro. Please install: gcc, binutils, qemu-system-x86_64 manually."
+    echo "See: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
+    return 1
   fi
 }
 
@@ -344,8 +370,7 @@ case "$1" in
   run-floppy) run-floppy ;;
   run-cdrom) run-cdrom ;;
   write) write ;;
-  deps) deps ;;
   burn) burn ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run-floppy|run-cdrom|write-floppy|clean|deps}" ;;
+  *) echo "Usage: $0 {all|run-floppy|run-cdrom|write-floppy|clean}" ;;
 esac
