@@ -33,6 +33,7 @@
 #include "stddef.h"
 #include "stdint.h"
 #include "stdbool.h"
+#include "string.h"
 
 static uint32_t current_dir_inode_no = 0;
 static uint8_t default_text_fg_color = COLOR_WHITE;
@@ -755,9 +756,7 @@ void txt(const char *filename) {
             vga_get_cursor(&row, &col);
             row++;
             col = 0;
-            if (row >= get_screen_height()) {
-                row = get_screen_height() - 1;
-            }
+            if (row >= get_screen_height()) row = get_screen_height() - 1;
             vga_move_cursor(row, col);
         } else {
             vga_putchar(buffer[i]);
@@ -784,13 +783,11 @@ void txt(const char *filename) {
             if (removed == '\n') {
                 if (row > 1) row--;
                 col = 0;
-
                 size_t scan = index;
                 while (scan > 0 && buffer[scan - 1] != '\n') {
                     scan--;
                     col++;
                 }
-
                 if (col >= get_screen_width()) col = get_screen_width() - 1;
             } else {
                 if (col > 0) {
@@ -817,10 +814,123 @@ void txt(const char *filename) {
                 buffer[index++] = '\n';
                 row++;
                 col = 0;
-                if (row >= get_screen_height()) {
-                    row = get_screen_height() - 1;
-                }
+                if (row >= get_screen_height()) row = get_screen_height() - 1;
                 vga_move_cursor(row, col);
+            }
+        }
+
+        else if (ch == KEY_LEFT) {
+            if (index > 0) {
+                index--;
+                if (buffer[index] == '\n') {
+                    size_t scan = index;
+                    uint8_t col = 0;
+                    while (scan > 0 && buffer[scan - 1] != '\n') {
+                        scan--;
+                        col++;
+                    }
+                    uint8_t row = 1;
+                    for (size_t i = 0; i < scan; i++) {
+                        if (buffer[i] == '\n') row++;
+                    }
+                    vga_move_cursor(row, col);
+                } else {
+                    if (col > 0) col--;
+                    else if (row > 1) {
+                        row--;
+                        col = 0;
+                        size_t scan = index;
+                        while (scan > 0 && buffer[scan - 1] != '\n') {
+                            scan--;
+                            col++;
+                        }
+                    }
+                    vga_move_cursor(row, col);
+                }
+            }
+        }
+
+        else if (ch == KEY_RIGHT) {
+            if (index < kstrlen(buffer)) {
+                if (buffer[index] == '\n') {
+                    row++;
+                    col = 0;
+                    if (row >= get_screen_height()) row = get_screen_height() - 1;
+                    vga_move_cursor(row, col);
+                } else {
+                    col++;
+                    if (col >= get_screen_width()) {
+                        col = 0;
+                        row++;
+                        if (row >= get_screen_height()) row = get_screen_height() - 1;
+                    }
+                    vga_move_cursor(row, col);
+                }
+                index++;
+            }
+        }
+
+ else if (ch == KEY_UP) {
+    size_t curr_start = index;
+    while (curr_start > 0 && buffer[curr_start - 1] != '\n') {
+        curr_start--;
+    }
+
+    if (curr_start > 0) {
+        size_t prev_end = curr_start - 1;
+
+        size_t prev_start = prev_end;
+        while (prev_start > 0 && buffer[prev_start - 1] != '\n') {
+            prev_start--;
+        }
+
+        index = prev_end + 1;
+
+        uint8_t row = 1;
+        for (size_t i = 0; i < prev_start; i++) {
+            if (buffer[i] == '\n') row++;
+        }
+
+        uint8_t col = 0;
+        for (size_t i = prev_start; i <= prev_end; i++) {
+            if (buffer[i] != '\n') col++;
+        }
+
+        vga_move_cursor(row, col);
+    }
+}
+
+        else if (ch == KEY_DOWN) {
+            size_t line_start = index;
+            while (line_start > 0 && buffer[line_start - 1] != '\n') {
+                line_start--;
+            }
+
+            size_t col_target = index - line_start;
+
+            size_t line_end = index;
+            while (line_end < sizeof(buffer) && buffer[line_end] != '\n' && buffer[line_end] != '\0') {
+                line_end++;
+            }
+
+            if (buffer[line_end] == '\n') {
+                size_t next_start = line_end + 1;
+                size_t next_end = next_start;
+                while (next_end < sizeof(buffer) && buffer[next_end] != '\n' && buffer[next_end] != '\0') {
+                    next_end++;
+                }
+
+                size_t next_len = next_end - next_start;
+                if (col_target > next_len) col_target = next_len;
+
+                index = next_start + col_target;
+
+                uint8_t row = 1;
+                for (size_t i = 0; i < index; i++) {
+                    if (buffer[i] == '\n') row++;
+                }
+
+                vga_move_cursor(row, (uint8_t)col_target);
             }
         }
 
@@ -832,9 +942,7 @@ void txt(const char *filename) {
             if (col >= get_screen_width()) {
                 col = 0;
                 row++;
-                if (row >= get_screen_height()) {
-                    row = get_screen_height() - 1;
-                }
+                if (row >= get_screen_height()) row = get_screen_height() - 1;
             }
             vga_move_cursor(row, col);
         }

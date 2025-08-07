@@ -59,6 +59,10 @@
 #define KEY_PAUSE        ((int)0xA7)
 #define KEY_MENU         ((int)0xA8)
 #define KEY_WIN          ((int)0xA9)
+#define KEY_UP           ((int)0x48)
+#define KEY_DOWN         ((int)0x50)
+#define KEY_LEFT         ((int)0x4B)
+#define KEY_RIGHT        ((int)0x4D)
 
 int keyboard_getchar();
 
