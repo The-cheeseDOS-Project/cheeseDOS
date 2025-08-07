@@ -26,6 +26,7 @@
 #include "serial.h"
 #include "stddef.h"
 #include "stdint.h"
+#include "stdbool.h"
 
 #define INPUT_BUF_SIZE 256
 #define HISTORY_SIZE 32
