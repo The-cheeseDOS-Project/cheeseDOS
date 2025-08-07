@@ -27,7 +27,7 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - build.sh
       - 'src/boot/specs.txt'
-workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
