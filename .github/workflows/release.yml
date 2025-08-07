@@ -39,14 +39,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      #- name: Cleanup Podman tmp
-      #  run: |
-      #    sudo rm -rf /tmp/storage-run-1001/containers /tmp/storage-run-1001/libpod/tmp || true
-
       - name: Build
         run: |
-         chmod +x ./build.sh
-         ./build.sh
+          chmod +x ./build.sh
+          ./build.sh
 
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
@@ -54,36 +50,16 @@ jobs:
           name: cheeseDOS-img
           path: cdos.img
 
-      - name: Generate build number
-        id: gentag
+      - name: Read version tag
+        id: readtag
         run: |
-          CHARS=( {0..9} {A..Z} {a..z} )
-          base62() {
-            local num=$1
-            local out=""
-            while [ "$num" -gt 0 ]; do
-              out="${CHARS[$((num % 62))]}$out"
-              num=$((num / 62))
-            done
-            echo "$out"
-          }
-
-          EXISTING_TAGS=$(git ls-remote --tags origin | awk -F/ '{print $NF}')
-          for i in {1..100}; do
-            RAND=$(od -An -N4 -tu4 < /dev/urandom | tr -d ' ')
-            TAG=$(base62 "$RAND")
-            if ! echo "$EXISTING_TAGS" | grep -qx "$TAG"; then
-              echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done
-          echo "Failed to generate unique tag" >&2
-          exit 1
+          TAG=$(cat src/version.txt)
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release and Upload IMG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ steps.gentag.outputs.tag }}"
+          TAG="${{ steps.readtag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
           gh release create "$TAG" cdos.img --title "$TITLE" --notes-file .github/release.md
