@@ -719,6 +719,7 @@ void txt(const char *filename) {
 
     char buffer[1024] = {0};
     size_t index = 0;
+    size_t cursor_index = 0;
     bool saved = true;
     bool is_new = false;
 
@@ -741,28 +742,31 @@ void txt(const char *filename) {
     } else {
         memcpy(buffer, file->data, file->size);
         index = file->size;
+        cursor_index = index;
     }
 
     putstr("[ESC = Save & Exit | INSERT = Exit (Without save)] ");
     putstr(is_new ? "[NEW FILE] " : "[EDITING] ");
     putstr(filename);
 
-    vga_move_cursor(1, 0);
+    uint8_t row = 1, col = 0;
+    vga_move_cursor(row, col);
 
     for (size_t i = 0; i < index; i++) {
         if (buffer[i] == '\n') {
-            uint8_t row, col;
-            vga_get_cursor(&row, &col);
             row++;
             col = 0;
-            if (row >= get_screen_height()) {
-                row = get_screen_height() - 1;
-            }
-            vga_move_cursor(row, col);
         } else {
             vga_putchar(buffer[i]);
+            col++;
+            if (col >= get_screen_width()) {
+                col = 0;
+                row++;
+            }
         }
     }
+
+    vga_move_cursor(row, col);
 
     while (1) {
         int ch = keyboard_getchar();
@@ -773,13 +777,11 @@ void txt(const char *filename) {
             break;
         }
 
-        uint8_t row, col;
-        vga_get_cursor(&row, &col);
-
-        if (ch == 8 && index > 0) {
+        if (ch == 8 && cursor_index > 0) {
+            cursor_index--;
             index--;
-            char removed = buffer[index];
-            buffer[index] = '\0';
+            char removed = buffer[cursor_index];
+            buffer[cursor_index] = '\0';
 
             if (removed == '\n') {
                 if (row > 0) row--;
@@ -798,23 +800,61 @@ void txt(const char *filename) {
             vga_move_cursor(row, col);
         }
 
-        else if (ch == KEY_ENTER) {
+        else if (ch == '\n') {
             if (index < sizeof(buffer) - 1) {
-                buffer[index++] = '\n';
-
+                buffer[cursor_index++] = '\n';
+                index++;
                 row++;
                 col = 0;
-
                 if (row >= get_screen_height()) {
                     row = get_screen_height() - 1;
                 }
-
                 vga_move_cursor(row, col);
             }
         }
 
+        else if (ch == KEY_LEFT) {
+            if (cursor_index > 0) {
+                cursor_index--;
+                if (buffer[cursor_index] == '\n') {
+                    if (row > 0) row--;
+                    col = 0;
+                } else {
+                    if (col > 0) {
+                        col--;
+                    } else if (row > 0) {
+                        row--;
+                        col = get_screen_width() - 1;
+                    }
+                }
+                vga_move_cursor(row, col);
+            }
+        }
+
+        else if (ch == KEY_RIGHT) {
+            if (cursor_index < index) {
+                if (buffer[cursor_index] == '\n') {
+                    row++;
+                    col = 0;
+                } else {
+                    col++;
+                    if (col >= get_screen_width()) {
+                        col = 0;
+                        row++;
+                    }
+                }
+                cursor_index++;
+                vga_move_cursor(row, col);
+            }
+        }
+
+        else if (ch == KEY_UP || ch == KEY_DOWN) {
+            // Optional: implement vertical movement later
+        }
+
         else if (ch >= 32 && ch <= 126 && index < sizeof(buffer) - 1) {
-            buffer[index++] = (char)ch;
+            buffer[cursor_index++] = (char)ch;
+            index++;
             vga_putchar((char)ch);
 
             col++;
@@ -837,9 +877,9 @@ void txt(const char *filename) {
     } else {
         putstr("[EXIT WITHOUT SAVING]\n");
     }
+
     clear_screen();
 }
-
 
 static void run_script(const char* args) {
     if (!args) {
