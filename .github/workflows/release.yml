@@ -17,7 +17,6 @@
 name: Build and Release cheeseDOS IMG
 
 on:
-  workflow_call: {}
   push:
     branches:
       - main
