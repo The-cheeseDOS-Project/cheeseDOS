@@ -189,3 +189,9 @@ void vga_clear_chars(int start_pos, int count) {
         VGA_MEMORY[i] = ' ' | (color_byte << 8);
     }
 }
+
+void vga_move_cursor(uint8_t row, uint8_t col) {
+    vga_cursor_x = col;
+    vga_cursor_y = row;
+    set_cursor(row * SCREEN_WIDTH + col);
+}

@@ -687,6 +687,30 @@ static void clr(const char* arg) {
     print("Color set.\n");
 }
 
+void putnum(int num) {
+    char buf[12];
+    int i = 0;
+
+    if (num == 0) {
+        putchar('0');
+        return;
+    }
+
+    if (num < 0) {
+        putchar('-');
+        num = -num;
+    }
+
+    while (num > 0 && i < sizeof(buf)) {
+        buf[i++] = '0' + (num % 10);
+        num /= 10;
+    }
+
+    while (i--) {
+        putchar(buf[i]);
+    }
+}
+
 void txt(const char *filename) {
     if (!filename || *filename == '\0') {
         putstr("Usage: txt <file>\n");
@@ -697,11 +721,10 @@ void txt(const char *filename) {
     size_t index = 0;
     bool saved = true;
     bool is_new = false;
-    bool insert_mode = true;
 
     uint32_t parent_inode = 0;
 
-    cls("");
+    clear_screen();
 
     ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
     if (!file) {
@@ -720,21 +743,31 @@ void txt(const char *filename) {
         index = file->size;
     }
 
+    putstr("[ESC = Save & Exit | INSERT = Exit (Without save)] ");
     putstr(is_new ? "[NEW FILE] " : "[EDITING] ");
     putstr(filename);
-    putstr("              [ESC = Save & Exit | INSERT = Exit (Without save)]\n");
-    putchar('\n');
-    vga_set_cursor(1, 0);
+
+    vga_move_cursor(1, 0);
 
     for (size_t i = 0; i < index; i++) {
-        putchar(buffer[i]);
+        if (buffer[i] == '\n') {
+            uint8_t row, col;
+            vga_get_cursor(&row, &col);
+            row++;
+            col = 0;
+            if (row >= get_screen_height()) {
+                row = get_screen_height() - 1;
+            }
+            vga_move_cursor(row, col);
+        } else {
+            vga_putchar(buffer[i]);
+        }
     }
 
     while (1) {
         int ch = keyboard_getchar();
 
         if (ch == 27) break;
-
         if (ch == KEY_INSERT) {
             saved = false;
             break;
@@ -743,37 +776,60 @@ void txt(const char *filename) {
         uint8_t row, col;
         vga_get_cursor(&row, &col);
 
-        if (ch == 8 && index > 0 && row > 1) {
+        if (ch == 8 && index > 0) {
             index--;
+            char removed = buffer[index];
             buffer[index] = '\0';
-            putchar(8); putchar(' '); putchar(8);
-        }
 
-        else if (ch == '\r') {
-            if (index < sizeof(buffer) - 1) {
-                buffer[index++] = '\n';
-                putchar('\n');
-            }
-        }
-
-        else if ((ch >= 32 && ch <= 126) && index < sizeof(buffer) - 1 && row >= 1) {
-            if (insert_mode) {
-                buffer[index++] = (char)ch;
+            if (removed == '\n') {
+                if (row > 0) row--;
+                col = 0;
             } else {
-                if (index < sizeof(buffer)) {
-                    buffer[index++] = (char)ch;
+                if (col > 0) {
+                    col--;
+                } else if (row > 0) {
+                    row--;
+                    col = get_screen_width() - 1;
                 }
             }
-            putchar((char)ch);
 
-            if (col >= 79) {
-                putchar('\n');
+            vga_move_cursor(row, col);
+            vga_putchar(' ');
+            vga_move_cursor(row, col);
+        }
+
+        else if (ch == KEY_ENTER) {
+            if (index < sizeof(buffer) - 1) {
+                buffer[index++] = '\n';
+
+                row++;
+                col = 0;
+
+                if (row >= get_screen_height()) {
+                    row = get_screen_height() - 1;
+                }
+
+                vga_move_cursor(row, col);
             }
         }
 
+        else if (ch >= 32 && ch <= 126 && index < sizeof(buffer) - 1) {
+            buffer[index++] = (char)ch;
+            vga_putchar((char)ch);
+
+            col++;
+            if (col >= get_screen_width()) {
+                col = 0;
+                row++;
+                if (row >= get_screen_height()) {
+                    row = get_screen_height() - 1;
+                }
+            }
+            vga_move_cursor(row, col);
+        }
     }
 
-    vga_set_cursor(23, 0);
+    vga_move_cursor(get_screen_height() - 1, 0);
     if (saved) {
         memcpy(file->data, buffer, index);
         file->size = index;
@@ -1026,10 +1082,6 @@ static void die(const char* args) {
     print("\n");
 }
 
-//static void nyn(const char*) {
-//    nyan();
-//}
-
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1056,15 +1108,14 @@ static shell_command_t commands[] = {
     {"mov", mov},
     {"cop", cop},
     {"die", die},
-//    {"nyn", nyn},
     {NULL, NULL}
 };
 
 bool execute_command(const char* command, const char* args) {
     for (int i = 0; commands[i].name != NULL; i++) {
         if (kstrcmp(command, commands[i].name) == 0) {
-            commands[i].func(args);  // still void
-            return true;             // centralized success
+            commands[i].func(args);
+            return true;
         }
     }
 
