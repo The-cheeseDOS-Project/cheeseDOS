@@ -23,8 +23,6 @@ on:
     paths:
       - 'src/**'
       - 'build.sh'
-    paths-ignore:
-      - 'src/boot/specs.txt'
   workflow_dispatch:
 
 permissions:
