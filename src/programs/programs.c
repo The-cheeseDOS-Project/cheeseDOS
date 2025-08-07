@@ -376,12 +376,14 @@ static void bep(const char* args) {
 static void off(const char* args) {
     (void)args;
     print("Shutting down... Goodbye!");
+    sprint("\nShutting down target...\n\n");
     shutdown();
 }
 
 static void res(const char* args) {
     (void)args;
     print("Rebooting... See you later!");
+    sprint("\nRebooting target...\n\n");
     reboot();
 }
 
@@ -464,7 +466,7 @@ static void add(const char* args) {
         size_t filename_len = space_pos - args;
         if (filename_len >= RAMDISK_FILENAME_MAX) {
             set_text_color(COLOR_RED, COLOR_BLACK);
-            print("Error: Filename too long (max 27 characters).\n");
+            print("Error: Filename too long (max 32 characters).\n");
             set_text_color(default_text_fg_color, default_text_bg_color);
             return;
         }
@@ -562,8 +564,6 @@ static void add(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-
-    print("Text successfully added to file\n");
 }
 
 static void rem(const char* args) {
@@ -575,7 +575,6 @@ static void rem(const char* args) {
     }
     int res = ramdisk_remove_file(current_dir_inode_no, args);
     if (res == 0) {
-        print("File removed\n");
     } else {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to remove file\n");
@@ -592,7 +591,6 @@ static void mkd(const char* args) {
     }
     int res = ramdisk_create_dir(current_dir_inode_no, args);
     if (res == 0) {
-        print("Directory created\n");
     } else {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to create directory\n");
@@ -613,7 +611,6 @@ static void cd(const char* args) {
             ramdisk_inode_t *cur_dir = ramdisk_iget(current_dir_inode_no);
             if (cur_dir) current_dir_inode_no = cur_dir->parent_inode_no;
         }
-        print("Moved up\n");
         return;
     }
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
@@ -685,7 +682,6 @@ static void clr(const char* arg) {
     default_text_bg_color = COLOR_BLACK;
     set_text_color(default_text_fg_color, default_text_bg_color);
     clear_screen();
-    print("Color set.\n");
 }
 
 void putnum(int num) {
@@ -1074,7 +1070,6 @@ static void mov(const char* args) {
     for (size_t k = 0; k < RAMDISK_FILENAME_MAX; ++k) src_inode->name[k] = 0;
     for (size_t k = 0; k < len; ++k) src_inode->name[k] = dst[k];
     src_inode->name[len] = 0;
-    print("Moved/Renamed successfully\n");
 }
 
 static void cop(const char* args) {
@@ -1151,7 +1146,6 @@ static void cop(const char* args) {
     if (bytes > RAMDISK_DATA_SIZE_BYTES) bytes = RAMDISK_DATA_SIZE_BYTES;
     for (int k = 0; k < bytes; ++k) dst_inode->data[k] = src_inode->data[k];
     dst_inode->size = bytes;
-    print("Copied successfully\n");
 }
 
 static unsigned int seed = 123456789;
