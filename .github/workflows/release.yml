@@ -28,14 +28,13 @@ on:
       - 'src/boot/specs.txt'
   workflow_dispatch:
 
-jobs:
-  call_version:
-    uses: The-cheeseDOS-Project/cheeseDOS/.github/workflows/version.yml@main
-
 permissions:
   contents: write
 
 jobs:
+  call_version:
+    uses: The-cheeseDOS-Project/cheeseDOS/.github/workflows/version.yml@main
+
   build_and_release:
     needs: call_version
     runs-on: self-hosted
