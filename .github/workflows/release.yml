@@ -40,7 +40,7 @@ jobs:
       - name: Generate timestamp 
         run: |
           DATE=$(date +"%m%d%y%H%M%S")
-          echo "$DATE" > src/version/version.txt
+          echo "a$DATE" > src/version/version.txt
 
       - name: Commit version.txt
         run: |
@@ -67,7 +67,7 @@ jobs:
         id: readtag
         run: |
           TAG=$(cat src/version/version.txt)
-          echo "a$TAG" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release and Upload IMG
         env:
