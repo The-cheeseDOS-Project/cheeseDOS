@@ -25,7 +25,7 @@
 
 void kmain() {
     qprint("Loading KERNEL... OK!\n");
-    sprint("cheeseDOS alpha version ");
+    sprint("cheeseDOS version ");
     sprint(_binary_src_version_version_txt_start);
     qprint("Loading RAMDISK...");
     ramdisk_init();
