@@ -195,10 +195,6 @@ function all {
   echo -n "Building serial.o..."
   build_object "$UART_DIR/serial.c" "$BUILD_DIR/serial.o"
   echo " Done!"
-
-#  echo -n "Building nyan.o..."
-#  build_object "$NYAN_DIR/nyan.c" "$BUILD_DIR/nyan.o"
-#  echo " Done!"
   
   echo -n "Building banner.o..."
   objcopy -I binary -O elf32-i386 -B i386 \
@@ -239,35 +235,7 @@ function all {
     echo -n "Pad $FLOPPY..." # Remove when autodetect disk geometry is added
     truncate "$FLOPPY" -s '1474560' # Remove when autodetect disk geometry is added
     echo " Done!" # Remove when autodetect disk geometry is added
- fi
-# Comment out the sanity loosing stuffs for now.  
-#  if test "${BUILD_CDROM:-1}" -eq 1; then
-#    echo
-#    
-#    echo -n "Making directory $ISO_ROOT..."
-#    mkdir -p "$ISO_ROOT"
-#    echo " Done!"
-#
-#    echo -n "Copying kernel to $ISO_ROOT..."
-#    cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/kernel.elf"
-#    echo " Done!"
-#
-#    echo -n "Copying bootloader to $ISO_ROOT..."
-#    cp "$BUILD_DIR/boot.bin" "$ISO_ROOT/boot.bin"
-#    echo " Done!"
-#
-#    echo -n "Building $CDROM..."
-#        
-#    xorriso -as mkisofs -o "$CDROM" \
-#            -b boot.bin \
-#            -no-emul-boot \
-#            -boot-load-size 4 \
-#            -input-charset utf-8 "$ISO_ROOT" \
-#            > /dev/null 2>&1
-#    
-#    echo " Done!"
-#  fi
-  
+ fi  
   echo
 
 #  echo -n "Cleaning up..."
@@ -282,12 +250,6 @@ function all {
 MEM=1M
 CPU=486
 
-#function run {
-#  echo "Run with 'run-floppy' or 'run-cdrom' (run-cdrom is in very early works)"
-#}
-
-#function run-floppy {
-
 function run {
   qemu-system-$MARCH \
   -audiodev pa,id=snd0 \
@@ -297,15 +259,6 @@ function run {
   -m "$MEM" \
   -cpu "$CPU"
 }
-
-#function run-cdrom {
-#  qemu-system-$MARCH \
-#  -audiodev pa,id=snd0 \
-#  -machine pcspk-audiodev=snd0 \
-#  -cdrom "$CDROM" \
-#  -m "$MEM" \
-#  -cpu "$CPU"
-#}
 
 function write {
   lsblk
@@ -317,8 +270,6 @@ function write {
 
 function deps {
   echo "Checking for required tools: gcc, binutils, qemu-system-x86_64..."
-
-  # Detect package manager
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
   elif command -v dnf &> /dev/null; then
@@ -332,8 +283,6 @@ function deps {
   else
     pkg_mgr="unknown"
   fi
-
-  # Map commands to distro-specific package names
   declare -A pkg_map
   case "$pkg_mgr" in
     apt)
@@ -376,23 +325,18 @@ function deps {
       return 1
       ;;
   esac
-
-  # Check for missing commands
   missing=()
   for cmd in "${!pkg_map[@]}"; do
     if ! command -v "$cmd" &> /dev/null; then
       missing+=("${pkg_map[$cmd]}")
     fi
   done
-
   if [ ${#missing[@]} -eq 0 ]; then
     echo "All dependencies are already installed."
     return 0
   fi
-
   echo "Missing: ${missing[*]}"
   echo "Attempting to install missing dependencies..."
-
   case "$pkg_mgr" in
     apt)
       sudo apt-get update
@@ -414,8 +358,50 @@ function deps {
       done
       ;;
   esac
+  if command -v apt &> /dev/null; then
+    echo "Detected apt-based system."
+    sudo apt-get update
+    sudo apt-get install -y "${missing[@]}"
+  elif command -v dnf &> /dev/null; then
+   elif command -v dnf &> /dev/null; then
+  echo "Detected dnf-based system."
+  install_list=()
+  for cmd in "${!pkg_map[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+      pkg="${pkg_map[$cmd]}"
+      if dnf list --quiet available "$pkg" &> /dev/null; then
+        install_list+=("$pkg")
+      else
+        echo "Package not found in repos: $pkg (skipping)"
+      fi
+    fi
+  done
+  if [ ${#install_list[@]} -gt 0 ]; then
+    sudo dnf install -y "${install_list[@]}"
+  else
+    echo "No installable missing packages found."
+  fi
+  elif command -v zypper &> /dev/null; then
+    echo "Detected SUSE-based system."
+    sudo zypper install -y "${missing[@]}"
+  elif command -v pacman &> /dev/null; then
+    echo "Detected Arch-based system."
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm "${missing[@]}"
+  elif command -v emerge &> /dev/null; then
+    echo "Detected Gentoo-based system."
+    for pkg in "${missing[@]}"; do
+      sudo emerge "$pkg"
+    done
+  else
+    echo "Unsupported distro. Please install manually:"
+    for pkg in "${missing[@]}"; do
+      echo "  - $pkg"
+    done
+    echo "See: https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run#prerequisites"
+    return 1
+  fi
 }
-
 
 function clean {
   echo -n "Cleaning up: "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"..."
