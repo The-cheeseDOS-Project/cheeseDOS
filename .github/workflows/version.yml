@@ -50,7 +50,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add src/version.txt
-          git commit -m "Update version.txt to $(cat src/version.txt)"
+          git commit -m "Update version.txt to $(cat src/version/version.txt)"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
