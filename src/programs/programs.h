@@ -19,7 +19,7 @@
 #ifndef PROGRAMS_H
 #define PROGRAMS_H
 
-void execute_command(const char* command, const char* args);
+bool execute_command(const char* command, const char* args);
 void print_int(int n);
 void print_ansi(const char* ansi_str);
 

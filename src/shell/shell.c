@@ -23,7 +23,6 @@
 #include "programs.h"
 #include "beep.h"
 #include "timer.h"
-
 #include "serial.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -83,6 +82,11 @@ static void load_history_line(char *input, int *idx, int *cursor_index, int pos)
 
 void shell_execute(const char* cmd) {
     if (cmd[0] == '\0') return;
+
+    sprint("Running: ");
+    sprint(cmd);
+    sprint("...");
+
     char command[INPUT_BUF_SIZE];
     const char *args;
     args = kstrchr(cmd, ' ');
@@ -97,14 +101,19 @@ void shell_execute(const char* cmd) {
         command[INPUT_BUF_SIZE - 1] = '\0';
         args = NULL;
     }
-    execute_command(command, args);
+
+    bool success = execute_command(command, args);
+    if (success) {
+        sprint(" OK!\n");
+    }
 }
 
 void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
-    qprint(" OK!\n\n");
+    print(" OK!\n\n");
+    sprint(" OK!\n");
     print("\nWelcome to ");
     shell_execute("ver");
     print_prompt();

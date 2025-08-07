@@ -28,7 +28,7 @@
 #include "io.h"
 #include "timer.h"
 #include "keyboard.h"
-// #include "nyan.h"
+#include "serial.h"
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -1060,19 +1060,19 @@ static shell_command_t commands[] = {
     {NULL, NULL}
 };
 
-void execute_command(const char* command, const char* args) {
-    int found = 0;
+bool execute_command(const char* command, const char* args) {
     for (int i = 0; commands[i].name != NULL; i++) {
         if (kstrcmp(command, commands[i].name) == 0) {
-            commands[i].func(args);
-            found = 1;
-            break;
+            commands[i].func(args);  // still void
+            return true;             // centralized success
         }
     }
-    if (!found) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print(command);
-        print(": command not found\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-    }
+
+    set_text_color(COLOR_RED, COLOR_BLACK);
+    sprint(" FAIL!: ");
+    qprint(command);
+    qprint(": command not found\n");
+    set_text_color(default_text_fg_color, default_text_bg_color);
+
+    return false;
 }

@@ -54,6 +54,5 @@ void putstr(const char *str);
 void putchar(char ch);
 void vga_set_cursor(uint8_t row, uint8_t col);
 void vga_get_cursor(uint8_t *row, uint8_t *col);
-int get_cursor();
 
 #endif

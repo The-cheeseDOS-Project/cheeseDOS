@@ -21,6 +21,7 @@
 
 void shell_run();
 void print(const char* str);
+bool execute_command(const char* command, const char* args);
 void shell_execute(const char* cmd);
 
 #endif
