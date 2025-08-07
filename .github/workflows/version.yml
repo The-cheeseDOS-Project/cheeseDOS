@@ -17,6 +17,7 @@
 name: Generate CheeseDOS Version
 
 on:
+  workflow_call: {}
   workflow_dispatch:
   push:
     branches:
