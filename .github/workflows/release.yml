@@ -20,11 +20,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'build.sh'
     paths-ignore:
-      - '**/*.md'
-      - LICENSE
-      - .gitignore
-      - '.github/ISSUE_TEMPLATE/**'
       - 'src/boot/specs.txt'
   workflow_dispatch:
 
@@ -32,17 +31,29 @@ permissions:
   contents: write
 
 jobs:
-  call_version:
-    uses: The-cheeseDOS-Project/cheeseDOS/.github/workflows/version.yml@main
 
   build_and_release:
-    needs: call_version
     runs-on: self-hosted
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Generate timestamp
+        run: |
+          DATE=$(date +"%m%d%y%H%M%S")
+          echo "$DATE" > src/version/version.txt
+
+      - name: Commit version.txt
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add src/version/version.txt
+          git commit -m "Update version.txt to $(cat src/version/version.txt)"
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Build
         run: |
           chmod +x ./build.sh
