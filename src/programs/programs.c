@@ -279,7 +279,7 @@ static void hlp(const char* args) {
 
 static void ver(const char* args) {
     (void)args;
-    print("cheeseDOS alpha version ");
+    print("cheeseDOS version ");
     print(_binary_src_version_version_txt_start);
 }
 
