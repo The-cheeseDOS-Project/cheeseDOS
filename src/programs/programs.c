@@ -844,11 +844,14 @@ void txt(const char *filename) {
     if (saved) {
         memcpy(file->data, buffer, index);
         file->size = index;
-        putstr("[SAVED]\n");
+        clear_screen();
+        print("Saved as: ");
+        print(filename);
+        print("\n");
     } else {
-        putstr("[EXIT WITHOUT SAVING]\n");
+        clear_screen();
+        print("File was not saved.\n");
     }
-    clear_screen();
 }
 
 static void run_script(const char* args) {
