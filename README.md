@@ -17,6 +17,15 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB live 
 
 ![`ban` command](https://github.com/user-attachments/assets/878da25a-20ca-4889-a173-5b3517f210c1)
 
+> [!WARNING]
+> On real hardware, CheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
+
+> [!IMPORTANT]
+> Only 1.44MB floppy's on real IDE/SCSI with a CHS capable BIOS have a chance of working, use QEMU if you don't have those.
+
+> [!NOTE]
+> If you have any problems, please open an issue, you **WILL** get help!
+
 ## Getting Started
 
 You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest). Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Writing).
