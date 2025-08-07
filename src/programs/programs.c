@@ -837,6 +837,7 @@ void txt(const char *filename) {
     } else {
         putstr("[EXIT WITHOUT SAVING]\n");
     }
+    clear_screen();
 }
 
 
