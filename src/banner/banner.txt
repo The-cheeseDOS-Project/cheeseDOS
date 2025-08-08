@@ -11,7 +11,7 @@
 [94m        |  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  ||  ()  |[0m
 [95m        |______||______||______||______||______||______||______||______|[0m
                      
-[93mIs a x86, fully GNU GPLed, custom C written, super small, 1.44MB live CLI based DOS like OS that loads into RAM.[0m
+[93mIs a i386, fully GNU GPLed, custom C written, super small, 1.44MB live Single Address Space Diskette Operating System that loads into RAM.[0m
 
 
 
