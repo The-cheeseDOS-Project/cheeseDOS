@@ -246,23 +246,11 @@ void print_int(int n) {
     print_uint((unsigned int)n);
 }
 
-// TODO: Fix the weird stray '*'
 static void ban(const char*) {
-//   clear_screen();
+    clear_screen();
     set_cursor_pos(0);
     print_ansi((const char*)_binary_src_banner_banner_txt_start);
     set_text_color(default_text_fg_color, default_text_bg_color);
-//    int key;
-//    print("\nPress 'e' to exit to shell");
-//    int keyboard_getchar(void);
-//
-//    while (1) {
-//        key = keyboard_getchar();
-//        if (key == 'e' || key == 'E') {
-//            clear_screen();
-//            break;
-//        }
-//    }
 }
 
 typedef void (*command_func_t)(const char* args);
@@ -274,7 +262,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth.");
 }
 
 static void ver(const char* args) {
