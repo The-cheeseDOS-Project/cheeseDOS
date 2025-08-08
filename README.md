@@ -36,7 +36,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 |-------------|--------------------------------------------------------------------|
 | Processor   | i386 class or newer x86-compatible processor (including x86_64)    |
 | Storage     | Only 1.44MB Floppy Booting is supported (CD-ROM, 5.25" floppy, and more in the works!) |
-| Keyboard    | PS/2 QWERTY keyboard (Non-HID USB keyboards most likley will not work)             |
+| Keyboard    | PS/2 QWERTY keyboard (Non-HID USB keyboards most likely won't work) |
 | Firmware    | Legacy BIOS only (UEFI is not supported)                           |
 
 ## Building
