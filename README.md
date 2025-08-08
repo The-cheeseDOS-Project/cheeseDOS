@@ -30,7 +30,7 @@ cheeseDOS is a i386, fully GNU GPLed, custom C written, super small, 1.44MB live
 
 You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest). Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Writing).
 
-## System Requirements (for booting on real hardware)
+## System Requirements
 
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
