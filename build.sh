@@ -103,10 +103,38 @@ FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
        -fno-stack-protector \
-       -fno-builtin-strcpy \
-       -fno-builtin-strncpy \
-       -nostdinc"
-
+       -fno-builtin \
+       -nostdinc \
+       -fno-pic \
+       -mno-red-zone \
+       -Wl,--build-id=none \
+       -fomit-frame-pointer \
+       -fno-unwind-tables \
+       -fno-asynchronous-unwind-tables \
+       -fno-ident \
+       -Wl,--gc-sections \
+       -fdata-sections \
+       -ffunction-sections \
+       -Wl,-s \
+       -malign-double \
+       -frename-registers \
+       -fweb \
+       -fno-stack-check \
+       -fno-zero-initialized-in-bss \
+       -fno-common \
+       -fstrict-aliasing \
+       -Wl,--section-start=.text=0x1000 \
+       -Wl,--no-undefined \
+       -falign-functions=16 \
+       -falign-loops=16 \
+       -falign-jumps=16 \
+       -fno-inline-small-functions \
+       -fno-inline-functions-called-once \
+       -fno-schedule-insns2 \
+       -fno-unroll-loops \
+       -fmerge-all-constants \
+       -fno-ident"
+       
 CFLAGS="-m$BITS \
         -march=$MARCH \
         -O$OPT \
