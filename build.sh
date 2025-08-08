@@ -123,6 +123,8 @@ build_object() {
 }
 
 function all {
+  start=$(date +%s%N)
+
   echo The cheeseDOS Build System
   echo
   echo BITS=$BITS
@@ -144,63 +146,49 @@ function all {
 
   echo
 
-  echo -n "Building kernel.o..."
-  build_object "$KERNEL_DIR/kernel.c" "$BUILD_DIR/kernel.o"
-  echo " Done!"
+  build_jobs=()
 
-  echo -n "Building shell.o..."
-  build_object "$SHELL_DIR/shell.c" "$BUILD_DIR/shell.o"
-  echo " Done!"
+  build_echo() {
+    src="$1"
+    obj="$2"
+    name="$(basename "$obj")"
 
-  echo -n "Building vga.o..."
-  build_object "$VGA_DIR/vga.c" "$BUILD_DIR/vga.o"
-  echo " Done!"
+    {
+      output=$(mktemp)
+      if build_object "$src" "$obj" >"$output" 2>&1; then
+        echo "Building $name... Done!"
+      else
+        echo "Building $name... Failed!"
+        cat "$output"
+      fi
+      rm -f "$output"
+    } &
+    build_jobs+=($!)
+  }
 
-  echo -n "Building keyboard.o..."
-  build_object "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
-  echo " Done!"
+  build_echo "$KERNEL_DIR/kernel.c"   "$BUILD_DIR/kernel.o"
+  build_echo "$SHELL_DIR/shell.c"     "$BUILD_DIR/shell.o"
+  build_echo "$VGA_DIR/vga.c"         "$BUILD_DIR/vga.o"
+  build_echo "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
+  build_echo "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
+  build_echo "$CALC_DIR/calc.c"       "$BUILD_DIR/calc.o"
+  build_echo "$STRING_DIR/string.c"   "$BUILD_DIR/string.o"
+  build_echo "$RTC_DIR/rtc.c"         "$BUILD_DIR/rtc.o"
+  build_echo "$BEEP_DIR/beep.c"       "$BUILD_DIR/beep.o"
+  build_echo "$ACPI_DIR/acpi.c"       "$BUILD_DIR/acpi.o"
+  build_echo "$TIMER_DIR/timer.c"     "$BUILD_DIR/timer.o"
+  build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  build_echo "$UART_DIR/serial.c"     "$BUILD_DIR/serial.o"
 
-  echo -n "Building ramdisk.o..."
-  build_object "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
-  echo " Done!"
-
-  echo -n "Building calc.o..."
-  build_object "$CALC_DIR/calc.c" "$BUILD_DIR/calc.o"
-  echo " Done!"
-
-  echo -n "Building string.o..."
-  build_object "$STRING_DIR/string.c" "$BUILD_DIR/string.o"
-  echo " Done!"
-
-  echo -n "Building rtc.o..."
-  build_object "$RTC_DIR/rtc.c" "$BUILD_DIR/rtc.o"
-  echo " Done!"
-
-  echo -n "Building beep.o..."
-  build_object "$BEEP_DIR/beep.c" "$BUILD_DIR/beep.o"
-  echo " Done!"
-
-  echo -n "Building acpi.o..."
-  build_object "$ACPI_DIR/acpi.c" "$BUILD_DIR/acpi.o"
-  echo " Done!"
-
-  echo -n "Building timer.o..."
-  build_object "$TIMER_DIR/timer.c" "$BUILD_DIR/timer.o"
-  echo " Done!"
+  for job in "${build_jobs[@]}"; do
+    wait "$job"
+  done
 
   echo -n "Building version.o..."
   objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
           "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
   echo " Done!"
 
-  echo -n "Building programs.o..."
-  build_object "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  echo " Done!"
-
-  echo -n "Building serial.o..."
-  build_object "$UART_DIR/serial.c" "$BUILD_DIR/serial.o"
-  echo " Done!"
-  
   echo -n "Building banner.o..."
   objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
@@ -247,9 +235,13 @@ function all {
 #  rm -rf "$BUILD_DIR" "$ISO_ROOT"
 #  echo " Done!"
   
-  echo
+#  echo
 
-  echo "Build completed, Floppy is $FLOPPY and CD-ROM is $CDROM".
+  end=$(date +%s%N)
+  elapsed_ns=$((end - start))
+  elapsed_sec=$(printf "%d.%03d\n" $((elapsed_ns / 1000000000)) $(((elapsed_ns / 1000000) % 1000)))
+
+  echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
 }
 
 MEM=1M
