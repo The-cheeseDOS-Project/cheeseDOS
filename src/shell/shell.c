@@ -24,6 +24,7 @@
 #include "beep.h"
 #include "timer.h"
 #include "serial.h"
+#include "ramdisk.h"
 #include "stddef.h"
 #include "stdint.h"
 
@@ -41,7 +42,7 @@ extern void print_ansi(const char* ansi_str);
 
 static void print_prompt() {
     set_text_color(COLOR_YELLOW, COLOR_BLACK); 
-    print("/");
+    shell_execute("pth"); // Yes I know it's a bit hacky but hey, it works!
     set_text_color(COLOR_CYAN, COLOR_BLACK);
     print("> ");
     set_text_color(COLOR_WHITE, COLOR_BLACK);

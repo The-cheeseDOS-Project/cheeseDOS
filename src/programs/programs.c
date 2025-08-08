@@ -1266,6 +1266,15 @@ static void die(const char* args) {
     print("\n");
 }
 
+static void pth(const char*) {
+    char path_buffer[256];
+    if (ramdisk_get_path(current_dir_inode_no, path_buffer, sizeof(path_buffer)) == 0) {
+        print(path_buffer);
+    } else {
+        print("Error getting path\n");
+    }
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1292,6 +1301,7 @@ static shell_command_t commands[] = {
     {"mov", mov},
     {"cop", cop},
     {"die", die},
+    {"pth", pth},
     {NULL, NULL}
 };
 
