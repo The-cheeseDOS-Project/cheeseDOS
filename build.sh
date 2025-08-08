@@ -97,7 +97,7 @@ OBJS=(
 
 BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
 MARCH=i386 # i386 is 32-bit and is backward compatible with i486, i586, i686 and most x86_64 cpus
-OPT=fast # Change to 2 or 3 if you have stability issues
+OPT=2 # Change to 2 or 3 if you have stability issues
 
 FLAGS="-ffreestanding \
        -Wall \
