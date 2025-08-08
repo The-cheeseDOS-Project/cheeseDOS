@@ -20,9 +20,6 @@ cheeseDOS is a i386, fully GNU GPLed, custom C written, super small, 1.44MB live
 > [!WARNING]
 > On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
 
-> [!IMPORTANT]
-> Only 1.44MB floppy's on real IDE/SCSI with a CHS capable BIOS have a chance of working, use QEMU if you don't have those.
-
 > [!NOTE]
 > If you have any problems, please open an issue, you **WILL** get help!
 
