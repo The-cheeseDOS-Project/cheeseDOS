@@ -35,7 +35,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 | Component   | Requirement                                                        |
 |-------------|--------------------------------------------------------------------|
 | Processor   | i386 class or newer x86-compatible processor                       |
-| Storage     | 13.5" 1.44MB Floppy Diskette                                       |
+| Storage     | 13.5" 1.44MB Floppy Diskette with IDE/SCSI Floppy drive (USB drives may work but I haven't gotten it stable) |
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                                    |
 | Firmware    | CHS capable BIOS                                                   |
 
