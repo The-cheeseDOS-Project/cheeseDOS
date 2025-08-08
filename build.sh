@@ -197,11 +197,11 @@ function all {
   echo
 
   echo -n "Assembling bootloader..."
-  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/1.44mb-floppy.o" "$BOOT_DIR/1.44mb-floppy.S"
+  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
   echo " Done!"
   
   echo -n "Linking bootloader..."
-  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/1.44mb-floppy.o"
+  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
   echo " Done!"
   
   echo -n "Converting boot.elf into boot.bin..."
@@ -382,10 +382,8 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
-  run-floppy) run-floppy ;;
-  run-cdrom) run-cdrom ;;
   write) write ;;
   burn) burn ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run-floppy|run-cdrom|write-floppy|clean}" ;;
+  *) echo "Usage: $0 {all|run|write|clean}" ;;
 esac
