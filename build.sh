@@ -274,6 +274,7 @@ function all {
 
 MEM=1M
 CPU=486
+CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 function run {
   qemu-system-$MARCH \
@@ -282,7 +283,7 @@ function run {
   -serial stdio \
   -drive format=raw,file="$FLOPPY",index=0,if=floppy \
   -m "$MEM" \
-  -cpu "$CPU"
+  -cpu "$CPU","$CPU_FLAGS"
 }
 
 function write {
