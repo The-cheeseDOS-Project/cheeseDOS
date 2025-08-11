@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-## NOTE: Add autodetect disk geometry
+## NOTE: Use LBA
 
 .intel_syntax noprefix
 .code16
