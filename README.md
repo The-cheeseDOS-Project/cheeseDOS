@@ -59,5 +59,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 ### Shoutouts
 - Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
 - Shout out to [anchored-archer](https://github.com/anchored-archer) for just being a cool person!
+- Shout out to [ImNotJahan](https://github.com/ImNotJahan) for fixing a typo!
+- and Shout out to **YOU!** for visting the cheeseDOS GitHub page!
 
 It's all about the pentoims!!
