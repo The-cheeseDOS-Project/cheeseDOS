@@ -21,6 +21,9 @@ cheeseDOS is a i386, fully GNU GPLed, custom C written, super small, 1.44MB live
 > On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
 
 > [!NOTE]
+> cDOS will be moving up the requirements to need extended BIOS and CD-ROM.
+
+> [!NOTE]
 > If you have any problems, please open an issue, you **WILL** get help!
 
 ## Getting Started
