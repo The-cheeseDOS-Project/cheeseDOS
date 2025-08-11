@@ -95,54 +95,29 @@ OBJS=(
   "$BUILD_DIR/version.o"
 )
 
-BITS=32 # 32 is backwards compatible with 64 but not vice versa and also don't change?
-MARCH=i386 # i386 is 32-bit and is backward compatible with i486, i586, i686 and most x86_64 cpus
-OPT=3 # 0 Does not work for some reason, use 2 if you get a lot of crashes.
+BITS=32
+MARCH=i486
+OPT=2
+MTUNE=$MARCH
+GDBINFO=0
 
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
        -fno-stack-protector \
        -fno-builtin \
-       -nostdinc \
-       -fno-pic \
-       -mno-red-zone \
-       -Wl,--build-id=none \
-       -fomit-frame-pointer \
-       -fno-unwind-tables \
-       -fno-asynchronous-unwind-tables \
-       -fno-ident \
-       -Wl,--gc-sections \
-       -fdata-sections \
-       -ffunction-sections \
-       -Wl,-s \
-       -malign-double \
-       -frename-registers \
-       -fweb \
-       -fno-stack-check \
-       -fno-zero-initialized-in-bss \
-       -fno-common \
-       -fstrict-aliasing \
-       -Wl,--section-start=.text=0x1000 \
-       -Wl,--no-undefined \
-       -falign-functions=16 \
-       -falign-loops=16 \
-       -falign-jumps=16 \
-       -fno-inline-small-functions \
-       -fno-inline-functions-called-once \
-       -fno-schedule-insns2 \
-       -fno-unroll-loops \
-       -fmerge-all-constants \
-       -fno-ident"
+       -nostdinc"
        
 CFLAGS="-m$BITS \
         -march=$MARCH \
         -O$OPT \
+        -mtune=$MTUNE \
+        -g$GDBINFO
         $FLAGS \
         $INCLUDES"
 
 LDFLAGS="-m \
-         elf_$MARCH \
+         elf_i386 \
          -z \
          noexecstack"
 
@@ -213,12 +188,12 @@ function all {
   done
 
   echo -n "Building version.o..."
-  objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
+  objcopy -I binary -O elf$BITS-i386 -B i386 \
           "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
   echo " Done!"
 
   echo -n "Building banner.o..."
-  objcopy -I binary -O elf$BITS-$MARCH -B $MARCH \
+  objcopy -I binary -O elf$BITS-i386 -B i386 \
           "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
   echo " Done!"
 
@@ -274,10 +249,10 @@ function all {
 
 MEM=1M
 CPU=486
-CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
+CPU_FLAGS="-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 function run {
-  qemu-system-$MARCH \
+  qemu-system-i386 \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
