@@ -41,6 +41,17 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                                    |
 | Firmware    | CHS capable BIOS                                                   |
 
+## Philosophy
+
+- Fully under the GNU GPL v3
+- Works on vintage hardware
+- Runs as fast as possible
+- Uses 100% custom code and libraries (besides the toolchain)
+- Only needs 1 command to compile (including installing dependencies)
+- Compiles the same exact way on every system
+- Always has a precompiled image of its latest version
+- Super simple to use
+
 ## Building
 
 For instructions on building from source, refer to the [Build and Run Guide](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run).
