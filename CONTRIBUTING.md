@@ -52,6 +52,7 @@ There are many ways to contribute, including:
     - 2. Write clear, readable, and well-commented code.
     - 3. Code must work and be tested with `./build.sh run`.
     - 4. ONLY .ld, .S, .h, .c, .md (git docs only), and, Containerfile is allowed.
+    - 5. Featrues must be mostly working before a PR.
 
 ## Reporting Issues
 
