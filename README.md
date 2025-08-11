@@ -47,7 +47,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 - Works on vintage hardware
 - Runs as fast as possible
 - Uses 100% custom code and libraries (besides the toolchain)
-- Only needs 1 command to compile (including installing dependencies)
+- Only needs one command to compile (including installing dependencies)
 - Compiles the same exact way on every system
 - Always has a precompiled image of its latest version
 - Super simple to use
