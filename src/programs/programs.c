@@ -262,7 +262,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit.");
 }
 
 static void ver(const char* args) {
