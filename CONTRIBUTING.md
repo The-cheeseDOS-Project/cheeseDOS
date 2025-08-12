@@ -6,11 +6,11 @@ Thank you for your interest in contributing to cheeseDOS!
 
 There are many ways to contribute, including:
 
-    - Reporting bugs and issues  
-    - Suggesting features or improvements  
-    - Writing and improving documentation  
-    - Submitting code patches or new features  
-    - Helping with testing and providing feedback
+- Reporting bugs and issues  
+- Suggesting features or improvements  
+- Writing and improving documentation  
+- Submitting code patches or new features  
+- Helping with testing and providing feedback
 
 ## Getting Started
 
