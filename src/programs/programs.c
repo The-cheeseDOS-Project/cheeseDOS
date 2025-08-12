@@ -261,7 +261,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit, stc, &.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit, stc, &, xms.");
 }
 
 static void ver(const char*) {
@@ -1412,6 +1412,58 @@ exit_demo:
     return;
 }
 
+static void xms(const char*) {
+    print("This is the only free domain song I can find so you just need to deal with it...");
+    beep(523,386);beep(698,386);beep(698,193);beep(784,193);beep(698,193);beep(659,193);
+    beep(587,386);beep(587,386);beep(587,386);
+    beep(784,386);beep(784,193);beep(880,193);beep(784,193);beep(698,193);
+    beep(659,386);beep(523,386);beep(523,386);
+    beep(880,386);beep(880,193);beep(932,193);beep(880,193);beep(784,193);
+    beep(698,386);beep(587,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(523,386);
+    beep(698,386);beep(698,193);beep(784,193);beep(698,193);beep(659,193);
+    beep(587,386);beep(587,386);beep(587,386);
+    beep(784,386);beep(784,193);beep(880,193);beep(784,193);beep(698,193);
+    beep(659,386);beep(523,386);beep(523,386);
+    beep(880,386);beep(880,193);beep(932,193);beep(880,193);beep(784,193);
+    beep(698,386);beep(587,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(523,386);
+    beep(698,386);beep(698,386);beep(698,386);
+    beep(659,771);beep(659,386);
+    beep(698,386);beep(659,386);beep(587,386);
+    beep(523,771);beep(880,386);
+    beep(932,386);beep(880,386);beep(784,386);
+    beep(1047,386);beep(523,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(523,386);
+    beep(698,386);beep(698,193);beep(784,193);beep(698,193);beep(659,193);
+    beep(587,386);beep(587,386);beep(587,386);
+    beep(784,386);beep(784,193);beep(880,193);beep(784,193);beep(698,193);
+    beep(659,386);beep(523,386);beep(523,386);
+    beep(880,386);beep(880,193);beep(932,193);beep(880,193);beep(784,193);
+    beep(698,386);beep(587,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(523,386);
+    beep(698,386);beep(698,386);beep(698,386);
+    beep(659,771);beep(659,386);
+    beep(698,386);beep(659,386);beep(587,386);
+    beep(523,771);beep(880,386);
+    beep(932,386);beep(880,386);beep(784,386);
+    beep(1047,386);beep(523,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(523,386);
+    beep(698,386);beep(698,193);beep(784,193);beep(698,193);beep(659,193);
+    beep(587,386);beep(587,386);beep(587,386);
+    beep(784,386);beep(784,193);beep(880,193);beep(784,193);beep(698,193);
+    beep(659,386);beep(523,386);beep(523,386);
+    beep(880,386);beep(880,193);beep(932,193);beep(880,193);beep(784,193);
+    beep(698,386);beep(587,386);beep(523,193);beep(523,193);
+    beep(587,386);beep(784,386);beep(659,386);
+    beep(698,771);beep(0,386);
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1441,6 +1493,7 @@ static shell_command_t commands[] = {
     {"pth", pth},
     {"bit", bit},
     {"stc", stc},
+    {"xms", xms},
     {NULL, NULL}
 };
 
