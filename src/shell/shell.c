@@ -81,31 +81,99 @@ static void load_history_line(char *input, int *idx, int *cursor_index, int pos)
     print(input);
 }
 
-void shell_execute(const char* cmd) {
-    if (cmd[0] == '\0') return;
+static void trim_whitespace(char *str) {
+    if (!str) return;
+    
+    int start = 0;
+    while (str[start] == ' ' || str[start] == '\t') start++;
+    
+    if (start > 0) {
+        int i;
+        for (i = 0; str[start + i]; i++) {
+            str[i] = str[start + i];
+        }
+        str[i] = '\0';
+    }
+    
+    int end = kstrlen(str) - 1;
+    while (end >= 0 && (str[end] == ' ' || str[end] == '\t')) {
+        str[end] = '\0';
+        end--;
+    }
+}
 
-    sprint("Running: ");
-    sprint(cmd);
-    sprint("...");
-
+static bool execute_single_command(const char* cmd) {
     char command[INPUT_BUF_SIZE];
     const char *args;
-    args = kstrchr(cmd, ' ');
+    
+    kstrncpy(command, cmd, INPUT_BUF_SIZE - 1);
+    command[INPUT_BUF_SIZE - 1] = '\0';
+    
+    trim_whitespace(command);
+    
+    if (command[0] == '\0') return true;
+    
+    args = kstrchr(command, ' ');
     if (args) {
-        size_t command_len = (size_t)(args - cmd);
-        if (command_len >= INPUT_BUF_SIZE) command_len = INPUT_BUF_SIZE - 1;
-        kstrncpy(command, cmd, command_len);
-        command[command_len] = '\0';
+        size_t command_len = (size_t)(args - command);
+        char temp_cmd[INPUT_BUF_SIZE];
+        kstrncpy(temp_cmd, command, command_len);
+        temp_cmd[command_len] = '\0';
+        
+        kstrcpy(command, temp_cmd);
         args++;
-    } else {
-        kstrncpy(command, cmd, INPUT_BUF_SIZE - 1);
-        command[INPUT_BUF_SIZE - 1] = '\0';
-        args = NULL;
+        
+        while (*args == ' ') args++;
+        if (*args == '\0') args = NULL;
     }
-
+    
+    sprint("Running: ");
+    sprint(command);
+    if (args) {
+        sprint(" ");
+        sprint(args);
+    }
+    sprint("...");
+    
     bool success = execute_command(command, args);
     if (success) {
         sprint(" OK!\n");
+    }
+    
+    return success;
+}
+
+void shell_execute(const char* cmd) {
+    if (cmd[0] == '\0') return;
+
+    const char *amp_pos = kstrchr(cmd, '&');
+    
+    if (amp_pos == NULL) {
+        execute_single_command(cmd);
+        return;
+    }
+    
+    char cmd_copy[INPUT_BUF_SIZE];
+    kstrncpy(cmd_copy, cmd, INPUT_BUF_SIZE - 1);
+    cmd_copy[INPUT_BUF_SIZE - 1] = '\0';
+    
+    char *current_cmd = cmd_copy;
+    char *next_amp;
+    
+    while (current_cmd != NULL) {
+        next_amp = kstrchr(current_cmd, '&');
+        
+        if (next_amp != NULL) {
+            *next_amp = '\0';
+        }
+        
+        execute_single_command(current_cmd);
+        
+        if (next_amp != NULL) {
+            current_cmd = next_amp + 1;
+        } else {
+            current_cmd = NULL;
+        }
     }
 }
 
