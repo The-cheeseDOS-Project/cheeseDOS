@@ -260,24 +260,20 @@ typedef struct {
     command_func_t func;
 } shell_command_t;
 
-static void hlp(const char* args) {
-    (void)args;
+static void hlp(const char*) {
     print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit, stc, &.");
 }
 
-static void ver(const char* args) {
-    (void)args;
+static void ver(const char*) {
     print("cheeseDOS version ");
     print(_binary_src_version_version_txt_start);
 }
 
-static void hi(const char* args) {
-    (void)args;
+static void hi(const char*) {
     print("Hello, world!\n");
 }
 
-static void cls(const char* args) {
-    (void)args;
+static void cls(const char*) {
     clear_screen();
 }
 
@@ -308,9 +304,7 @@ static void dly(const char* args) {
     delay(ms);
 }
 
-void spd(const char* args) {
-    (void)args;
-
+void spd(const char*) {
     print("This is a W.I.P Debug tool. it's not very accurate. This is only really meant to see if a emulator is underclocking the CPU at all\n\n");
 
     unsigned int start_lo, start_hi;
@@ -363,22 +357,19 @@ static void bep(const char* args) {
     beep(hz, ms);
 }
 
-static void off(const char* args) {
-    (void)args;
+static void off(const char*) {
     print("Shutting down... Goodbye!");
     sprint("\nShutting down target...\n\n");
     shutdown();
 }
 
-static void res(const char* args) {
-    (void)args;
+static void res(const char*) {
     print("Rebooting... See you later!");
     sprint("\nRebooting target...\n\n");
     reboot();
 }
 
-static void ls(const char* args) {
-    (void)args;
+static void ls(const char*) {
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -620,8 +611,7 @@ static void cd(const char* args) {
     current_dir_inode_no = new_dir->inode_no;
 }
 
-static void rtc(const char* args) {
-    (void)args;
+static void rtc(const char*) {
     handle_rtc_command();
 }
 
