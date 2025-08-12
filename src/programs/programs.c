@@ -1367,11 +1367,15 @@ static void stc(const char* args) {
     while (inb(0x64) & 1) inb(0x60);
     int screen_size = get_screen_width() * get_screen_height();
     uint16_t* vga_mem = (uint16_t*)0xB8000;
-    
+    int frame_counter = 0;
+
     while (1) {
-        if (inb(0x64) & 1) {
-            inb(0x60);
-            break;
+        if (++frame_counter >= 500) {
+            if (inb(0x64) & 1) {
+                inb(0x60);
+                break;
+            }
+            frame_counter = 0;
         }
         for (int pos = 0; pos < screen_size; pos++) {
             rng_state = ((rng_state >> 1) ^ (-(rng_state & 1) & 0xd0000001));
