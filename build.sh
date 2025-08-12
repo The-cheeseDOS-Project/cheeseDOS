@@ -23,8 +23,8 @@ CC=gcc # Don't change!
 AS=as # Don't change!!
 LD=ld # Don't change!!!
 
-FLOPPY=cdos.img
-CDROM=NULL
+FLOPPY=cdos-1.44mb-floppy.img
+CDROM=cheesedos-cdrom.iso
 ISO_ROOT=iso_root
 
 SRC_DIR=src
@@ -96,7 +96,7 @@ OBJS=(
 )
 
 BITS=32
-MARCH=i486
+MARCH=i386
 OPT=2
 MTUNE=$MARCH
 GDBINFO=0
@@ -128,11 +128,9 @@ build_object() {
 function all {
   start=$(date +%s%N)
 
-  echo The cheeseDOS Build System
-  echo
-  echo BITS=$BITS
-  echo MARCH=$MARCH
-  echo OPT=$OPT
+  echo -n "Building cheeseDOS "
+  cat src/version/version.txt
+
   echo
 
   clean
@@ -223,40 +221,57 @@ function all {
   
   echo
 
- if test "${BUILD_FLOPPY:-1}" -eq 1; then
-    echo -n "Building $FLOPPY..."
-    cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
-    echo " Done!"
+  echo -n "Building $FLOPPY..."
+  cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
+  echo " Done!"
     
-    echo -n "Pad $FLOPPY..." # Remove when autodetect disk geometry is added
-    truncate "$FLOPPY" -s '1474560' # Remove when autodetect disk geometry is added
-    echo " Done!" # Remove when autodetect disk geometry is added
- fi  
+  echo -n "Pad $FLOPPY..."
+  truncate "$FLOPPY" -s '1474560'
+  echo " Done!"
+
   echo
 
-#  echo -n "Cleaning up..."
-#  rm -rf "$BUILD_DIR" "$ISO_ROOT"
-#  echo " Done!"
-  
-#  echo
+  echo -n "Building $CDROM..."
+  xorriso -as mkisofs \
+    -o $CDROM \
+    -b $FLOPPY \
+    -c boot.cat \
+    -boot-load-size 2880 \
+    -boot-info-table \
+  . \
+  > /dev/null 2>&1
+
+  echo " Done!"
+
+  echo
 
   end=$(date +%s%N)
   elapsed_ns=$((end - start))
   elapsed_sec=$(printf "%d.%03d\n" $((elapsed_ns / 1000000000)) $(((elapsed_ns / 1000000) % 1000)))
 
-  echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
+  echo "Build completed, made floppy at $FLOPPY and CD-ROM at $CDROM in $elapsed_sec seconds."
 }
 
 MEM=1M
 CPU=486
-CPU_FLAGS="-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
+CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 function run {
   qemu-system-i386 \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
-  -drive format=raw,file="$FLOPPY",index=0,if=floppy \
+  -fda $FLOPPY \
+  -m "$MEM" \
+  -cpu "$CPU","$CPU_FLAGS"
+}
+
+function runcd {
+  qemu-system-i386 \
+  -audiodev pa,id=snd0 \
+  -machine pcspk-audiodev=snd0 \
+  -serial stdio \
+  -cdrom $CDROM \
   -m "$MEM" \
   -cpu "$CPU","$CPU_FLAGS"
 }
@@ -270,7 +285,7 @@ function write {
 }
 
 function deps {
-  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64..."
+  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64 and xorriso..."
 
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
@@ -294,6 +309,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
+        [xorriso]="xorriso"
       )
       ;;
     dnf)
@@ -301,6 +317,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
+        [xorriso]="xorriso"
       )
       ;;
     zypper)
@@ -308,6 +325,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
+        [xorriso]="xorriso"
       )
       ;;
     pacman)
@@ -315,6 +333,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
+        [xorriso]="xorriso"
       )
       ;;
     emerge)
@@ -322,6 +341,7 @@ function deps {
         [gcc]="sys-devel/gcc"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
+        [xorriso]="xorriso"
       )
       ;;
   esac
@@ -386,8 +406,8 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
+  runcd) runcd ;;
   write) write ;;
-  burn) burn ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|write|clean}" ;;
+  *) echo "Usage: $0 {all|run|runcd|write|clean}" ;;
 esac

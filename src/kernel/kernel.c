@@ -24,6 +24,7 @@
 #include "version.h"
 
 void kmain() {
+    clear_screen();
     qprint("Loading KERNEL... OK!\n");
     sprint("cheeseDOS version ");
     sprint(_binary_src_version_version_txt_start);

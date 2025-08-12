@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-name: Build and Release cheeseDOS IMG
+name: Build and Release cheeseDOS
 
 on:
   push:
@@ -57,11 +57,17 @@ jobs:
           chmod +x ./build.sh
           ./build.sh
 
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cheeseDOS-iso
+          path: cheesedos-cdrom.iso
+
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
         with:
           name: cheeseDOS-img
-          path: cdos.img
+          path: cdos-1.44mb-floppy.img
 
       - name: Read version tag
         id: readtag
@@ -69,10 +75,10 @@ jobs:
           TAG=$(cat src/version/version.txt)
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release and Upload IMG
+      - name: Create GitHub Release and Upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.readtag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
-          gh release create "$TAG" cdos.img --title "$TITLE" --notes-file .github/release.md
+          gh release create "$TAG" cheesedos-cdrom.iso cdos-1.44mb-floppy.img --title "$TITLE" --notes-file .github/release.md
