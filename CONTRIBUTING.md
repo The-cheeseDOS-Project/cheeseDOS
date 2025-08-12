@@ -50,7 +50,7 @@ There are many ways to contribute, including:
 1. Follow the existing coding style and conventions in the project.
 2. Write clear, readable, and well-commented code.
 3. Code must work and be tested with `./build.sh run`.
-4. ONLY .ld, .S, .h, .c, .md (git docs only), and, Containerfile is allowed.
+4. ONLY `.ld`, `.S`, `.h`, `.c`, `.md` (git docs only), and, `Containerfile` is allowed.
 5. Features must be mostly working before a PR.
 
 ## Reporting Issues
