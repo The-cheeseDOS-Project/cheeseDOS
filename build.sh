@@ -261,9 +261,13 @@ function run {
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
-  -fda $FLOPPY \
+  -drive file="$FLOPPY",format=raw,if=floppy
   -m "$MEM" \
-  -cpu "$CPU","$CPU_FLAGS"
+  -cpu "$CPU","$CPU_FLAGS" \
+  -vga std \
+  -display gtk \
+  -rtc base=localtime \
+  -nodefaults
 }
 
 function runcd {
