@@ -31,10 +31,10 @@ permissions:
 jobs:
 
   build_and_release:
-    runs-on: ubuntu-latest
+    runs-on: selfhosted
     
-    env:
-        TZ: America/Los_Angeles
+#    env:
+#        TZ: America/Los_Angeles
 
     steps:
       - name: Checkout repo
@@ -60,11 +60,11 @@ jobs:
           chmod +x ./build.sh
           ./build.sh
 
-      - name: Upload ISO artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cheeseDOS-iso
-          path: cheesedos-cdrom.iso
+#      - name: Upload ISO artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: cheeseDOS-iso
+#          path: cheesedos-cdrom.iso
 
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
@@ -84,4 +84,4 @@ jobs:
         run: |
           TAG="${{ steps.readtag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
-          gh release create "$TAG" cheesedos-cdrom.iso cdos-1.44mb-floppy.img --title "$TITLE" --notes-file .github/release.md
+          gh release create "$TAG" cdos-1.44mb-floppy.img --title "$TITLE" --notes-file .github/release.md
