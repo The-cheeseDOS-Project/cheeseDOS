@@ -47,11 +47,11 @@ There are many ways to contribute, including:
     Submit your changes by opening a pull request on GitHub.
 
 ## Coding Guidelines
-- 1. Follow the existing coding style and conventions in the project.
-- 2. Write clear, readable, and well-commented code.
-- 3. Code must work and be tested with `./build.sh run`.
-- 4. ONLY .ld, .S, .h, .c, .md (git docs only), and, Containerfile is allowed.
-- 5. Features must be mostly working before a PR.
+1. Follow the existing coding style and conventions in the project.
+2. Write clear, readable, and well-commented code.
+3. Code must work and be tested with `./build.sh run`.
+4. ONLY .ld, .S, .h, .c, .md (git docs only), and, Containerfile is allowed.
+5. Features must be mostly working before a PR.
 
 ## Reporting Issues
 If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
