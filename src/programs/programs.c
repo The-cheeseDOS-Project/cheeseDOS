@@ -800,6 +800,36 @@ void txt(const char *filename) {
             vga_move_cursor(redraw_row, redraw_col);
         }
 
+        else if (ch == KEY_DELETE && index < kstrlen(buffer)) {
+            for (size_t i = index; i < kstrlen(buffer); i++) {
+                buffer[i] = buffer[i + 1];
+            }
+
+            size_t redraw_idx = index;
+            uint8_t r = row, c = col;
+            while (buffer[redraw_idx] != '\0') {
+                if (buffer[redraw_idx] == '\n') {
+                    r++;
+                    c = 0;
+                    if (r >= get_screen_height()) break;
+                    vga_move_cursor(r, c);
+                } else {
+                    vga_putchar(buffer[redraw_idx]);
+                    c++;
+                    if (c >= get_screen_width()) {
+                        c = 0;
+                        r++;
+                        if (r >= get_screen_height()) break;
+                        vga_move_cursor(r, c);
+                    }
+                }
+                redraw_idx++;
+            }
+
+            vga_putchar(' ');
+            vga_move_cursor(row, col);
+        }
+
         else if (ch == KEY_ENTER) {
             if (kstrlen(buffer) < sizeof(buffer) - 1) {
                 for (size_t i = kstrlen(buffer); i >= index && i < sizeof(buffer) - 1; i--) {
