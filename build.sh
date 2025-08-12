@@ -285,7 +285,7 @@ function write {
 }
 
 function deps {
-  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64..."
+  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64 and xorriso..."
 
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
@@ -309,6 +309,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
+        [xorriso]="xorriso"
       )
       ;;
     dnf)
@@ -316,6 +317,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
+        [xorriso]="xorriso"
       )
       ;;
     zypper)
@@ -323,6 +325,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
+        [xorriso]="xorriso"
       )
       ;;
     pacman)
@@ -330,6 +333,7 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
+        [xorriso]="xorriso"
       )
       ;;
     emerge)
@@ -337,6 +341,7 @@ function deps {
         [gcc]="sys-devel/gcc"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
+        [xorriso]="xorriso"
       )
       ;;
   esac
