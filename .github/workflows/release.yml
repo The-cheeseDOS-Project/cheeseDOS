@@ -31,7 +31,7 @@ permissions:
 jobs:
 
   build_and_release:
-    runs-on: selfhosted
+    runs-on: self-hosted
     
 #    env:
 #        TZ: America/Los_Angeles
