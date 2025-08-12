@@ -55,10 +55,9 @@ There are many ways to contribute, including:
     - 5. Features must be mostly working before a PR.
 
 ## Reporting Issues
-
-    If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
+If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
 
 ## Communication
+For questions or discussions, you can open an issue or contact the maintainers via email at blumatrikz@gmail.com.
 
-    For questions or discussions, you can open an issue or contact the maintainers via email at blumatrikz@gmail.com.
-    Thank you for building cheeseDOS!
+Thank you for building cheeseDOS!
