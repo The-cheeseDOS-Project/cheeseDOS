@@ -262,7 +262,7 @@ typedef struct {
 
 static void hlp(const char* args) {
     (void)args;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit, stc.");
 }
 
 static void ver(const char* args) {
@@ -1331,6 +1331,67 @@ static void bit(const char* args) {
     print("B\n");
 }
 
+static void stc(const char* args) {
+
+    static uint32_t rng_state = 0x12345678;
+
+    print("PHOTOSENSITIVITY EPILEPSY WARNING:\nThis generates colored static as fast as the computer can go!\nYou can press any key to exit this demo.\nContinue? (y/n): ");
+
+    int response = keyboard_getchar();
+    print("\n");
+
+    if (response != 'y' && response != 'Y') {
+        clear_screen();
+        return;
+    }
+
+    uint8_t orig_row, orig_col;
+    vga_get_cursor(&orig_row, &orig_col);
+
+    vga_set_cursor(25, 0);
+
+    for(volatile int i = 0; i < 2000000; i++);
+
+    while (inb(0x64) & 1) inb(0x60);
+
+    int screen_size = get_screen_width() * get_screen_height();
+    uint16_t* vga_mem = (uint16_t*)0xB8000;
+
+    while (1) {
+
+        if (inb(0x64) & 1) {
+            inb(0x60); 
+            break;
+        }
+
+       for (int pos = 0; pos < screen_size; pos++) {
+            rng_state = ((rng_state >> 1) ^ (-(rng_state & 1) & 0xd0000001));
+
+            char ch = ' ';
+
+            uint8_t fg = (rng_state & 0x0F);
+            uint8_t bg = (rng_state >> 4) & 0x0F;
+
+            if (fg == 0) fg = 1;
+            if (bg == 0) bg = 1;
+            if (fg == 15) fg = 14;
+            if (bg == 15) bg = 14;
+
+            uint8_t color = (bg << 4) | fg;
+
+            vga_mem[pos] = ch | (color << 8);
+        }
+    }
+
+exit_demo:
+
+    while (inb(0x64) & 1) inb(0x60);
+
+    vga_set_cursor(orig_row, orig_col);
+    clear_screen();
+    return;
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1359,6 +1420,7 @@ static shell_command_t commands[] = {
     {"die", die},
     {"pth", pth},
     {"bit", bit},
+    {"stc", stc},
     {NULL, NULL}
 };
 
