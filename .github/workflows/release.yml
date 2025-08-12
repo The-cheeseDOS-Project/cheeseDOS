@@ -31,7 +31,10 @@ permissions:
 jobs:
 
   build_and_release:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    
+    env:
+        TZ: America/Los_Angeles
 
     steps:
       - name: Checkout repo
