@@ -31,5 +31,7 @@ char *kstrncpy(char *dest, const char *src, size_t n);
 char *kstrcpy(char *dest, const char *src);
 const char *kstrchr(const char *s, int c);
 int str_to_int(const char *str);
+char *kstrtok(char *str, const char *delim);
+void *memset(void *s, int c, size_t n);
 
 #endif

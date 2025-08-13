@@ -82,3 +82,32 @@ void *memcpy(void *dest, const void *src, size_t n) {
     while (n--) *d++ = *s++;
     return dest;
 }
+
+void *memset(void *s, int c, size_t n) {
+    unsigned char *p = s;
+    while (n--) *p++ = (unsigned char)c;
+    return s;
+}
+
+char *kstrtok(char *str, const char *delim) {
+    static char *next;
+    if (str) next = str;
+
+    if (!next) return NULL;
+
+    while (*next && kstrchr(delim, *next)) next++;
+    if (!*next) return NULL;
+
+    char *start = next;
+
+    while (*next && !kstrchr(delim, *next)) next++;
+
+    if (*next) {
+        *next = '\0';
+        next++;
+    } else {
+        next = NULL;
+    }
+
+    return start;
+}
