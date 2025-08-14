@@ -69,15 +69,14 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - Shout out to [ImNotJahan](https://github.com/ImNotJahan) for fixing a typo!
 - and Shout out to **YOU!** for visting the cheeseDOS GitHub page!
 
-### Here's a random word I made up
-Pentoims (noun) 
+#### Here's a random word I made up
+##### Pentoims (noun) 
+###### Pronounced: /ˈpen-ti-oms/
 
-Pronounced: /ˈpen-ti-oms/
+##### Meaning
 
-Meaning:
+- random dandified intel pentuim CPU
 
-random dandified intel pentuim CPU
+##### Usage
 
-Usage:
-
-My **pentoim** is so fast and overclocked.
+- My **pentoim** is so fast and overclocked.
