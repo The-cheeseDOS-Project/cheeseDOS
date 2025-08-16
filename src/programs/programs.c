@@ -40,6 +40,9 @@ static uint32_t current_dir_inode_no = 0;
 static uint8_t default_text_fg_color = COLOR_WHITE;
 static uint8_t default_text_bg_color = COLOR_BLACK;
 
+static const char *search_name = NULL;
+static ramdisk_inode_t *search_result = NULL;
+
 static void print_uint(uint32_t num) {
     char buf[12];
     int i = 0;
@@ -56,15 +59,17 @@ static void print_uint(uint32_t num) {
     }
 }
 
-static ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name) {
-    ramdisk_inode_t *found = NULL;
-    void callback(const char *entry_name, uint32_t inode_no) {
-        if (kstrcmp(entry_name, name) == 0) {
-            found = ramdisk_iget(inode_no);
-        }
+static void inode_search_callback(const char *entry_name, uint32_t inode_no) {
+    if (kstrcmp(entry_name, search_name) == 0) {
+        search_result = ramdisk_iget(inode_no);
     }
-    ramdisk_readdir(dir, callback);
-    return found;
+}
+
+ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name) {
+    search_name = name;
+    search_result = NULL;
+    ramdisk_readdir(dir, inode_search_callback);
+    return search_result;
 }
 
 static void print_name_callback(const char *name, uint32_t inode) {
