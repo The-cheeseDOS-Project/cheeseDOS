@@ -22,13 +22,18 @@
 #include "shell.h"
 #include "ramdisk.h"
 #include "version.h"
+#include "string.h"
 
 void kmain() {
+    char buf[16];
     clear_screen();
     qprint("Loading KERNEL... OK!\n");
     sprint("cheeseDOS version ");
     sprint(_binary_src_version_version_txt_start);
-    qprint("Loading RAMDISK...");
+    qprint("Loading ");
+    itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
+    qprint(buf);
+    qprint("B RAMDISK...");
     ramdisk_init();
     qprint(" OK!\nLoading SHELL...");
     shell_run();

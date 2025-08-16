@@ -20,8 +20,8 @@ ENTRY(_start)
 
 MEMORY
 {
-  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 28K
-  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 36K
+  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 32K
+  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 48K
 }
 
 SECTIONS

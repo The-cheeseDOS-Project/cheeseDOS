@@ -23,7 +23,7 @@
 #include "stddef.h"
 
 #define RAMDISK_FILENAME_MAX 32
-#define RAMDISK_DATA_SIZE_BYTES 768
+#define RAMDISK_DATA_SIZE_BYTES 512
 
 #define ROOT_INODE 0
 

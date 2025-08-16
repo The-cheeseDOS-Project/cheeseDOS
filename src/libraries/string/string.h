@@ -33,5 +33,6 @@ const char *kstrchr(const char *s, int c);
 int str_to_int(const char *str);
 char *kstrtok(char *str, const char *delim);
 void *memset(void *s, int c, size_t n);
+void itoa(int value, char *str, int base);
 
 #endif
