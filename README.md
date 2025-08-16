@@ -36,6 +36,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 |-------------|--------------------------------------------------------------------|
 | Processor   | i386 class or newer x86-compatible processor                       |
 | Storage     | 3.5" 1.44MB Floppy Diskette or any El Torito compatible device (El Torito is experimental) |
+| Memory      | 128KB                                                              |
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                                    |
 | Firmware    | CHS capable BIOS                                                   |
 
