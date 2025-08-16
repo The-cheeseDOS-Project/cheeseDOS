@@ -261,7 +261,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cop, mov, die, pth, bit, stc, &, xms.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, stc, &, xms.");
 }
 
 static void ver(const char*) {
@@ -1086,10 +1086,10 @@ static void run(const char* args) {
     }
 }
 
-static void mov(const char* args) {
+static void mve(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: mov <src> <dst>\n");
+        print("Usage: mve <src> <dst>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -1110,7 +1110,7 @@ static void mov(const char* args) {
 
     if (src[0] == '\0' || dst[0] == '\0') {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: mov <src> <dst>\n");
+        print("Usage: mve <src> <dst>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -1148,10 +1148,10 @@ static void mov(const char* args) {
     src_inode->name[len] = 0;
 }
 
-static void cop(const char* args) {
+static void cpy(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: cop <src> <dst>\n");
+        print("Usage: cpy <src> <dst>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -1173,7 +1173,7 @@ static void cop(const char* args) {
 
     if (src[0] == '\0' || dst[0] == '\0') {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: cop <src> <dst>\n");
+        print("Usage: cpy <src> <dst>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -1508,8 +1508,8 @@ static shell_command_t commands[] = {
     {"spd", spd},
     {"run", run},
     {"txt", txt},
-    {"mov", mov},
-    {"cop", cop},
+    {"mve", mve},
+    {"cpy", cpy},
     {"die", die},
     {"pth", pth},
     {"bit", bit},
