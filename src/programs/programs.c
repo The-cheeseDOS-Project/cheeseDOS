@@ -261,7 +261,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rem, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, stc, &, mus.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, stc, &, mus.");
 }
 
 static void ver(const char*) {
@@ -549,10 +549,10 @@ static void add(const char* args) {
     }
 }
 
-static void rem(const char* args) {
+static void rm(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: rem <filename>\n");
+        print("Usage: rm <filename>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -1497,7 +1497,7 @@ static shell_command_t commands[] = {
     {"ls", ls},
     {"see", see},
     {"add", add},
-    {"rem", rem},
+    {"rm", rm},
     {"mkd", mkd},
     {"cd", cd},
     {"rtc", rtc},
