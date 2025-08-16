@@ -1353,7 +1353,7 @@ static void bit(const char* args) {
     print("B\n");
 }
 
-static void stc(const char* args) {
+static void stc(const char*) {
     static uint32_t rng_state = 0x12345678;
     print("PHOTOSENSITIVITY EPILEPSY WARNING:\nThis generates colored static as fast as the computer can go!\nYou can press any key to exit this demo.\nContinue? (y/n): ");
     int response = keyboard_getchar();
