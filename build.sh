@@ -261,7 +261,7 @@ function run {
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
-  -drive file="$FLOPPY",format=raw,if=floppy
+  -drive file="$FLOPPY",format=raw,if=floppy \
   -m "$MEM" \
   -cpu "$CPU","$CPU_FLAGS" \
   -vga std \
