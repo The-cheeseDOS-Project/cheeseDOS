@@ -20,6 +20,9 @@ cheeseDOS is a x86, fully GNU GPLed, custom C written, super small, 1.44MB, mono
 > [!WARNING]
 > On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
 
+> [!IMPORTANT]
+> I have **only** gotten this to **work** with the **floppy image** on **QEMU**, when I tried this on my **real computer**, it **froze** and **rebooted** right after booting.
+
 > [!NOTE]
 > If you have any problems, please open an issue, you **WILL** get help!
 
