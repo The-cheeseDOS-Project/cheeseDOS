@@ -19,7 +19,7 @@
 set -e
 
 SU=sudo # Change to doas if you dont use sudo
-CC=gcc # Don't change!
+CC=clang # Don't change!
 AS=as # Don't change!!
 LD=ld # Don't change!!!
 
@@ -289,7 +289,7 @@ function write {
 }
 
 function deps {
-  echo "Checking for required tools: gcc, binutils, qemu-system-x86_64 and xorriso..."
+  echo "Checking for required tools: clang, binutils, qemu-system-x86_64 and xorriso..."
 
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
@@ -310,7 +310,7 @@ function deps {
   case "$pkg_mgr" in
     apt)
       pkg_map=(
-        [gcc]="gcc"
+        [gcc]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -318,7 +318,7 @@ function deps {
       ;;
     dnf)
       pkg_map=(
-        [gcc]="gcc"
+        [gcc]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -326,7 +326,7 @@ function deps {
       ;;
     zypper)
       pkg_map=(
-        [gcc]="gcc"
+        [gcc]="llvm-clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -334,7 +334,7 @@ function deps {
       ;;
     pacman)
       pkg_map=(
-        [gcc]="gcc"
+        [gcc]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -342,7 +342,7 @@ function deps {
       ;;
     emerge)
       pkg_map=(
-        [gcc]="sys-devel/gcc"
+        [gcc]="sys-devel/clang"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
         [xorriso]="xorriso"
