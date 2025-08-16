@@ -1,7 +1,5 @@
 # Contributing to cheeseDOS
 
-Thank you for your interest in contributing to cheeseDOS!
-
 ## How Can I Contribute?
 
 There are many ways to contribute, including:
@@ -57,6 +55,4 @@ There are many ways to contribute, including:
 If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
 
 ## Communication
-For questions or discussions, you can open an issue or contact the maintainers via email at blumatrikz@gmail.com.
-
-Thank you for building cheeseDOS!
+For questions or discussions, you can open an issue.
