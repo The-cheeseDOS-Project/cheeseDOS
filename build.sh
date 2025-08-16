@@ -310,7 +310,7 @@ function deps {
   case "$pkg_mgr" in
     apt)
       pkg_map=(
-        [gcc]="clang"
+        [clang]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -318,7 +318,7 @@ function deps {
       ;;
     dnf)
       pkg_map=(
-        [gcc]="clang"
+        [clang]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -326,7 +326,7 @@ function deps {
       ;;
     zypper)
       pkg_map=(
-        [gcc]="llvm-clang"
+        [clang]="llvm-clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -334,7 +334,7 @@ function deps {
       ;;
     pacman)
       pkg_map=(
-        [gcc]="clang"
+        [clang]="clang"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -342,7 +342,7 @@ function deps {
       ;;
     emerge)
       pkg_map=(
-        [gcc]="sys-devel/clang"
+        [clang]="sys-devel/clang"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
         [xorriso]="xorriso"
