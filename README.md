@@ -69,6 +69,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - Shout out to [ImNotJahan](https://github.com/ImNotJahan) for fixing a typo!
 - and Shout out to **YOU!** for visting the cheeseDOS GitHub page!
 
+<!--
 #### Here's a random word I made up
 ##### Pentoims (noun) 
 ###### Pronounced: /ˈpen-ti-oms/
@@ -80,3 +81,4 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 ##### Usage
 
 - My **pentoim** is so fast and overclocked.
+-->
