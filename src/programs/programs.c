@@ -1359,21 +1359,23 @@ static void bit(const char* args) {
     print("B\n");
 }
 
-static void stc(const char*) {
+static void svr(const char*) {
     static uint32_t rng_state = 0x12345678;
-    print("PHOTOSENSITIVITY EPILEPSY WARNING:\nThis generates colored static as fast as the computer can go!\nYou can press any key to exit this demo.\nContinue? (y/n): ");
-    int response = keyboard_getchar();
-    print("\n");
-    if (response != 'y' && response != 'Y') {
-        clear_screen();
-        return;
-    }
+    print("You can press any key to exit this demo.\n");
+    delay(2000);
+
+    static const uint8_t rainbow_bg[11] = {
+        1, 3, 5, 6, 9, 10, 11, 12, 13, 14, 15
+    };
+
     uint8_t orig_row, orig_col;
     vga_get_cursor(&orig_row, &orig_col);
     vga_set_cursor(25, 0);
-    for(volatile int i = 0; i < 2000000; i++);
+    for (volatile int i = 0; i < 2000000; i++);
     while (inb(0x64) & 1) inb(0x60);
-    int screen_size = get_screen_width() * get_screen_height();
+
+    int width = get_screen_width();
+    int height = get_screen_height();
     uint16_t* vga_mem = (uint16_t*)0xB8000;
     int frame_counter = 0;
 
@@ -1385,22 +1387,31 @@ static void stc(const char*) {
             }
             frame_counter = 0;
         }
-        for (int pos = 0; pos < screen_size; pos++) {
+
+        // Update a few random blocks per frame
+        for (int i = 0; i < 40; i++) {
             rng_state = ((rng_state >> 1) ^ (-(rng_state & 1) & 0xd0000001));
-            char ch = ' ';
-            uint8_t bg = (rng_state >> 4) & 0x0F;
-            if (bg == 0) bg = 1;
-            if (bg == 15) bg = 14;
-            uint8_t color = (bg << 4);
-            vga_mem[pos] = ch | (color << 8);
+            int x = (rng_state >> 8) % width;
+            int y = (rng_state >> 16) % height;
+            int pos = y * width + x;
+
+            uint8_t bg_index = (rng_state >> 4) % 11; // ITS HERE RIGHT HERE
+            uint8_t bg = rainbow_bg[bg_index];
+            uint8_t attr = (bg << 4) | 0;  // foreground = black
+
+            vga_mem[pos] = ' ' | (attr << 8);
         }
+
+        // Slow down the loop
+        for (volatile int delay = 0; delay < 10000; delay++);
     }
-    
+
     while (inb(0x64) & 1) inb(0x60);
     vga_set_cursor(orig_row, orig_col);
     clear_screen();
     return;
 }
+
 
 static void xmas_music() {
     print("Playing: We Wish You a Merry Christmas...");
@@ -1546,7 +1557,7 @@ static shell_command_t commands[] = {
     {"die", die},
     {"pth", pth},
     {"bit", bit},
-    {"stc", stc},
+    {"svr", svr},
     {"mus", mus},
     {"chs", chs},
     {NULL, NULL}
