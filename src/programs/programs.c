@@ -267,7 +267,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, chs.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide.");
 }
 
 static void ver(const char*) {
@@ -1501,29 +1501,9 @@ static void mus(const char* args) {
     }
 }
 
-static void chs(const char*) {
-    uint16_t cyl  = ide_get_cylinders();
-    uint16_t head = ide_get_heads();
-    uint16_t sect = ide_get_sectors();
-
-    if (cyl == 0 && head == 0 && sect == 0) {
-        print("Drive not found!\n");
-        return;
-    }
-
-    uint32_t total_sectors = (uint32_t)cyl * head * sect;
-    uint32_t total_bytes   = total_sectors * 512;
-
-    char buf[32];
-
-    print("Cylinders:     "); itoa(cyl, buf, 10); print(buf); print("\n");
-    print("Heads:         "); itoa(head, buf, 10); print(buf); print("\n");
-    print("Sectors:       "); itoa(sect, buf, 10); print(buf); print("\n");
-
-    print("\n");
-
-    print("Total Sectors: "); itoa(total_sectors, buf, 10); print(buf); print("\n");
-    print("Total Bytes:   "); itoa(total_bytes, buf, 10); print(buf); print("B\n");
+static void ide(const char*) {
+    print("Master: ");
+    print_drive_present();
 }
 
 static shell_command_t commands[] = {
@@ -1556,7 +1536,7 @@ static shell_command_t commands[] = {
     {"bit", bit},
     {"svr", svr},
     {"mus", mus},
-    {"chs", chs},
+    {"ide", ide},
     {NULL, NULL}
 };
 

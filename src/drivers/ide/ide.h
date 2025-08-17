@@ -23,8 +23,6 @@
 
 int ide_init();
 
-uint16_t ide_get_cylinders();
-uint16_t ide_get_heads();
-uint16_t ide_get_sectors();
+int print_drive_present();
 
 #endif

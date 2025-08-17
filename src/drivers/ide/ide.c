@@ -19,6 +19,7 @@
 #include "stdint.h"
 #include "io.h"
 #include "serial.h"
+#include "vga.h"
 
 #define IDE_DATA       0x1F0
 #define IDE_ERROR      0x1F1
@@ -35,6 +36,8 @@
 
 static uint16_t identify_buffer[256];
 
+static uint8_t ide_status = 0;
+
 void ide_wait_ready() {
     while (inb(IDE_STATUS) & 0x80);
     while (!(inb(IDE_STATUS) & 0x08));
@@ -44,8 +47,9 @@ int ide_init() {
     outb(IDE_DRIVE_HEAD, IDE_DRIVE_MASTER);
     outb(IDE_COMMAND, IDE_CMD_IDENTIFY);
 
-    uint8_t status = inb(IDE_STATUS);
-    if (status == 0) {
+    ide_status = inb(IDE_STATUS);
+
+    if (ide_status == 0) {
         qprint("NOT FOUND!\n");
         return 0;
     }
@@ -60,14 +64,11 @@ int ide_init() {
     return 1;
 }
 
-uint16_t ide_get_cylinders() {
-    return identify_buffer[1];
-}
-
-uint16_t ide_get_heads() {
-    return identify_buffer[3];
-}
-
-uint16_t ide_get_sectors() {
-    return identify_buffer[6];
+int print_drive_present(void) {
+    if (ide_status == 0) {
+        print("False\n");
+        return 0;
+    }
+    print("True\n");
+    return 1;
 }
