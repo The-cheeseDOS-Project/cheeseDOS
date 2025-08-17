@@ -30,6 +30,9 @@ ISO_ROOT=iso_root
 SRC_DIR=src
 BUILD_DIR=build
 
+HDD="$BUILD_DIR/hdd.img"
+HDD_SIZE="512"
+
 KERNEL="$BUILD_DIR/kernel.elf"
 
 BANNER_DIR="$SRC_DIR/banner"
@@ -244,7 +247,11 @@ function all {
     -boot-info-table \
   . \
   > /dev/null 2>&1
+  echo " Done!"
 
+  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
+  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
+  > /dev/null 2>&1
   echo " Done!"
 
   echo
@@ -266,7 +273,7 @@ function run {
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
   -drive file="$FLOPPY",format=raw,if=floppy \
-  -drive file=cheesedos-1mb.img,format=raw,if=ide,media=disk \
+  -drive file=$HDD,format=raw,if=ide,media=disk \
   -m "$MEM" \
   -cpu "$CPU","$CPU_FLAGS" \
   -vga std \
