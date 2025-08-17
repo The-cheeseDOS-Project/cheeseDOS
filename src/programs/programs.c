@@ -1364,8 +1364,8 @@ static void svr(const char*) {
     print("You can press any key to exit this demo.\n");
     delay(2000);
 
-    static const uint8_t rainbow_bg[11] = {
-        1, 3, 5, 6, 9, 10, 11, 12, 13, 14, 15
+    static const uint8_t rainbow_bg[10] = {
+        1, 3, 5, 9, 10, 11, 12, 13, 14, 15
     };
 
     uint8_t orig_row, orig_col;
@@ -1388,21 +1388,19 @@ static void svr(const char*) {
             frame_counter = 0;
         }
 
-        // Update a few random blocks per frame
         for (int i = 0; i < 40; i++) {
             rng_state = ((rng_state >> 1) ^ (-(rng_state & 1) & 0xd0000001));
             int x = (rng_state >> 8) % width;
             int y = (rng_state >> 16) % height;
             int pos = y * width + x;
 
-            uint8_t bg_index = (rng_state >> 4) % 11; // ITS HERE RIGHT HERE
+            uint8_t bg_index = (rng_state >> 4) % 10;
             uint8_t bg = rainbow_bg[bg_index];
-            uint8_t attr = (bg << 4) | 0;  // foreground = black
+            uint8_t attr = (bg << 4) | 0;
 
             vga_mem[pos] = ' ' | (attr << 8);
         }
 
-        // Slow down the loop
         for (volatile int delay = 0; delay < 10000; delay++);
     }
 
@@ -1411,7 +1409,6 @@ static void svr(const char*) {
     clear_screen();
     return;
 }
-
 
 static void xmas_music() {
     print("Playing: We Wish You a Merry Christmas...");
