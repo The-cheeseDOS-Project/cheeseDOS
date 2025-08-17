@@ -728,10 +728,12 @@ void txt(const char *filename) {
         index = file->size;
     }
 
-    putstr("[ESC = Save & Exit | INSERT = Exit (Without save)] ");
-    putstr(is_new ? "[NEW FILE] " : "[EDITING] ");
+    set_text_color(COLOR_WHITE, COLOR_BLUE);
+    putstr("txt [ESC = Save & Exit | INSERT = Exit (Without save)] ");
+    putstr(is_new ? "[NEW FILE] " : "");
     putstr(filename);
-
+    set_text_color(COLOR_WHITE, COLOR_BLACK); 
+    
     vga_move_cursor(1, 0);
 
     for (size_t i = 0; i < index; i++) {
