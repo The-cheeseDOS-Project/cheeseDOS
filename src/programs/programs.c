@@ -1364,8 +1364,8 @@ static void svr(const char*) {
     print("You can press any key to exit this demo.\n");
     delay(2000);
 
-    static const uint8_t rainbow_bg[10] = {
-        1, 3, 5, 9, 10, 11, 12, 13, 14, 15
+    static const uint8_t rainbow_bg[9] = {
+        3, 5, 9, 10, 11, 12, 13, 14, 15
     };
 
     uint8_t orig_row, orig_col;
@@ -1394,7 +1394,7 @@ static void svr(const char*) {
             int y = (rng_state >> 16) % height;
             int pos = y * width + x;
 
-            uint8_t bg_index = (rng_state >> 4) % 10;
+            uint8_t bg_index = (rng_state >> 4) % 9;
             uint8_t bg = rainbow_bg[bg_index];
             uint8_t attr = (bg << 4) | 0;
 
