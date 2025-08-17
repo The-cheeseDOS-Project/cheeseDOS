@@ -1364,8 +1364,9 @@ static void svr(const char*) {
     print("You can press any key to exit this demo.\n");
     delay(2000);
 
-    static const uint8_t rainbow_bg[9] = {
-        3, 5, 9, 10, 11, 12, 13, 14, 15
+    #define COLOR_COUNT 6
+    static const uint8_t rainbow_bg[COLOR_COUNT] = {
+        9, 10, 11, 12, 13, 14
     };
 
     uint8_t orig_row, orig_col;
@@ -1377,6 +1378,19 @@ static void svr(const char*) {
     int width = get_screen_width();
     int height = get_screen_height();
     uint16_t* vga_mem = (uint16_t*)0xB8000;
+
+    rng_state = ((rng_state >> 1) ^ (-(rng_state & 1) & 0xd0000001));
+    uint8_t bg_index = (rng_state >> 4) % COLOR_COUNT;
+    uint8_t bg = rainbow_bg[bg_index];
+    uint8_t attr = (bg << 4) | 0;
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int pos = y * width + x;
+            vga_mem[pos] = ' ' | (attr << 8);
+        }
+    }
+
     int frame_counter = 0;
 
     while (1) {
@@ -1394,7 +1408,7 @@ static void svr(const char*) {
             int y = (rng_state >> 16) % height;
             int pos = y * width + x;
 
-            uint8_t bg_index = (rng_state >> 4) % 9;
+            uint8_t bg_index = (rng_state >> 4) % COLOR_COUNT;
             uint8_t bg = rainbow_bg[bg_index];
             uint8_t attr = (bg << 4) | 0;
 
