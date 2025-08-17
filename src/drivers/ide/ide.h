@@ -16,31 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifndef IDE_H
+#define IDE_H
+
 #include "stdint.h"
-#include "vga.h"
-#include "serial.h"
-#include "shell.h"
-#include "ramdisk.h"
-#include "version.h"
-#include "ide.h"
-#include "string.h"
 
-void kmain() {
-    char buf[16];
-    clear_screen();
-    qprint("Loading KERNEL... OK!\n");
-    sprint("cheeseDOS version ");
-    sprint(_binary_src_version_version_txt_start);
-    qprint("Loading ");
-    itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
-    qprint(buf);
-    qprint("B RAMDISK...");
-    ramdisk_init();
-    qprint(" OK!\nLoading IDE_DRIVE... ");
-    ide_init();
-    qprint("Loading SHELL...");
-    shell_run();
+int ide_init();
 
-    while (1)
-        __asm__("hlt");
-}
+uint16_t ide_get_cylinders();
+uint16_t ide_get_heads();
+uint16_t ide_get_sectors();
+
+#endif

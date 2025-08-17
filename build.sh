@@ -54,6 +54,7 @@ STRING_DIR="$LIB_DIR/string"
 RTC_DIR="$SRC_DIR/rtc"
 TIMER_DIR="$SRC_DIR/timer"
 VER_DIR="$SRC_DIR/version"
+IDE_DIR="$DRIVERS_DIR/ide"
 
 INCLUDES=" \
   -I$KERNEL_DIR \
@@ -75,7 +76,8 @@ INCLUDES=" \
   -I$UART_DIR \
   -I$STDBOOL_DIR \
   -I$IO_DIR \
-  -I$VER_DIR"
+  -I$VER_DIR \
+  -I$IDE_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -93,6 +95,7 @@ OBJS=(
   "$BUILD_DIR/programs.o"
   "$BUILD_DIR/serial.o"
   "$BUILD_DIR/version.o"
+  "$BUILD_DIR/ide.o"
 )
 
 BITS=32
@@ -180,6 +183,7 @@ function all {
   build_echo "$TIMER_DIR/timer.c"     "$BUILD_DIR/timer.o"
   build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
   build_echo "$UART_DIR/serial.c"     "$BUILD_DIR/serial.o"
+  build_echo "$IDE_DIR/ide.c"     "$BUILD_DIR/ide.o"
 
   for job in "${build_jobs[@]}"; do
     wait "$job"
@@ -262,6 +266,7 @@ function run {
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
   -drive file="$FLOPPY",format=raw,if=floppy \
+  -drive file=cheesedos-1mb.img,format=raw,if=ide,media=disk \
   -m "$MEM" \
   -cpu "$CPU","$CPU_FLAGS" \
   -vga std \

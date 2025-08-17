@@ -30,6 +30,7 @@
 #include "timer.h"
 #include "keyboard.h"
 #include "serial.h"
+#include "ide.h"
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -1492,6 +1493,31 @@ static void mus(const char* args) {
     }
 }
 
+static void chs(const char*) {
+    uint16_t cyl  = ide_get_cylinders();
+    uint16_t head = ide_get_heads();
+    uint16_t sect = ide_get_sectors();
+
+    if (cyl == 0 && head == 0 && sect == 0) {
+        print("Drive not found!\n");
+        return;
+    }
+
+    uint32_t total_sectors = (uint32_t)cyl * head * sect;
+    uint32_t total_bytes   = total_sectors * 512;
+
+    char buf[32];
+
+    print("Cylinders:     "); itoa(cyl, buf, 10); print(buf); print("\n");
+    print("Heads:         "); itoa(head, buf, 10); print(buf); print("\n");
+    print("Sectors:       "); itoa(sect, buf, 10); print(buf); print("\n");
+
+    print("\n");
+
+    print("Total Sectors: "); itoa(total_sectors, buf, 10); print(buf); print("\n");
+    print("Total Bytes:   "); itoa(total_bytes, buf, 10); print(buf); print("B\n");
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1522,6 +1548,7 @@ static shell_command_t commands[] = {
     {"bit", bit},
     {"stc", stc},
     {"mus", mus},
+    {"chs", chs},
     {NULL, NULL}
 };
 
