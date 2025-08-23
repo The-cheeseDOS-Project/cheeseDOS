@@ -87,9 +87,21 @@ static void big32_print(const big32_t* num) {
     while (tmp.size > 0) {
         uint32_t rem = 0;
         for (int i = tmp.size - 1; i >= 0; i--) {
-            uint64_t val = ((uint64_t)rem << 32) | tmp.digits[i];
-            tmp.digits[i] = (uint32_t)(val / 10);
-            rem = (uint32_t)(val % 10);
+            uint32_t hi = rem;
+            uint32_t lo = tmp.digits[i];
+            uint32_t q = 0;
+            for (int bit = 31; bit >= 0; bit--) {
+                uint64_t acc = ((uint64_t)q << 1) | ((lo >> bit) & 1);
+                if (acc >= 10) {
+                    acc -= 10;
+                    q = (q << 1) | 1;
+                } else {
+                    q = (q << 1);
+                }
+                hi = (hi << 1) | ((lo >> bit) & 1);
+            }
+            tmp.digits[i] = q;
+            rem = hi % 10;
         }
         buf[idx++] = '0' + rem;
         while (tmp.size > 0 && tmp.digits[tmp.size - 1] == 0) tmp.size--;

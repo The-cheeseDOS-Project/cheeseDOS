@@ -22,12 +22,13 @@
 #define PIT_CMD  0x43
 #define PIT_CH0  0x40
 #define PIT_FREQ 1193182
+#define PIT_HZ   1000 // 1ms
 
 static uint32_t elapsed_ms = 0;
 
 void timer_init(void) {
     outb(PIT_CMD, 0x34);
-    uint16_t reload = PIT_FREQ / 1000;
+    uint16_t reload = PIT_FREQ / PIT_HZ;
     outb(PIT_CH0, reload & 0xFF);
     outb(PIT_CH0, reload >> 8);
 }
@@ -41,7 +42,7 @@ uint32_t timer_millis(void) {
     uint8_t hi = inb(PIT_CH0);
     uint16_t count = (hi << 8) | lo;
 
-    uint16_t reload = PIT_FREQ / 1000;
+    uint16_t reload = PIT_FREQ / PIT_HZ;
     uint16_t delta;
 
     if (prev_count >= count) {

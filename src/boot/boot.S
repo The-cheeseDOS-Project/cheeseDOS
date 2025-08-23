@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-## NOTE: Use LBA
-
 .intel_syntax noprefix
 .code16
 

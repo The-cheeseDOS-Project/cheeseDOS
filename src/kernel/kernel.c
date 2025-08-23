@@ -25,13 +25,22 @@
 #include "ide.h"
 #include "string.h"
 
+__attribute__((section(".text"))) uint8_t _kernel_start;
+
+extern uint8_t _kernel_start;
+extern uint8_t _end;
+
+uint32_t heap_ptr;
+
 void kmain() {
     char buf[16];
     clear_screen();
     qprint("Loading KERNEL... OK!\n");
     sprint("cheeseDOS version ");
     sprint(_binary_src_version_version_txt_start);
-    qprint("Loading ");
+    qprint("Loading HEAP_POINTER...");
+    heap_ptr = (uint32_t)&_end;
+    qprint(" OK!\nLoading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     qprint(buf);
     qprint("B RAMDISK...");

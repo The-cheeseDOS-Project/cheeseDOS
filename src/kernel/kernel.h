@@ -15,36 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+ 
+#ifndef KERNEL_H
+#define KERNEL_H
 
-ENTRY(_start)
+#include "stdint.h"
 
-MEMORY
-{
-  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 28K
-  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 28K
-}
+extern uint32_t heap_ptr;
+extern uint8_t _kernel_start;
 
-SECTIONS
-{
-  . = ORIGIN(CODE);
-
-  .text : {
-    *(.text*)
-    *(.rodata*)
-  } > CODE
-
-  .data : {
-    *(.data*)
-  } > DATA
-
-  .bss : {
-    *(.bss*)
-    *(COMMON)
-    . = ALIGN(16);
-    _end = .;
-  } > DATA
-
-  /DISCARD/ : {
-    *(.eh_frame*)
-  }
-}
+#endif

@@ -18,20 +18,100 @@
 
 set -e
 
-SU=sudo # Change to doas if you dont use sudo
-CC=clang # Don't change!
-AS=as # Don't change!!
-LD=ld # Don't change!!!
+## CONFIGURATION --------------------------------------------------
+
+SU=sudo # "doas" also work too
+CC=gcc # "clang" (sometimes) works too
+AS=as
+LD=ld
 
 FLOPPY=cdos-1.44mb-floppy.img
 CDROM=cheesedos-cdrom.iso
+
+# HDD_SIZE="1" # (in bytes)
+
+# "BITS" Options:
+# 1. 32
+# 2. 64
+BITS=32
+
+# "MARCH" Options:
+#  1. i386 (default)
+#  2. i486
+#  3. i586
+#  4. i686
+#  5. pentium
+#  6. pentium-mmx
+#  7. pentiumpro
+#  8. pentium2
+#  9. pentium3
+# 10. pentium4
+# 11. prescott
+# 12. nocona
+# 13. core2
+# 14. nehalem
+# 15. westmere
+# 16. sandybridge
+# 17. ivybridge
+# 18. haswell
+# 19. broadwell
+# 20. skylake
+# 21. cannonlake
+# 22. icelake-client
+# 23. icelake-server
+# 24. tigerlake
+# 25. rocketlake
+# 26. alderlake
+# 27. sapphirerapids
+# 28. meteorlake
+# 29. emeraldrapids
+# 30. graniterapids-d
+# 31. arrowlake
+# 32. lunarlake
+# 33. pantherlake
+# 34. siliconrapids
+# 35. clearlake
+MARCH=i386
+
+# "OPT" Options:
+# 1. 0 (none)
+# 2. 1
+# 3. 2
+# 4. 3
+# 5. f (fast)
+# 6. s (size) (default)
+# 7. g (debug)
+# 8. z (more fast) (experimental)
+OPT=z
+
+# "GDBINFO" Options:
+# 1. 0 (none) (default)
+# 2. 1
+# 3. 2
+# 4. 3
+GDBINFO=3
+
+## Flags for gcc
+FLAGS="-ffreestanding \
+       -Wall \
+       -Wextra \
+       -fno-stack-protector \
+       -fno-builtin \
+       -nostdinc"
+
+## END OF CONFIGURATION --------------------------------------------------
+
+# HDD="$BUILD_DIR/hdd.img"
+
+LDFLAGS="-m \
+         elf_i386 \
+         -z \
+         noexecstack"
+
 ISO_ROOT=iso_root
 
 SRC_DIR=src
 BUILD_DIR=build
-
-HDD="$BUILD_DIR/hdd.img"
-HDD_SIZE="512"
 
 KERNEL="$BUILD_DIR/kernel.elf"
 
@@ -80,7 +160,8 @@ INCLUDES=" \
   -I$STDBOOL_DIR \
   -I$IO_DIR \
   -I$VER_DIR \
-  -I$IDE_DIR"
+  -I$IDE_DIR \
+  -I$KERNEL_DIR"
 
 OBJS=(
   "$BUILD_DIR/kernel.o"
@@ -100,32 +181,14 @@ OBJS=(
   "$BUILD_DIR/version.o"
   "$BUILD_DIR/ide.o"
 )
-
-BITS=32
-MARCH=i386
-OPT=2
-MTUNE=$MARCH
-GDBINFO=0
-
-FLAGS="-ffreestanding \
-       -Wall \
-       -Wextra \
-       -fno-stack-protector \
-       -fno-builtin \
-       -nostdinc"
        
 CFLAGS="-m$BITS \
         -march=$MARCH \
         -O$OPT \
-        -mtune=$MTUNE \
-        -g$GDBINFO
+        -mtune=$MARCH \
+        -g$GDBINFO \
         $FLAGS \
         $INCLUDES"
-
-LDFLAGS="-m \
-         elf_i386 \
-         -z \
-         noexecstack"
 
 build_object() {
   $CC $CFLAGS -c "$1" -o "$2"
@@ -167,6 +230,7 @@ function all {
       else
         echo "Building $name... Failed!"
         cat "$output"
+        exit 1
       fi
       rm -f "$output"
     } &
@@ -249,10 +313,10 @@ function all {
   > /dev/null 2>&1
   echo " Done!"
 
-  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
-  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
-  > /dev/null 2>&1
-  echo " Done!"
+#  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
+#  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
+#  > /dev/null 2>&1
+#  echo " Done!"
 
   echo
 
@@ -261,6 +325,8 @@ function all {
   elapsed_sec=$(printf "%d.%03d\n" $((elapsed_ns / 1000000000)) $(((elapsed_ns / 1000000) % 1000)))
 
   echo "Build completed, made floppy at $FLOPPY and CD-ROM at $CDROM in $elapsed_sec seconds."
+
+  exit 0
 }
 
 MEM=1M
@@ -273,13 +339,13 @@ function run {
   -machine pcspk-audiodev=snd0 \
   -serial stdio \
   -drive file="$FLOPPY",format=raw,if=floppy \
-  -drive file=$HDD,format=raw,if=ide,media=disk \
   -m "$MEM" \
   -cpu "$CPU","$CPU_FLAGS" \
   -vga std \
   -display gtk \
   -rtc base=localtime \
-  -nodefaults
+  -nodefaults # \
+# -drive file=$HDD,format=raw,if=ide,media=disk
 }
 
 function runcd {
@@ -322,7 +388,7 @@ function deps {
   case "$pkg_mgr" in
     apt)
       pkg_map=(
-        [clang]="clang"
+        [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -330,7 +396,7 @@ function deps {
       ;;
     dnf)
       pkg_map=(
-        [clang]="clang"
+        [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
         [xorriso]="xorriso"
@@ -338,7 +404,7 @@ function deps {
       ;;
     zypper)
       pkg_map=(
-        [clang]="llvm-clang"
+        [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -346,7 +412,7 @@ function deps {
       ;;
     pacman)
       pkg_map=(
-        [clang]="clang"
+        [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
         [xorriso]="xorriso"
@@ -354,7 +420,7 @@ function deps {
       ;;
     emerge)
       pkg_map=(
-        [clang]="sys-devel/clang"
+        [gcc]="sys-devel/gcc"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
         [xorriso]="xorriso"

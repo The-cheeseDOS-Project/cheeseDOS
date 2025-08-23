@@ -31,6 +31,7 @@
 #include "keyboard.h"
 #include "serial.h"
 #include "ide.h"
+#include "kernel.h"
 #include "shell.h"
 #include "stddef.h"
 #include "stdint.h"
@@ -267,7 +268,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide, mem, box.");
 }
 
 static void ver(const char*) {
@@ -276,7 +277,7 @@ static void ver(const char*) {
 }
 
 static void hi(const char*) {
-    print("Hello, world!\n");
+    print("hello, world\n");
 }
 
 static void cls(const char*) {
@@ -311,7 +312,7 @@ static void dly(const char* args) {
 }
 
 void spd(const char*) {
-    print("This is a W.I.P Debug tool. it's not very accurate. This is only really meant to see if a emulator is underclocking the CPU at all\n\n");
+    print("This is a deprecated Debug tool as it has no real use for what it is.\n\n");
 
     unsigned int start_lo, start_hi;
     __asm__ __volatile__("rdtsc" : "=a"(start_lo), "=d"(start_hi));
@@ -1363,8 +1364,6 @@ static void bit(const char* args) {
 
 static void svr(const char*) {
     static uint32_t rng_state = 0x12345678;
-    print("You can press any key to exit this demo.\n");
-    delay(2000);
 
     #define COLOR_COUNT 6
     static const uint8_t rainbow_bg[COLOR_COUNT] = {
@@ -1396,7 +1395,7 @@ static void svr(const char*) {
     int frame_counter = 0;
 
     while (1) {
-        if (++frame_counter >= 500) {
+        if (++frame_counter >= 100) {
             if (inb(0x64) & 1) {
                 inb(0x60);
                 break;
@@ -1424,6 +1423,90 @@ static void svr(const char*) {
     vga_set_cursor(orig_row, orig_col);
     clear_screen();
     return;
+}
+
+static void box(const char*) {
+    uint8_t orig_row, orig_col;
+    vga_get_cursor(&orig_row, &orig_col);
+    vga_set_cursor(25, 80);
+    for (volatile int i = 0; i < 2000000; i++);
+    while (inb(0x64) & 1) inb(0x60);
+
+    int width = get_screen_width();
+    int height = get_screen_height();
+    uint16_t* vga_mem = (uint16_t*)0xB8000;
+
+    static unsigned int seed = 1;
+    seed = seed * 1103515245 + 12345;
+    unsigned int rand_x = (seed / 65536) % 32768;
+    seed = seed * 1103515245 + 12345;
+    unsigned int rand_y = (seed / 65536) % 32768;
+
+    const int size = 2;
+    int x = size + (rand_x % (width - 2 * size));
+    int y = size + (rand_y % (height - 2 * size));
+    int vx = 1, vy = 1;
+
+    uint8_t bg_colors[] = {9, 10, 11, 12, 13, 14};
+    int num_colors = sizeof(bg_colors) / sizeof(bg_colors[0]);
+
+    seed = seed * 1103515245 + 12345;
+    uint8_t current_bg = bg_colors[(seed / 65536) % num_colors];
+    uint8_t attr = (current_bg << 4) | 0;
+
+    while (1) {
+        if (inb(0x64) & 1) {
+            inb(0x60);
+            break;
+        }
+
+        clear_screen();
+        x += vx;
+        y += vy;
+        vga_set_cursor(25, 80);
+
+        int collided = 0;
+
+        if (x - size <= 0 || x + size >= width) {
+            vx = -vx;
+            collided = 1;
+            x = (x - size <= 0) ? size + 1 : width - size - 1;
+        }
+
+        if (y - size <= 0 || y + size >= height) {
+            vy = -vy;
+            collided = 1;
+            y = (y - size <= 0) ? size + 1 : height - size - 1;
+        }
+
+        if (collided) {
+            seed = seed * 1103515245 + 12345;
+            uint8_t new_bg;
+            do {
+                new_bg = bg_colors[(seed / 65536) % num_colors];
+                seed = seed * 1103515245 + 12345;
+            } while (new_bg == current_bg);
+            current_bg = new_bg;
+            attr = (current_bg << 4) | 0;
+        }
+
+        for (int dy = -size; dy <= size; dy++) {
+            for (int dx = -size - 2; dx <= size + 2; dx++) {
+                int px = x + dx;
+                int py = y + dy;
+                if (px >= 0 && px < width && py >= 0 && py < height) {
+                    int pos = py * width + px;
+                    vga_mem[pos] = ' ' | (attr << 8);
+                }
+            }
+        }
+
+        for (volatile int delay = 0; delay < 100000; delay++);
+    }
+
+    while (inb(0x64) & 1) inb(0x60);
+    vga_set_cursor(orig_row, orig_col);
+    clear_screen();
 }
 
 static void xmas_music() {
@@ -1522,6 +1605,28 @@ static void ide(const char*) {
     print_drive_present();
 }
 
+static void hey(const char* args) {
+    if (!args || !*args) {
+        args = "hello, world!";
+    }
+
+    int counter = 0;
+    while (counter < 10000) {
+        print(args);
+        print(" "); // hey! dont look at me.
+        counter++;
+    }
+}
+
+static void mem(const char*) {
+    uint32_t used = heap_ptr - (uint32_t)&_kernel_start;
+    uint32_t used_kb = used / 1024;
+    char buf[16];
+    itoa(used_kb, buf, 10);
+    print(buf);
+    print("K RAM USED\n");
+}
+
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
@@ -1531,7 +1636,6 @@ static shell_command_t commands[] = {
     {"sum", sum},
     {"ls", ls},
     {"see", see},
-    {"add", add},
     {"rm", rm},
     {"mkd", mkd},
     {"cd", cd},
@@ -1553,6 +1657,9 @@ static shell_command_t commands[] = {
     {"svr", svr},
     {"mus", mus},
     {"ide", ide},
+    {"hey", hey},
+    {"mem", mem},
+    {"box", box},
     {NULL, NULL}
 };
 
