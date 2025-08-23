@@ -82,7 +82,7 @@ MARCH=i386
 # 6. s (size) (default)
 # 7. g (debug)
 # 8. z (more fast) (experimental)
-OPT=z
+OPT=s
 
 # "GDBINFO" Options:
 # 1. 0 (none) (default)
