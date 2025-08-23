@@ -268,7 +268,7 @@ typedef struct {
 } shell_command_t;
 
 static void hlp(const char*) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide, mem, box.");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, rtc, clr, ban, bep, off, res, dly, spd, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide, mem, box, hey.");
 }
 
 static void ver(const char*) {
