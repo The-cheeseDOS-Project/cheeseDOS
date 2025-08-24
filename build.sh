@@ -188,6 +188,13 @@ CFLAGS="-m$BITS \
         $FLAGS \
         $INCLUDES"
 
+SKIP_DEPS=0
+for arg in "$@"; do
+  if [[ "$arg" == "--no-dep-check" ]]; then
+    SKIP_DEPS=1
+  fi
+done
+
 build_object() {
   $CC $CFLAGS -c "$1" -o "$2"
 }
@@ -203,6 +210,14 @@ function all {
   clean
   
   echo
+
+  if [[ "$SKIP_DEPS" -eq 0 ]]; then
+    deps
+    echo
+  else
+    echo "Skipping dependency check (--no-dep-check)"
+    echo
+  fi
 
   deps
 
@@ -460,8 +475,7 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
-  runcd) runcd ;;
   write) write ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|runcd|write|clean}" ;;
+  *) echo "Usage: $0 {all|run|write|clean} [--no-dep-check]" ;;
 esac
