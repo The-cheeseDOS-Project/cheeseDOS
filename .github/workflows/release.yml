@@ -67,7 +67,7 @@ jobs:
       - name: Build cheeseDOS
         run: |
           chmod +x ./build.sh
-          ./build.sh --no-dep-check
+          ./build.sh all --no-dep-check
 
       # - name: Upload ISO artifact
       #   uses: actions/upload-artifact@v4
