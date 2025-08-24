@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 # cheeseDOS - My x86 DOS
 # Copyright (C) 2025  Connor Thomson
 #
