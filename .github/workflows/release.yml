@@ -29,23 +29,22 @@ permissions:
   contents: write
 
 jobs:
-
   build_and_release:
     runs-on: ubuntu-latest
-    
+
     env:
-        TZ: America/Los_Angeles
+      TZ: America/Los_Angeles
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-     
-     - name: Correct time
+
+      - name: Correct time
         run: |
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
 
-      - name: Generate timestamp 
+      - name: Generate timestamp
         run: |
           DATE=$(date +"%m%d%y%H%M")
           echo "a$DATE" > src/version/version.txt
@@ -59,17 +58,17 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Build
+
+      - name: Build cheeseDOS
         run: |
           chmod +x ./build.sh
           ./build.sh
 
-#      - name: Upload ISO artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cheeseDOS-iso
-#          path: cheesedos-cdrom.iso
+      # - name: Upload ISO artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: cheeseDOS-iso
+      #     path: cheesedos-cdrom.iso
 
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
