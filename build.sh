@@ -18,7 +18,7 @@
 
 set -e
 
-## CONFIGURATION --------------------------------------------------
+# CONFIGURATION --------------------------------------------------
 
 SU=sudo # "doas" also work too
 CC=gcc # "clang" (sometimes) works too
@@ -27,7 +27,7 @@ LD=ld
 
 FLOPPY=cdos-1.44mb-floppy.img
 
-HDD_SIZE="1" # (in bytes)
+HDD_SIZE="1" # in bytes
 
 # "BITS" Options:
 # 1. 32
@@ -98,7 +98,7 @@ FLAGS="-ffreestanding \
        -fno-builtin \
        -nostdinc"
 
-## END OF CONFIGURATION --------------------------------------------------
+# END OF CONFIGURATION --------------------------------------------------
 
 HDD="build/hdd.img"
 
@@ -204,7 +204,11 @@ function all {
   start=$(date +%s%N)
 
   echo -n "Building cheeseDOS "
-  cat src/version/version.txt
+  if [[ -f "src/version/version.txt" ]]; then
+    cat src/version/version.txt
+  else
+    echo "version file not found"
+  fi
 
   echo
 
@@ -219,10 +223,6 @@ function all {
     echo "Skipping dependency check (--no-dep-check)"
     echo
   fi
-
-  deps
-
-  echo
 
   echo -n "Making directory: $BUILD_DIR..."
   mkdir -p "$BUILD_DIR"
@@ -251,58 +251,150 @@ function all {
     build_jobs+=($!)
   }
 
-  build_echo "$KERNEL_DIR/kernel.c"   "$BUILD_DIR/kernel.o"
-  build_echo "$SHELL_DIR/shell.c"     "$BUILD_DIR/shell.o"
-  build_echo "$VGA_DIR/vga.c"         "$BUILD_DIR/vga.o"
-  build_echo "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
-  build_echo "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
-  build_echo "$CALC_DIR/calc.c"       "$BUILD_DIR/calc.o"
-  build_echo "$STRING_DIR/string.c"   "$BUILD_DIR/string.o"
-  build_echo "$RTC_DIR/rtc.c"         "$BUILD_DIR/rtc.o"
-  build_echo "$BEEP_DIR/beep.c"       "$BUILD_DIR/beep.o"
-  build_echo "$ACPI_DIR/acpi.c"       "$BUILD_DIR/acpi.o"
-  build_echo "$TIMER_DIR/timer.c"     "$BUILD_DIR/timer.o"
-  build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  build_echo "$UART_DIR/serial.c"     "$BUILD_DIR/serial.o"
-  build_echo "$IDE_DIR/ide.c"     "$BUILD_DIR/ide.o"
+  if [[ -f "$KERNEL_DIR/kernel.c" ]]; then
+    build_echo "$KERNEL_DIR/kernel.c"   "$BUILD_DIR/kernel.o"
+  else
+    echo "Warning: $KERNEL_DIR/kernel.c not found"
+  fi
+  
+  if [[ -f "$SHELL_DIR/shell.c" ]]; then
+    build_echo "$SHELL_DIR/shell.c"     "$BUILD_DIR/shell.o"
+  else
+    echo "Warning: $SHELL_DIR/shell.c not found"
+  fi
+  
+  if [[ -f "$VGA_DIR/vga.c" ]]; then
+    build_echo "$VGA_DIR/vga.c"         "$BUILD_DIR/vga.o"
+  else
+    echo "Warning: $VGA_DIR/vga.c not found"
+  fi
+  
+  if [[ -f "$KEYBRD_DIR/keyboard.c" ]]; then
+    build_echo "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
+  else
+    echo "Warning: $KEYBRD_DIR/keyboard.c not found"
+  fi
+  
+  if [[ -f "$RAMDISK_DIR/ramdisk.c" ]]; then
+    build_echo "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
+  else
+    echo "Warning: $RAMDISK_DIR/ramdisk.c not found"
+  fi
+  
+  if [[ -f "$CALC_DIR/calc.c" ]]; then
+    build_echo "$CALC_DIR/calc.c"       "$BUILD_DIR/calc.o"
+  else
+    echo "Warning: $CALC_DIR/calc.c not found"
+  fi
+  
+  if [[ -f "$STRING_DIR/string.c" ]]; then
+    build_echo "$STRING_DIR/string.c"   "$BUILD_DIR/string.o"
+  else
+    echo "Warning: $STRING_DIR/string.c not found"
+  fi
+  
+  if [[ -f "$RTC_DIR/rtc.c" ]]; then
+    build_echo "$RTC_DIR/rtc.c"         "$BUILD_DIR/rtc.o"
+  else
+    echo "Warning: $RTC_DIR/rtc.c not found"
+  fi
+  
+  if [[ -f "$BEEP_DIR/beep.c" ]]; then
+    build_echo "$BEEP_DIR/beep.c"       "$BUILD_DIR/beep.o"
+  else
+    echo "Warning: $BEEP_DIR/beep.c not found"
+  fi
+  
+  if [[ -f "$ACPI_DIR/acpi.c" ]]; then
+    build_echo "$ACPI_DIR/acpi.c"       "$BUILD_DIR/acpi.o"
+  else
+    echo "Warning: $ACPI_DIR/acpi.c not found"
+  fi
+  
+  if [[ -f "$TIMER_DIR/timer.c" ]]; then
+    build_echo "$TIMER_DIR/timer.c"     "$BUILD_DIR/timer.o"
+  else
+    echo "Warning: $TIMER_DIR/timer.c not found"
+  fi
+  
+  if [[ -f "$PROGRAMS_DIR/programs.c" ]]; then
+    build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  else
+    echo "Warning: $PROGRAMS_DIR/programs.c not found"
+  fi
+  
+  if [[ -f "$UART_DIR/serial.c" ]]; then
+    build_echo "$UART_DIR/serial.c"     "$BUILD_DIR/serial.o"
+  else
+    echo "Warning: $UART_DIR/serial.c not found"
+  fi
+  
+  if [[ -f "$IDE_DIR/ide.c" ]]; then
+    build_echo "$IDE_DIR/ide.c"     "$BUILD_DIR/ide.o"
+  else
+    echo "Warning: $IDE_DIR/ide.c not found"
+  fi
 
   for job in "${build_jobs[@]}"; do
     wait "$job"
   done
 
   echo -n "Building version.o..."
-  objcopy -I binary -O elf$BITS-i386 -B i386 \
-          "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
-  echo " Done!"
+  if [[ -f "$VER_DIR/version.txt" ]]; then
+    objcopy -I binary -O elf$BITS-i386 -B i386 \
+            "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
+    echo " Done!"
+  else
+    echo " Skipped (version.txt not found)"
+  fi
 
   echo -n "Building banner.o..."
-  objcopy -I binary -O elf$BITS-i386 -B i386 \
-          "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
-  echo " Done!"
+  if [[ -f "$BANNER_DIR/banner.txt" ]]; then
+    objcopy -I binary -O elf$BITS-i386 -B i386 \
+            "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
+    echo " Done!"
+  else
+    echo " Skipped (banner.txt not found)"
+  fi
 
   echo
 
-  echo -n "Assembling bootloader..."
-  $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
-  echo " Done!"
-  
-  echo -n "Linking bootloader..."
-  $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
-  echo " Done!"
-  
-  echo -n "Converting boot.elf into boot.bin..."
-  objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
-  echo " Done!"
+  if [[ -f "$BOOT_DIR/boot.S" ]]; then
+    echo -n "Assembling bootloader..."
+    $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
+    echo " Done!"
+    
+    if [[ -f "$BOOT_DIR/boot.ld" ]]; then
+      echo -n "Linking bootloader..."
+      $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
+      echo " Done!"
+      
+      echo -n "Converting boot.elf into boot.bin..."
+      objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
+      echo " Done!"
+    else
+      echo "Error: $BOOT_DIR/boot.ld not found"
+      exit 1
+    fi
+  else
+    echo "Error: $BOOT_DIR/boot.S not found"
+    exit 1
+  fi
   
   echo
 
-  echo -n "Linking kernel..."
-  $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
-  echo " Done!"
-  
-  echo -n "Stripping kernel..."
-  strip -sv "$KERNEL" > /dev/null 2>&1
-  echo " Done!"
+  if [[ -f "$KERNEL_DIR/kernel.ld" ]]; then
+    echo -n "Linking kernel..."
+    $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
+    echo " Done!"
+    
+    echo -n "Stripping kernel..."
+    strip -sv "$KERNEL" > /dev/null 2>&1
+    echo " Done!"
+  else
+    echo "Error: $KERNEL_DIR/kernel.ld not found"
+    exit 1
+  fi
   
   echo
 
@@ -316,8 +408,8 @@ function all {
 
   echo
 
-  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
-  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
+  echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
+  dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
   > /dev/null 2>&1
   echo " Done!"
 
@@ -337,6 +429,11 @@ CPU=486
 CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 function run {
+  if [[ ! -f "$FLOPPY" ]]; then
+    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
+    exit 1
+  fi
+  
   qemu-system-i386 \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
@@ -348,19 +445,24 @@ function run {
   -display gtk \
   -rtc base=localtime \
   -nodefaults \
- -drive file=$HDD,format=raw,if=ide,media=disk
+  -drive file="$HDD",format=raw,if=ide,media=disk
 }
 
 function write {
+  if [[ ! -f "$FLOPPY" ]]; then
+    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
+    exit 1
+  fi
+  
   lsblk
   read -p "Enter target device (e.g. fd0): " dev
   echo "Writing to /dev/$dev ..."
   $SU dd if="$FLOPPY" of="/dev/$dev" bs=512 conv=notrunc status=progress && sync
-  echo Done!
+  echo "Done!"
 }
 
 function deps {
-  echo "Checking for required tools: gcc, binutils, and qemu-system-x86_64..."
+  echo "Checking for required tools: gcc, binutils, and qemu-system-i386..."
 
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
@@ -383,35 +485,45 @@ function deps {
       pkg_map=(
         [gcc]="gcc"
         [ld]="binutils"
-        [qemu-system-x86_64]="qemu-system-x86"
+        [qemu-system-i386]="qemu-system-x86"
       )
       ;;
     dnf)
       pkg_map=(
         [gcc]="gcc"
         [ld]="binutils"
-        [qemu-system-x86_64]="qemu-system-x86"
+        [qemu-system-i386]="qemu-system-x86"
       )
       ;;
     zypper)
       pkg_map=(
         [gcc]="gcc"
         [ld]="binutils"
-        [qemu-system-x86_64]="qemu"
+        [qemu-system-i386]="qemu"
       )
       ;;
     pacman)
-      pkg_map=(
-        [gcc]="gcc"
-        [ld]="binutils"
-        [qemu-system-x86_64]="qemu"
-      )
+      missing=()
+      if ! command -v gcc &> /dev/null; then missing+=("gcc"); fi
+      if ! command -v ld &> /dev/null; then missing+=("binutils"); fi
+      if ! command -v qemu-system-i386 &> /dev/null; then missing+=("qemu-arch-extra"); fi
+      
+      if [ ${#missing[@]} -eq 0 ]; then
+        echo "All dependencies are already installed."
+        return 0
+      fi
+      
+      echo "Missing: ${missing[*]}"
+      echo "Attempting to install missing dependencies..."
+      sudo pacman -Syu --noconfirm
+      sudo pacman -S --noconfirm "${missing[@]}"
+      return 0
       ;;
     emerge)
       pkg_map=(
         [gcc]="sys-devel/gcc"
         [ld]="sys-devel/binutils"
-        [qemu-system-x86_64]="app-emulation/qemu"
+        [qemu-system-i386]="app-emulation/qemu"
       )
       ;;
   esac
@@ -454,10 +566,6 @@ function deps {
     zypper)
       sudo zypper install -y "${missing[@]}"
       ;;
-    pacman)
-      sudo pacman -Syu --noconfirm
-      sudo pacman -S --noconfirm "${missing[@]}"
-      ;;
     emerge)
       for pkg in "${missing[@]}"; do
         sudo emerge "$pkg"
@@ -467,7 +575,7 @@ function deps {
 }
 
 function clean {
-  echo -n "Cleaning up: "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"..."
+  echo -n "Cleaning up: $BUILD_DIR $FLOPPY $ISO_ROOT..."
   rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
   echo " Done!"
 }
@@ -478,5 +586,5 @@ case "$1" in
   run) run ;;
   write) write ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|write|clean} [--no-dep-check]" ;;
+  *) echo "Usage: $0 {all|run|write|clean} [--no-dep-check]" ; exit 1 ;;
 esac
