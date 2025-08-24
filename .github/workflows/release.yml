@@ -31,15 +31,20 @@ permissions:
 jobs:
 
   build_and_release:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
-#    env:
-#        TZ: America/Los_Angeles
+    env:
+        TZ: America/Los_Angeles
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
      
+     - name: Correct time
+        run: |
+          sudo timedatectl set-timezone America/Los_Angeles
+          sudo timedatectl set-ntp true
+
       - name: Generate timestamp 
         run: |
           DATE=$(date +"%m%d%y%H%M")
