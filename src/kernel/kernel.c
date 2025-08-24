@@ -21,7 +21,6 @@
 #include "serial.h"
 #include "shell.h"
 #include "ramdisk.h"
-#include "version.h"
 #include "ide.h"
 #include "string.h"
 
@@ -35,19 +34,32 @@ uint32_t heap_ptr;
 void kmain() {
     char buf[16];
     clear_screen();
-    qprint("Loading KERNEL... OK!\n");
-    sprint("cheeseDOS version ");
-    sprint(_binary_src_version_version_txt_start);
-    qprint("Loading HEAP_POINTER...");
+    qprint("Loading cheeseDOS... Done!\n");
+
+    qprint("Setting Heap pointer...");
     heap_ptr = (uint32_t)&_end;
-    qprint(" OK!\nLoading ");
+    qprint(" Done!\n");
+
+    qprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     qprint(buf);
-    qprint("B RAMDISK...");
+    qprint("B RAM Disk...");
     ramdisk_init();
-    qprint(" OK!\nLoading IDE_DRIVE... ");
-    ide_init();
-    qprint("Loading SHELL...");
+    qprint(" Done!\n");
+
+    qprint("Looking for IDE master... ");
+    if (ide_detect()) {
+        qprint("Found!\nLoading IDE Drive...");
+        if (ide_init()) {
+            qprint(" Done!\n");
+        } else {
+            qprint(" Failed!\n");
+        }
+    } else {
+        qprint("Not Found!\n");
+    }
+
+    qprint("Loading Shell...");
     shell_run();
 
     while (1)

@@ -37,14 +37,12 @@
 start:
 
 cli
-
 jmp 0:start2
 start2:
 
 xor cx, cx
 mov ss, cx
 mov sp, STACK_TOP
-
 mov ds, cx
 
 mov ax, 0xB800
@@ -53,7 +51,6 @@ xor di, di
 mov ah, 0x0F
 mov al, ' '
 mov cx, 2000
-
 .clear_loop:
 stosw
 loop .clear_loop
@@ -69,30 +66,12 @@ call print
 
 mov si, drives
 
-scan_drive:
+scan_floppy:
     lodsb
     test al, al
     jz err
-
     mov dl, al
 
-    mov ah, 0x41
-    mov bx, 0x55AA
-    int 0x13
-    
-    jc read_chs
-    cmp bx, 0xAA55
-    jne read_chs
-    
-    mov si, dap
-    mov ah, 0x42
-    int 0x13
-    
-    jc scan_drive
-    
-    jmp load_kernel
-
-read_chs:
     mov ax, 0x0201
     mov cx, 0x0002
     xor dx, dx
@@ -100,8 +79,9 @@ read_chs:
     mov es, bx
     xor bx, bx
     int 0x13
-    
-    jc scan_drive
+    jc scan_floppy
+
+    jmp load_kernel
 
 load_kernel:
     mov ax, ELF_HDR_LOAD/16
@@ -238,23 +218,12 @@ err:
 drives:
     .byte 0x00
     .byte 0x01
-    .byte 0x80
-    .byte 0x81
     .byte 0x00
 
-dap:
-    .byte 16
-    .byte 0
-    .word 1
-    .word ELF_HDR_LOAD
-    .word 0x0000
-    .long 1
-    .long 0
-
 msg_loading:
-    .ascii "Loading kernel...\r\0"
+    .ascii "Loading cheeseDOS...\r\0"
 msg_failed:
-    .ascii "Loading kernel... FAIL!\0"
+    .ascii "Loading cheeseDOS... Failed!\0"
 
 gdt_code:
     .word 0xFFFF

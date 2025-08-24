@@ -18,23 +18,9 @@
 
 #include "stdint.h"
 #include "io.h"
-#include "serial.h"
-#include "vga.h"
+#include "ide.h"
 
-#define IDE_DATA       0x1F0
-#define IDE_ERROR      0x1F1
-#define IDE_SECCOUNT   0x1F2
-#define IDE_LBA_LOW    0x1F3
-#define IDE_LBA_MID    0x1F4
-#define IDE_LBA_HIGH   0x1F5
-#define IDE_DRIVE_HEAD 0x1F6
-#define IDE_COMMAND    0x1F7
-#define IDE_STATUS     0x1F7
-
-#define IDE_CMD_IDENTIFY 0xEC
-#define IDE_DRIVE_MASTER 0xA0
-
-static uint16_t identify_buffer[256];
+uint16_t identify_buffer[256];
 
 static uint8_t ide_status = 0;
 
@@ -44,31 +30,36 @@ void ide_wait_ready() {
 }
 
 int ide_init() {
+    if (!ide_detect()) {
+        return 0;
+    }
+
+    ide_load_identify();
+    return 1;
+}
+
+int ide_detect() {
     outb(IDE_DRIVE_HEAD, IDE_DRIVE_MASTER);
     outb(IDE_COMMAND, IDE_CMD_IDENTIFY);
 
     ide_status = inb(IDE_STATUS);
-
     if (ide_status == 0) {
-        qprint("NOT FOUND!\n");
         return 0;
     }
 
     ide_wait_ready();
+    return 1;
+}
 
+void ide_load_identify() {
     for (int i = 0; i < 256; i++) {
         identify_buffer[i] = inw(IDE_DATA);
     }
-
-    qprint("FOUND!\n");
-    return 1;
 }
 
 int print_drive_present(void) {
     if (ide_status == 0) {
-        print("False\n");
         return 0;
     }
-    print("True\n");
     return 1;
 }

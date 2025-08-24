@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # cheeseDOS - My x86 DOS
 # Copyright (C) 2025  Connor Thomson
 #
@@ -26,9 +25,8 @@ AS=as
 LD=ld
 
 FLOPPY=cdos-1.44mb-floppy.img
-CDROM=cheesedos-cdrom.iso
 
-# HDD_SIZE="1" # (in bytes)
+HDD_SIZE="1" # (in bytes)
 
 # "BITS" Options:
 # 1. 32
@@ -101,7 +99,7 @@ FLAGS="-ffreestanding \
 
 ## END OF CONFIGURATION --------------------------------------------------
 
-# HDD="$BUILD_DIR/hdd.img"
+HDD="build/hdd.img"
 
 LDFLAGS="-m \
          elf_i386 \
@@ -302,21 +300,10 @@ function all {
 
   echo
 
-  echo -n "Building $CDROM..."
-  xorriso -as mkisofs \
-    -o $CDROM \
-    -b $FLOPPY \
-    -c boot.cat \
-    -boot-load-size 2880 \
-    -boot-info-table \
-  . \
+  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
+  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
   > /dev/null 2>&1
   echo " Done!"
-
-#  echo -n "Creating "$HDD_SIZE"B disk image to $HDD..."
-#  dd if=/dev/zero of=$HDD bs=$HDD_SIZE count=1 \
-#  > /dev/null 2>&1
-#  echo " Done!"
 
   echo
 
@@ -324,7 +311,7 @@ function all {
   elapsed_ns=$((end - start))
   elapsed_sec=$(printf "%d.%03d\n" $((elapsed_ns / 1000000000)) $(((elapsed_ns / 1000000) % 1000)))
 
-  echo "Build completed, made floppy at $FLOPPY and CD-ROM at $CDROM in $elapsed_sec seconds."
+  echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
 
   exit 0
 }
@@ -344,18 +331,8 @@ function run {
   -vga std \
   -display gtk \
   -rtc base=localtime \
-  -nodefaults # \
-# -drive file=$HDD,format=raw,if=ide,media=disk
-}
-
-function runcd {
-  qemu-system-i386 \
-  -audiodev pa,id=snd0 \
-  -machine pcspk-audiodev=snd0 \
-  -serial stdio \
-  -cdrom $CDROM \
-  -m "$MEM" \
-  -cpu "$CPU","$CPU_FLAGS"
+  -nodefaults \
+ -drive file=$HDD,format=raw,if=ide,media=disk
 }
 
 function write {
@@ -367,7 +344,7 @@ function write {
 }
 
 function deps {
-  echo "Checking for required tools: clang, binutils, qemu-system-x86_64 and xorriso..."
+  echo "Checking for required tools: gcc, binutils, and qemu-system-x86_64..."
 
   if command -v apt &> /dev/null; then
     pkg_mgr="apt"
@@ -391,7 +368,6 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
-        [xorriso]="xorriso"
       )
       ;;
     dnf)
@@ -399,7 +375,6 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu-system-x86"
-        [xorriso]="xorriso"
       )
       ;;
     zypper)
@@ -407,7 +382,6 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
-        [xorriso]="xorriso"
       )
       ;;
     pacman)
@@ -415,7 +389,6 @@ function deps {
         [gcc]="gcc"
         [ld]="binutils"
         [qemu-system-x86_64]="qemu"
-        [xorriso]="xorriso"
       )
       ;;
     emerge)
@@ -423,7 +396,6 @@ function deps {
         [gcc]="sys-devel/gcc"
         [ld]="sys-devel/binutils"
         [qemu-system-x86_64]="app-emulation/qemu"
-        [xorriso]="xorriso"
       )
       ;;
   esac
@@ -479,8 +451,8 @@ function deps {
 }
 
 function clean {
-  echo -n "Cleaning up: "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"..."
-  rm -rf "$BUILD_DIR" "$FLOPPY" "$CDROM" "$ISO_ROOT"
+  echo -n "Cleaning up: "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"..."
+  rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
   echo " Done!"
 }
 
