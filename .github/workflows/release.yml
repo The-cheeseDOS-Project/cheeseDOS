@@ -58,12 +58,7 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y gcc binutils
-
+          
       - name: Build cheeseDOS
         run: |
           chmod +x ./build.sh
