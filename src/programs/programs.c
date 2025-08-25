@@ -1647,7 +1647,12 @@ static void mus(const char* args) {
 
 static void ide(const char*) {
     print("Master: ");
-    print_drive_present();
+    if (ide_detect()) {
+        print("True");
+    } 
+    else {
+        print(" False\n");
+    }
 }
 
 static void hey(const char* args) {
