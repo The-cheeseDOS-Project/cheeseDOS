@@ -75,20 +75,20 @@ MARCH=i386
 # "OPT" Options:
 # 1. 0 (none)
 # 2. 1
-# 3. 2
+# 3. 2 (default)
 # 4. 3
 # 5. f (fast)
-# 6. s (size) (default)
+# 6. s (size)
 # 7. g (debug)
-# 8. z (more fast) (experimental)
-OPT=s
+# 8. z (more small) (experimental)
+OPT=2
 
 # "GDBINFO" Options:
 # 1. 0 (none) (default)
 # 2. 1
 # 3. 2
 # 4. 3
-GDBINFO=3
+GDBINFO=0
 
 ## Flags for gcc
 FLAGS="-ffreestanding \
