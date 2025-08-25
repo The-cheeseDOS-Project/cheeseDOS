@@ -39,11 +39,17 @@
 #include "string.h"
 
 static uint32_t current_dir_inode_no = 0;
+
+static void copy_inode_callback(const char *name, uint32_t inode_no);
+
 static uint8_t default_text_fg_color = COLOR_WHITE;
 static uint8_t default_text_bg_color = COLOR_BLACK;
 
-static const char *search_name = NULL;
 static ramdisk_inode_t *search_result = NULL;
+static ramdisk_inode_t *copy_src;
+static ramdisk_inode_t *copy_dst;
+
+static const char *search_name = NULL;
 
 static void print_uint(uint32_t num) {
     char buf[12];
@@ -1167,6 +1173,40 @@ static void mve(const char* args) {
     src_inode->name[len] = 0;
 }
 
+static void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst) {
+    if (!src || !dst) return;
+
+    if (src->type == RAMDISK_INODE_TYPE_FILE) {
+        int bytes = src->size;
+        if (bytes > RAMDISK_DATA_SIZE_BYTES) bytes = RAMDISK_DATA_SIZE_BYTES;
+        for (int i = 0; i < bytes; ++i) {
+            dst->data[i] = src->data[i];
+        }
+        dst->size = bytes;
+    } else if (src->type == RAMDISK_INODE_TYPE_DIR) {
+        copy_src = src;
+        copy_dst = dst;
+
+        ramdisk_readdir(src, copy_inode_callback);
+    }
+}
+
+static void copy_inode_callback(const char *name, uint32_t inode_no) {
+    ramdisk_inode_t *child_src = ramdisk_iget(inode_no);
+    if (!child_src) return;
+
+    if (child_src->type == RAMDISK_INODE_TYPE_FILE) {
+        if (ramdisk_create_file(copy_dst->inode_no, name) != 0) return;
+    } else if (child_src->type == RAMDISK_INODE_TYPE_DIR) {
+        if (ramdisk_create_dir(copy_dst->inode_no, name) != 0) return;
+    }
+
+    ramdisk_inode_t *child_dst = ramdisk_iget_by_name(copy_dst->inode_no, name);
+    if (!child_dst) return;
+
+    copy_inode(child_src, child_dst);
+}
+
 static void cpy(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -1174,20 +1214,17 @@ static void cpy(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
+
     char src[RAMDISK_FILENAME_MAX] = {0};
     char dst[RAMDISK_FILENAME_MAX] = {0};
     int i = 0, j = 0;
     while (args[i] == ' ') i++;
-    while (args[i] && args[i] != ' ' && j < RAMDISK_FILENAME_MAX - 1) {
-        src[j++] = args[i++];
-    }
+    while (args[i] && args[i] != ' ' && j < RAMDISK_FILENAME_MAX - 1) src[j++] = args[i++];
     src[j] = '\0';
 
     while (args[i] == ' ') i++;
     j = 0;
-    while (args[i] && j < RAMDISK_FILENAME_MAX - 1) {
-        dst[j++] = args[i++];
-    }
+    while (args[i] && j < RAMDISK_FILENAME_MAX - 1) dst[j++] = args[i++];
     dst[j] = '\0';
 
     if (src[0] == '\0' || dst[0] == '\0') {
@@ -1204,6 +1241,7 @@ static void cpy(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
+
     ramdisk_inode_t *src_inode = ramdisk_find_inode_by_name(dir, src);
     if (!src_inode) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -1211,12 +1249,7 @@ static void cpy(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    if (src_inode->type != RAMDISK_INODE_TYPE_FILE) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Copy only supports files\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
+
     ramdisk_inode_t *dst_inode = ramdisk_find_inode_by_name(dir, dst);
     if (dst_inode) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -1224,12 +1257,18 @@ static void cpy(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    if (ramdisk_create_file(current_dir_inode_no, dst) != 0) {
+
+    int create_result = (src_inode->type == RAMDISK_INODE_TYPE_FILE)
+        ? ramdisk_create_file(current_dir_inode_no, dst)
+        : ramdisk_create_dir(current_dir_inode_no, dst);
+
+    if (create_result != 0) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to create destination file\n");
+        print("Failed to create destination\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
+
     dst_inode = ramdisk_find_inode_by_name(dir, dst);
     if (!dst_inode) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -1237,10 +1276,8 @@ static void cpy(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    int bytes = src_inode->size;
-    if (bytes > RAMDISK_DATA_SIZE_BYTES) bytes = RAMDISK_DATA_SIZE_BYTES;
-    for (int k = 0; k < bytes; ++k) dst_inode->data[k] = src_inode->data[k];
-    dst_inode->size = bytes;
+
+    copy_inode(src_inode, dst_inode);
 }
 
 static unsigned int seed = 123456789;
