@@ -181,8 +181,8 @@ void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
-    print(" OK!\n\n");
-    sprint(" OK!\n");
+    qprint(" Done!\n");
+    print("\n");
     shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
