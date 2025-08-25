@@ -75,13 +75,13 @@ MARCH=i386
 # "OPT" Options:
 # 1. 0 (none)
 # 2. 1
-# 3. 2 (default)
+# 3. 2
 # 4. 3
-# 5. f (fast)
-# 6. s (size)
+# 5. f (fast) (use this when we somehow stop getting all that overlapping .data and .text or whatever junk)
+# 6. s (size) (default, because its speedy and doesnt use a lot of memory)
 # 7. g (debug)
 # 8. z (more small) (experimental)
-OPT=2
+OPT=s
 
 # "GDBINFO" Options:
 # 1. 0 (none) (default)
