@@ -114,7 +114,6 @@ BUILD_DIR=build
 
 KERNEL="$BUILD_DIR/kernel.elf"
 
-BANNER_DIR="$SRC_DIR/banner"
 BOOT_DIR="$SRC_DIR/boot"
 CALC_DIR="$SRC_DIR/calc"
 DRIVERS_DIR="$SRC_DIR/drivers"
@@ -148,7 +147,6 @@ INCLUDES=" \
   -I$STRING_DIR \
   -I$CALC_DIR \
   -I$RTC_DIR \
-  -I$BANNER_DIR \
   -I$BEEP_DIR \
   -I$ACPI_DIR \
   -I$TIMER_DIR \
@@ -171,7 +169,6 @@ OBJS=(
   "$BUILD_DIR/calc.o"
   "$BUILD_DIR/string.o"
   "$BUILD_DIR/rtc.o"
-  "$BUILD_DIR/banner.o"
   "$BUILD_DIR/beep.o"
   "$BUILD_DIR/acpi.o"
   "$BUILD_DIR/timer.o"
@@ -346,15 +343,6 @@ function all {
     echo " Done!"
   else
     echo " Skipped (version.txt not found)"
-  fi
-
-  echo -n "Building banner.o..."
-  if [[ -f "$BANNER_DIR/banner.txt" ]]; then
-    objcopy -I binary -O elf$BITS-i386 -B i386 \
-            "$BANNER_DIR/banner.txt" "$BUILD_DIR/banner.o"
-    echo " Done!"
-  else
-    echo " Skipped (banner.txt not found)"
   fi
 
   echo

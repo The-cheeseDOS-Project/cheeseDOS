@@ -21,7 +21,6 @@
 #include "ramdisk.h"
 #include "calc.h"
 #include "string.h"
-#include "banner.h"
 #include "rtc.h"
 #include "version.h"
 #include "beep.h"
@@ -91,179 +90,6 @@ static void print_name_callback(const char *name, uint32_t inode) {
         print(name);
         print("\n");
     }
-}
-
-static void handle_rtc_command() {
-    rtc_time_t current_time;
-    read_rtc_time(&current_time);
-    if (current_time.month < 10) vga_putchar('0');
-    print_uint(current_time.month);
-    vga_putchar('/');
-    if (current_time.day < 10) vga_putchar('0');
-    print_uint(current_time.day);
-    vga_putchar('/');
-    print_uint(current_time.year);
-    print(" ");
-    uint8_t display_hour = current_time.hour;
-    const char* ampm = "AM";
-    if (display_hour >= 12) {
-        ampm = "PM";
-        if (display_hour > 12) {
-            display_hour -= 12;
-        }
-    } else if (display_hour == 0) {
-        display_hour = 12;
-    }
-    if (display_hour < 10) vga_putchar('0');
-    print_uint(display_hour);
-    vga_putchar(':');
-    if (current_time.minute < 10) vga_putchar('0');
-    print_uint(current_time.minute);
-    vga_putchar(':');
-    if (current_time.second < 10) vga_putchar('0');
-    print_uint(current_time.second);
-    vga_putchar(' ');
-    print(ampm);
-    print("\n");
-}
-
-static uint8_t ansi_to_vga_color(int ansi_color) {
-    switch (ansi_color) {
-        case 30: return COLOR_BLACK;
-        case 31: return COLOR_DARKRED;
-        case 32: return COLOR_DARKGREEN;
-        case 33: return COLOR_BROWN;
-        case 34: return COLOR_DARKBLUE;
-        case 35: return COLOR_MAGENTA;
-        case 36: return COLOR_DARKCYAN;
-        case 37: return COLOR_LIGHT_GREY;
-        case 90: return COLOR_DARK_GREY;
-        case 91: return COLOR_RED;
-        case 92: return COLOR_GREEN;
-        case 93: return COLOR_YELLOW; 
-        case 94: return COLOR_BLUE;
-        case 95: return COLOR_MAGENTA;
-        case 96: return COLOR_CYAN;
-        case 97: return COLOR_WHITE;
-        default: return COLOR_LIGHT_GREY;
-    }
-}
-
-static uint8_t ansi_bg_to_vga_color(int ansi_color) {
-    switch (ansi_color) {
-        case 40: return COLOR_BLACK;
-        case 41: return COLOR_DARKRED;
-        case 42: return COLOR_DARKGREEN;
-        case 43: return COLOR_BROWN;
-        case 44: return COLOR_DARKBLUE;
-        case 45: return COLOR_MAGENTA;
-        case 46: return COLOR_DARKCYAN;
-        case 47: return COLOR_LIGHT_GREY;
-        case 100: return COLOR_DARK_GREY;
-        case 101: return COLOR_RED;
-        case 102: return COLOR_GREEN;
-        case 103: return COLOR_YELLOW; 
-        case 104: return COLOR_BLUE;
-        case 105: return COLOR_MAGENTA;
-        case 106: return COLOR_CYAN;
-        case 107: return COLOR_WHITE;
-        default: return COLOR_BLACK;
-    }
-}
-
-void print_ansi(const char* ansi_str) {
-    uint8_t current_fg = COLOR_WHITE;
-    uint8_t current_bg = COLOR_BLACK;
-    set_text_color(current_fg, current_bg);
-    while (*ansi_str) {
-        if (*ansi_str == '\033' && *(ansi_str + 1) == '[') {
-            ansi_str += 2;
-            int code_val = 0;
-            int attribute_count = 0;
-            int attributes[5];
-            for (int i = 0; i < 5; i++) {
-                attributes[i] = 0;
-            }
-            while (*ansi_str >= '0' && *ansi_str <= '9') {
-                code_val = code_val * 10 + (*ansi_str - '0');
-                ansi_str++;
-            }
-            if (*ansi_str == ';') {
-                attributes[attribute_count++] = code_val;
-                code_val = 0;
-                ansi_str++;
-                while (*ansi_str != 'm' && *ansi_str != '\0') {
-                    if (*ansi_str >= '0' && *ansi_str <= '9') {
-                        code_val = code_val * 10 + (*ansi_str - '0');
-                    } else if (*ansi_str == ';') {
-                        if (attribute_count < 5) attributes[attribute_count++] = code_val;
-                        code_val = 0;
-                    }
-                    ansi_str++;
-                }
-                if (attribute_count < 5) attributes[attribute_count++] = code_val;
-            } else if (*ansi_str == 'm') {
-                if (attribute_count < 5) attributes[attribute_count++] = code_val;
-            }
-            if (*ansi_str == 'm') {
-                for (int i = 0; i < attribute_count; i++) {
-                    int attr = attributes[i];
-                    if (attr == 0) {
-                        current_fg = COLOR_LIGHT_GREY;
-                        current_bg = COLOR_BLACK;
-                    } else if (attr == 1) {
-                    } else if (attr == 5) {
-                    } else if (attr == 7) {
-                        uint8_t temp = current_fg;
-                        current_fg = current_bg;
-                        current_bg = temp;
-                    } else if (attr == 8) {
-                        current_fg = current_bg;
-                    } else if (attr >= 30 && attr <= 37) {
-                        current_fg = ansi_to_vga_color(attr);
-                    } else if (attr >= 40 && attr <= 47) {
-                        current_bg = ansi_bg_to_vga_color(attr);
-                    } else if (attr >= 90 && attr <= 97) {
-                        current_fg = ansi_to_vga_color(attr);
-                    } else if (attr >= 100 && attr <= 107) {
-                        current_bg = ansi_bg_to_vga_color(attr);
-                    } else if (attr == 25) {
-                    } else if (attr == 27) {
-                    } else if (attr == 28) {
-                    }
-                }
-                set_text_color(current_fg, current_bg);
-                ansi_str++;
-            } else if (*ansi_str == 's') {
-                ansi_str++;
-            } else if (*ansi_str == 'u') {
-                ansi_str++;
-            } else {
-                while (*ansi_str != 'm' && *ansi_str != '\0') {
-                    ansi_str++;
-                }
-                if (*ansi_str == 'm') ansi_str++;
-            }
-        } else {
-            vga_putchar(*ansi_str);
-            ansi_str++;
-        }
-    }
-}
-
-void print_int(int n) {
-    if (n < 0) {
-        print("-");
-        n = -n;
-    }
-    print_uint((unsigned int)n);
-}
-
-static void ban(const char*) {
-    clear_screen();
-    set_cursor_pos(0);
-    print_ansi((const char*)_binary_src_banner_banner_txt_start);
-    set_text_color(default_text_fg_color, default_text_bg_color);
 }
 
 typedef void (*command_func_t)(const char* args);
@@ -635,7 +461,37 @@ static void cd(const char* args) {
 }
 
 static void rtc(const char*) {
-    handle_rtc_command();
+    rtc_time_t current_time;
+    read_rtc_time(&current_time);
+    if (current_time.month < 10) vga_putchar('0');
+    print_uint(current_time.month);
+    vga_putchar('/');
+    if (current_time.day < 10) vga_putchar('0');
+    print_uint(current_time.day);
+    vga_putchar('/');
+    print_uint(current_time.year);
+    print(" ");
+    uint8_t display_hour = current_time.hour;
+    const char* ampm = "AM";
+    if (display_hour >= 12) {
+        ampm = "PM";
+        if (display_hour > 12) {
+            display_hour -= 12;
+        }
+    } else if (display_hour == 0) {
+        display_hour = 12;
+    }
+    if (display_hour < 10) vga_putchar('0');
+    print_uint(display_hour);
+    vga_putchar(':');
+    if (current_time.minute < 10) vga_putchar('0');
+    print_uint(current_time.minute);
+    vga_putchar(':');
+    if (current_time.second < 10) vga_putchar('0');
+    print_uint(current_time.second);
+    vga_putchar(' ');
+    print(ampm);
+    print("\n");
 }
 
 static void clr(const char* arg) {
@@ -1675,6 +1531,100 @@ static void mem(const char*) {
     itoa(used_kb, buf, 10);
     print(buf);
     print("K RAM USED\n");
+}
+
+static void ban(const char*) {
+    const uint8_t glyphs[][8] = {
+        {0x3C,0x40,0x80,0x80,0x80,0x80,0x40,0x3C},
+        {0xFC,0x82,0x81,0x81,0x81,0x81,0x82,0xFC},
+        {0x7E,0x81,0x81,0x81,0x81,0x81,0x81,0x7E},
+        {0x7C,0x82,0x80,0x7C,0x02,0x82,0x7C,0x00}
+    };
+
+    const int count = sizeof(glyphs) / sizeof(glyphs[0]);
+    const int gw = 8, gh = 8;
+    const int sw = 80, sh = 25;
+    uint16_t* vga = (uint16_t*)0xB8000;
+
+    vga_set_cursor(25, 0);
+
+    int x[count], y[count];
+    int vx[count], vy[count];
+    for (int i = 0; i < count; i++) {
+        x[i] = 10 + i * (gw + 2);
+        y[i] = 5 + i * 2;
+        vx[i] = 1;
+        vy[i] = 1;
+    }
+
+    uint8_t colors[] = {
+        (COLOR_BLUE << 4) | COLOR_WHITE,
+        (COLOR_GREEN << 4) | COLOR_WHITE,
+        (COLOR_CYAN << 4) | COLOR_WHITE,
+        (COLOR_RED << 4) | COLOR_WHITE,
+        (COLOR_MAGENTA << 4) | COLOR_WHITE,
+        (COLOR_YELLOW << 4) | COLOR_WHITE
+    };
+    int color_index = 0;
+
+    static const char* banner_top = " Press ESCAPE to exit. ";
+    static const char* banner_bottom =
+        " cheeseDOS is a i386, fully GNU GPLed, custom C written, super small, 1.44MB live, Single Address Space Diskette Operating System that loads into RAM. ";
+    static int scroll_top = 0;
+    static int scroll_bottom = 0;
+
+    while (1) {
+        vga_set_cursor(25, 0);
+
+        if (inb(0x64) & 1 && inb(0x60) == 0x01) break;
+
+        for (int i = 0; i < sw * sh; i++) {
+            vga[i] = ' ' | (COLOR_LIGHT_GREY << 8);
+        }
+
+        for (int i = 0; i < sw; i++) {
+            char ch = banner_top[(scroll_top + i) % kstrlen(banner_top)];
+            vga[i] = ch | ((COLOR_MAGENTA << 4 | COLOR_WHITE) << 8);
+        }
+        scroll_top = (scroll_top + 1) % kstrlen(banner_top);
+
+        for (int i = 0; i < sw; i++) {
+            char ch = banner_bottom[(scroll_bottom + i) % kstrlen(banner_bottom)];
+            vga[(sh - 1) * sw + i] = ch | ((COLOR_BLUE << 4 | COLOR_WHITE) << 8);
+        }
+        scroll_bottom = (scroll_bottom + 1) % kstrlen(banner_bottom);
+
+        for (int i = 0; i < count; i++) {
+            x[i] += vx[i];
+            y[i] += vy[i];
+
+            if (x[i] <= 0 || x[i] + gw >= sw) {
+                vx[i] = -vx[i];
+                color_index = (color_index + 1) % (sizeof(colors) / sizeof(colors[0]));
+            }
+
+            if (y[i] <= 1 || y[i] + gh >= sh - 1) {
+                vy[i] = -vy[i];
+                color_index = (color_index + 1) % (sizeof(colors) / sizeof(colors[0]));
+            }
+
+            for (int row = 0; row < gh; row++) {
+                for (int col = 0; col < gw; col++) {
+                    if (glyphs[i][row] & (1 << (7 - col))) {
+                        int px = x[i] + col;
+                        int py = y[i] + row;
+                        if (px >= 0 && px < sw && py >= 1 && py < sh - 1) {
+                            vga[py * sw + px] = ' ' | (colors[color_index] << 8);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (volatile int d = 0; d < 100000; d++);
+    }
+
+    clear_screen();
 }
 
 static shell_command_t commands[] = {
