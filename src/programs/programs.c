@@ -376,7 +376,7 @@ static void res(const char*) {
     reboot();
 }
 
-static void ls(const char*) {
+static void ls(const char* args) {
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -384,6 +384,14 @@ static void ls(const char*) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
+
+    if (dir->type != RAMDISK_INODE_TYPE_DIR) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Not a directory\n");
+        set_text_color(default_text_fg_color, default_text_bg_color);
+        return;
+    }
+
     ramdisk_readdir(dir, print_name_callback);
 }
 
@@ -1660,6 +1668,7 @@ static shell_command_t commands[] = {
     {"hey", hey},
     {"mem", mem},
     {"box", box},
+    {"add", add},
     {NULL, NULL}
 };
 
