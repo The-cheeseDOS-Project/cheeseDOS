@@ -9,6 +9,7 @@ There are many ways to contribute, including:
 - Writing and improving documentation  
 - Submitting code patches or new features  
 - Helping with testing and providing feedback
+- Fixing code warnings (if any)
 
 ## Getting Started
 
@@ -50,6 +51,7 @@ There are many ways to contribute, including:
 3. Code must work and be tested with `./build.sh run`.
 4. ONLY `.ld`, `.S`, `.h`, `.c`, `.md` is allowed.
 5. Features must be mostly working before a PR.
+6. Use C99, no C11 or later.
 
 ## Reporting Issues
 If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
