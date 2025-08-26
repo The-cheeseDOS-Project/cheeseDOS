@@ -1567,7 +1567,7 @@ static void ban(const char*) {
     };
     int color_index = 0;
 
-    static const char* banner_top = " Press ESCAPE to exit. ";
+    static const char* banner_top = "The cheese Diskette Operating System | Press ESCAPE (or ESC) key to exit demo. | ";
     static const char* banner_bottom =
         " cheeseDOS is a i386, fully GNU GPLed, custom C written, super small, 1.44MB live, Single Address Space Diskette Operating System that loads into RAM. ";
     static int scroll_top = 0;
@@ -1579,7 +1579,7 @@ static void ban(const char*) {
         if (inb(0x64) & 1 && inb(0x60) == 0x01) break;
 
         for (int i = 0; i < sw * sh; i++) {
-            vga[i] = ' ' | (COLOR_LIGHT_GREY << 8);
+            vga[i] = ' ' | (COLOR_WHITE << 8);
         }
 
         for (int i = 0; i < sw; i++) {
@@ -1621,7 +1621,7 @@ static void ban(const char*) {
             }
         }
 
-        for (volatile int d = 0; d < 100000; d++);
+    delay(50);
     }
 
     clear_screen();
