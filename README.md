@@ -50,7 +50,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 - Compiles the same exact way on every system
 - Always has a precompiled image of its latest version
 - Super simple to use
-- And **NO** fake retro stuff (it drives me crazy)
+- Uses C99 so you dont need to be up to date with C
 
 ## Building
 
