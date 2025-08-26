@@ -91,12 +91,15 @@ OPT=s
 GDBINFO=0
 
 ## Flags for gcc
+CVER=99
+
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
        -fno-stack-protector \
        -fno-builtin \
-       -nostdinc"
+       -nostdinc \
+       -std=c$CVER"
 
 # END OF CONFIGURATION --------------------------------------------------
 
