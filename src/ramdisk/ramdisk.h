@@ -21,6 +21,8 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "string.h"
+
 
 #define RAMDISK_FILENAME_MAX 32
 #define RAMDISK_DATA_SIZE_BYTES 512

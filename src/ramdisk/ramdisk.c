@@ -16,37 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stddef.h"
-#include "stdint.h"
 #include "ramdisk.h" 
+#include <stdint.h>
 
 static ramdisk_inode_t inodes[32];
 
-static int strcmp(const char *a, const char *b) {
-    while (*a && (*a == *b)) { a++; b++; }
-    return (unsigned char)*a - (unsigned char)*b;
-}
-
-static size_t kstrlen(const char *str) {
-    size_t len = 0;
-    while (str[len] != '\0') {
-        len++;
-    }
-    return len;
-}
-
-static char *kstrcpy(char *dest, const char *src) {
-    char *original_dest = dest;
-    while ((*dest++ = *src++) != '\0');
-    return original_dest;
-}
-
-static void *mem_copy(void *dest, const void *src, size_t n) {
-    uint8_t *d = dest;
-    const uint8_t *s = src;
-    for (size_t i = 0; i < n; i++) d[i] = s[i];
-    return dest;
-}
 
 void ramdisk_init() {
     for (int i = 0; i < 32; i++) {
@@ -74,56 +48,45 @@ ramdisk_inode_t* ramdisk_iget(uint32_t inode_no) {
     return &inodes[inode_no];
 }
 
-int ramdisk_create_file(uint32_t parent_dir_inode_no, const char *filename) {
-    if (!filename) return -1;
-    if (kstrlen(filename) >= RAMDISK_FILENAME_MAX) return -1;
+static int rm_create_entity(uint32_t parent_dir_inode_no, const char *name, ramdisk_inode_type_t type) {
+    if (!name) return -1;
+    if (kstrlen(name) >= RAMDISK_FILENAME_MAX) return -1;
 
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED) {
-            if (strcmp(inodes[i].name, filename) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
+            if (kstrcmp(inodes[i].name, name) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
         }
     }
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type == RAMDISK_INODE_TYPE_UNUSED) {
-            inodes[i].type = RAMDISK_INODE_TYPE_FILE;
+            inodes[i].type = type;
             inodes[i].parent_inode_no = parent_dir_inode_no;
-            size_t len = kstrlen(filename);
-            mem_copy(inodes[i].name, filename, len);
+            size_t len = kstrlen(name);
+            memcpy(inodes[i].name, name, len);
             inodes[i].name[len] = 0;
             inodes[i].size = 0;
             return 0;
         }
     }
     return -1;
+
+}
+
+int ramdisk_create_file(uint32_t parent_dir_inode_no, const char *filename) {
+  return rm_create_entity(parent_dir_inode_no, filename, RAMDISK_INODE_TYPE_FILE);
 }
 
 int ramdisk_create_dir(uint32_t parent_dir_inode_no, const char *dirname) {
-    if (!dirname) return -1;
-    if (kstrlen(dirname) >= RAMDISK_FILENAME_MAX) return -1;
-
-    for (int i = 0; i < 32; i++) {
-        if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED) {
-            if (strcmp(inodes[i].name, dirname) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
-        }
-    }
-    for (int i = 0; i < 32; i++) {
-        if (inodes[i].type == RAMDISK_INODE_TYPE_UNUSED) {
-            inodes[i].type = RAMDISK_INODE_TYPE_DIR;
-            inodes[i].parent_inode_no = parent_dir_inode_no;
-            size_t len = kstrlen(dirname);
-            mem_copy(inodes[i].name, dirname, len);
-            inodes[i].name[len] = 0;
-            inodes[i].size = 0;
-            return 0;
-        }
-    }
-    return -1;
+  return rm_create_entity(parent_dir_inode_no, dirname, RAMDISK_INODE_TYPE_DIR);
 }
+
+
+
 
 int ramdisk_remove_file(uint32_t parent_dir_inode_no, const char *filename) {
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED && inodes[i].parent_inode_no == parent_dir_inode_no) {
-            if (strcmp(inodes[i].name, filename) == 0) {
+            if (kstrcmp(inodes[i].name, filename) == 0) {
                 if (inodes[i].type == RAMDISK_INODE_TYPE_DIR) {
                     int is_empty = 1;
                     for (int k = 0; k < 32; k++) {
@@ -155,7 +118,7 @@ int ramdisk_readfile(ramdisk_inode_t *file, uint32_t offset, uint32_t size, char
     if (offset > file->size) return 0;
     if (offset + size > file->size) size = file->size - offset;
 
-    mem_copy(buffer, (const char*)&file->data[offset], size);
+    memcpy(buffer, (const char*)&file->data[offset], size);
     return size;
 }
 
@@ -168,7 +131,7 @@ int ramdisk_writefile(ramdisk_inode_t *file, uint32_t offset, uint32_t size, con
         size = sizeof(file->data) - offset;
     }
 
-    mem_copy(&file->data[offset], buffer, size);
+    memcpy(&file->data[offset], buffer, size);
 
     if (offset + size > file->size) {
         file->size = offset + size;
@@ -190,7 +153,7 @@ ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name) {
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED &&
             inodes[i].parent_inode_no == parent_inode &&
-            strcmp(inodes[i].name, name) == 0) {
+            kstrcmp(inodes[i].name, name) == 0) {
             return &inodes[i];
         }
     }
