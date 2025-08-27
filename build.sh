@@ -16,14 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-set -e
-
 # CONFIGURATION --------------------------------------------------
-
-SU=sudo # "doas" also work too
-CC=gcc # "clang" (sometimes) works too
-AS=as
-LD=ld
 
 FLOPPY=cdos-1.44mb-floppy.img
 
@@ -32,6 +25,7 @@ HDD_SIZE="1" # in bytes
 # "BITS" Options:
 # 1. 32
 # 2. 64
+#
 BITS=32
 
 # "MARCH" Options:
@@ -70,6 +64,7 @@ BITS=32
 # 33. pantherlake
 # 34. siliconrapids
 # 35. clearlake
+#
 MARCH=i386
 
 # "OPT" Options:
@@ -81,42 +76,77 @@ MARCH=i386
 # 6. s (size) (default, because its speedy and doesnt use a lot of memory)
 # 7. g (debug)
 # 8. z (more small) (experimental)
+#
 OPT=s
 
-# "GDBINFO" Options:
+# "GDBINFO" Options:#
 # 1. 0 (none) (default)
 # 2. 1
 # 3. 2
 # 4. 3
+#
 GDBINFO=0
 
-## Flags for gcc
-CVER=99
+# Version of C to use
+#
+# "CVER" Options:
+# 1. c99
+# 2. c11
+# 3. c18
+# 4. c23
+# 5. gnu99 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
+# 6. gnu11 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
+# 7. gnu18 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
+# 8. gnu23 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
+#
+CVER=c99
 
+# Flags for gcc
+#
+# Used flags with meanings:
+# 1. "-freestanding" - Use freestanding environment
+# 2. "-Wall" - Enable all warnings
+# 3. "-Wextra" - Enable extra warnings
+# 4. "-fno-stack-protector" - Disable stack protector
+# 5. "-fno-builtin" - Disable built-in functions
+# 6. "-nostdinc" - Disable standard include paths
+# 7. "-std=$CVER" - Version of C to use
+# 8. "-pedantic" - Disable GNU extensions (disable if you are using any gnuXX C version)
+#
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
        -fno-stack-protector \
        -fno-builtin \
        -nostdinc \
-       -std=c$CVER"
+       -std=$CVER \
+       -pedantic"
 
-# END OF CONFIGURATION --------------------------------------------------
-
-HDD="build/hdd.img"
-
+# Flags for ld:
+#
+# Used flags with meanings:
+# 1. "-m" - Specify the target architecture
+# 2. "elf_i386" - Specify the output format
+# 3. "-z" - Set linker options
+# 4. "noexecstack" - Mark the stack as non-executable
+#
 LDFLAGS="-m \
          elf_i386 \
          -z \
          noexecstack"
 
-ISO_ROOT=iso_root
+# END OF CONFIGURATION --------------------------------------------------
+
+CC=gcc
+AS=as
+LD=ld
+
+HDD="build/hdd.img"
 
 SRC_DIR=src
 BUILD_DIR=build
 
 KERNEL="$BUILD_DIR/kernel.elf"
-
 BOOT_DIR="$SRC_DIR/boot"
 CALC_DIR="$SRC_DIR/calc"
 DRIVERS_DIR="$SRC_DIR/drivers"
@@ -221,7 +251,7 @@ function all {
 
   build_jobs=()
 
-  build_echo() {
+  build() {
     src="$1"
     obj="$2"
     name="$(basename "$obj")"
@@ -240,20 +270,20 @@ function all {
     build_jobs+=($!)
   }
 
-  build_echo "$KERNEL_DIR/kernel.c"     "$BUILD_DIR/kernel.o"
-  build_echo "$SHELL_DIR/shell.c"       "$BUILD_DIR/shell.o"
-  build_echo "$VGA_DIR/vga.c"           "$BUILD_DIR/vga.o"
-  build_echo "$KEYBRD_DIR/keyboard.c"   "$BUILD_DIR/keyboard.o"
-  build_echo "$RAMDISK_DIR/ramdisk.c"   "$BUILD_DIR/ramdisk.o"
-  build_echo "$CALC_DIR/calc.c"         "$BUILD_DIR/calc.o"
-  build_echo "$STRING_DIR/string.c"     "$BUILD_DIR/string.o"
-  build_echo "$RTC_DIR/rtc.c"           "$BUILD_DIR/rtc.o"
-  build_echo "$BEEP_DIR/beep.c"         "$BUILD_DIR/beep.o"
-  build_echo "$ACPI_DIR/acpi.c"         "$BUILD_DIR/acpi.o"
-  build_echo "$TIMER_DIR/timer.c"       "$BUILD_DIR/timer.o"
-  build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  build_echo "$UART_DIR/serial.c"       "$BUILD_DIR/serial.o"
-  build_echo "$IDE_DIR/ide.c"           "$BUILD_DIR/ide.o"
+  build "$KERNEL_DIR/kernel.c"     "$BUILD_DIR/kernel.o"
+  build "$SHELL_DIR/shell.c"       "$BUILD_DIR/shell.o"
+  build "$VGA_DIR/vga.c"           "$BUILD_DIR/vga.o"
+  build "$KEYBRD_DIR/keyboard.c"   "$BUILD_DIR/keyboard.o"
+  build "$RAMDISK_DIR/ramdisk.c"   "$BUILD_DIR/ramdisk.o"
+  build "$CALC_DIR/calc.c"         "$BUILD_DIR/calc.o"
+  build "$STRING_DIR/string.c"     "$BUILD_DIR/string.o"
+  build "$RTC_DIR/rtc.c"           "$BUILD_DIR/rtc.o"
+  build "$BEEP_DIR/beep.c"         "$BUILD_DIR/beep.o"
+  build "$ACPI_DIR/acpi.c"         "$BUILD_DIR/acpi.o"
+  build "$TIMER_DIR/timer.c"       "$BUILD_DIR/timer.o"
+  build "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  build "$UART_DIR/serial.c"       "$BUILD_DIR/serial.o"
+  build "$IDE_DIR/ide.c"           "$BUILD_DIR/ide.o"
 
   for job in "${build_jobs[@]}"; do
     wait "$job"
@@ -283,8 +313,8 @@ function all {
   echo -n "Building $FLOPPY..."
     cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
   echo " Done!"
-    
-  echo -n "Pad $FLOPPY..."
+
+  echo -n "Pad $FLOPPY from $(du -BK "$FLOPPY" | cut -f1) to 1.44MB..."
     truncate "$FLOPPY" -s '1474560'
   echo " Done!"
 
@@ -326,19 +356,6 @@ function run {
   -rtc base=localtime \
   -nodefaults \
   -drive file="$HDD",format=raw,if=ide,media=disk
-}
-
-function write {
-  if [[ ! -f "$FLOPPY" ]]; then
-    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
-    exit 1
-  fi
-  
-  lsblk
-  read -p "Enter target device (e.g. fd0): " dev
-  echo "Writing to /dev/$dev ..."
-  $SU dd if="$FLOPPY" of="/dev/$dev" bs=512 conv=notrunc status=progress && sync
-  echo "Done!"
 }
 
 function deps {
@@ -464,7 +481,6 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
-  write) write ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|write|clean} [--no-dep-check]" ; exit 1 ;;
+  *) echo "Usage: $0 {all|run|clean} [--no-dep-check]" ; exit 1 ;;
 esac
