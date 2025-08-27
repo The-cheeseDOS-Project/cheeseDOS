@@ -36,7 +36,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 |-------------|---------------------------------------------------------------------|
 | Processor   | i386 class or newer x86-compatible processor                        |
 | Storage     | 3.5" 1.44MB Floppy Diskette on slot 0 or 1 (nothing else will work) |
-| Memory      | 64KB RAM or better                                                  |
+| Memory      | 64KB RAM or better (640KB is all cDOS can use)                      |
 | Graphics    | VGA 80x25 Graphics Adapter                                          |
 | Display     | Color Monitor or Television (640×400 or better)                     |
 | Audio       | PC Speaker (Piezoelectric BIOS Beeper)                              |
@@ -74,6 +74,7 @@ For instructions on building from source, refer to the [Build and Run Guide](htt
 - Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
 - Shout out to [anchored-archer](https://github.com/anchored-archer) for just being a cool person!
 - Shout out to [ImNotJahan](https://github.com/ImNotJahan) for fixing a typo!
+- Shout out to [m4kyu](https://github.com/m4kyu) for adding `pix`!
 - and Shout out to **YOU!** for visiting the cheeseDOS GitHub page!
 
 <!--
