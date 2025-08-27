@@ -32,16 +32,16 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 
 ## System Requirements
 
-| Component   | Requirement                                                        |
-|-------------|--------------------------------------------------------------------|
-| Processor   | i386 class or newer x86-compatible processor                       |
-| Storage     | 3.5" 1.44MB Floppy Diskette                                        |
-| Memory      | 64KB                                                               |
-| Graphics    | VGA 80x25 Graphics Adapter                                         |
-| Display     | Color Monitor or Television (640×400 or better)                    |
-| Audio       | PC Speaker (Piezoelectric BIOS Beeper)                             |
-| Keyboard    | PS/2 or USB HID QWERTY keyboard                                    |
-| Firmware    | CHS-capable BIOS (ACPI Recommended, APM Coming soon!)              |
+| Component   | Requirement                                                         |
+|-------------|---------------------------------------------------------------------|
+| Processor   | i386 class or newer x86-compatible processor                        |
+| Storage     | 3.5" 1.44MB Floppy Diskette on slot 0 or 1 (nothing else will work) |
+| Memory      | 64KB RAM or better                                                  |
+| Graphics    | VGA 80x25 Graphics Adapter                                          |
+| Display     | Color Monitor or Television (640×400 or better)                     |
+| Audio       | PC Speaker (Piezoelectric BIOS Beeper)                              |
+| Keyboard    | PS/2 or USB HID QWERTY keyboard                                     |
+| Firmware    | CHS-capable BIOS (ACPI Recommended, APM Coming soon!)               |
 
 ## Philosophy
 
