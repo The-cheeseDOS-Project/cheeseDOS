@@ -204,31 +204,22 @@ function all {
   start=$(date +%s%N)
 
   echo -n "Building cheeseDOS "
-  if [[ -f "src/version/version.txt" ]]; then
-    cat src/version/version.txt
-  else
-    echo "version file not found"
-  fi
+  echo -n "$(<src/version/version.txt)"
+  echo "..."
 
   echo
 
   clean
   
-  echo
-
   if [[ "$SKIP_DEPS" -eq 0 ]]; then
     deps
-    echo
   else
     echo "Skipping dependency check (--no-dep-check)"
-    echo
   fi
 
   echo -n "Making directory: $BUILD_DIR..."
   mkdir -p "$BUILD_DIR"
   echo " Done!"
-
-  echo
 
   build_jobs=()
 
@@ -242,7 +233,7 @@ function all {
       if build_object "$src" "$obj" >"$output" 2>&1; then
         echo "Building $name... Done!"
       else
-        echo "Building $name... Failed!"
+        echo "Building $name... Failed! "
         cat "$output"
         exit 1
       fi
@@ -251,144 +242,46 @@ function all {
     build_jobs+=($!)
   }
 
-  if [[ -f "$KERNEL_DIR/kernel.c" ]]; then
-    build_echo "$KERNEL_DIR/kernel.c"   "$BUILD_DIR/kernel.o"
-  else
-    echo "Warning: $KERNEL_DIR/kernel.c not found"
-  fi
-  
-  if [[ -f "$SHELL_DIR/shell.c" ]]; then
-    build_echo "$SHELL_DIR/shell.c"     "$BUILD_DIR/shell.o"
-  else
-    echo "Warning: $SHELL_DIR/shell.c not found"
-  fi
-  
-  if [[ -f "$VGA_DIR/vga.c" ]]; then
-    build_echo "$VGA_DIR/vga.c"         "$BUILD_DIR/vga.o"
-  else
-    echo "Warning: $VGA_DIR/vga.c not found"
-  fi
-  
-  if [[ -f "$KEYBRD_DIR/keyboard.c" ]]; then
-    build_echo "$KEYBRD_DIR/keyboard.c" "$BUILD_DIR/keyboard.o"
-  else
-    echo "Warning: $KEYBRD_DIR/keyboard.c not found"
-  fi
-  
-  if [[ -f "$RAMDISK_DIR/ramdisk.c" ]]; then
-    build_echo "$RAMDISK_DIR/ramdisk.c" "$BUILD_DIR/ramdisk.o"
-  else
-    echo "Warning: $RAMDISK_DIR/ramdisk.c not found"
-  fi
-  
-  if [[ -f "$CALC_DIR/calc.c" ]]; then
-    build_echo "$CALC_DIR/calc.c"       "$BUILD_DIR/calc.o"
-  else
-    echo "Warning: $CALC_DIR/calc.c not found"
-  fi
-  
-  if [[ -f "$STRING_DIR/string.c" ]]; then
-    build_echo "$STRING_DIR/string.c"   "$BUILD_DIR/string.o"
-  else
-    echo "Warning: $STRING_DIR/string.c not found"
-  fi
-  
-  if [[ -f "$RTC_DIR/rtc.c" ]]; then
-    build_echo "$RTC_DIR/rtc.c"         "$BUILD_DIR/rtc.o"
-  else
-    echo "Warning: $RTC_DIR/rtc.c not found"
-  fi
-  
-  if [[ -f "$BEEP_DIR/beep.c" ]]; then
-    build_echo "$BEEP_DIR/beep.c"       "$BUILD_DIR/beep.o"
-  else
-    echo "Warning: $BEEP_DIR/beep.c not found"
-  fi
-  
-  if [[ -f "$ACPI_DIR/acpi.c" ]]; then
-    build_echo "$ACPI_DIR/acpi.c"       "$BUILD_DIR/acpi.o"
-  else
-    echo "Warning: $ACPI_DIR/acpi.c not found"
-  fi
-  
-  if [[ -f "$TIMER_DIR/timer.c" ]]; then
-    build_echo "$TIMER_DIR/timer.c"     "$BUILD_DIR/timer.o"
-  else
-    echo "Warning: $TIMER_DIR/timer.c not found"
-  fi
-  
-  if [[ -f "$PROGRAMS_DIR/programs.c" ]]; then
-    build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  else
-    echo "Warning: $PROGRAMS_DIR/programs.c not found"
-  fi
-  
-  if [[ -f "$UART_DIR/serial.c" ]]; then
-    build_echo "$UART_DIR/serial.c"     "$BUILD_DIR/serial.o"
-  else
-    echo "Warning: $UART_DIR/serial.c not found"
-  fi
-  
-  if [[ -f "$IDE_DIR/ide.c" ]]; then
-    build_echo "$IDE_DIR/ide.c"     "$BUILD_DIR/ide.o"
-  else
-    echo "Warning: $IDE_DIR/ide.c not found"
-  fi
+  build_echo "$KERNEL_DIR/kernel.c"     "$BUILD_DIR/kernel.o"
+  build_echo "$SHELL_DIR/shell.c"       "$BUILD_DIR/shell.o"
+  build_echo "$VGA_DIR/vga.c"           "$BUILD_DIR/vga.o"
+  build_echo "$KEYBRD_DIR/keyboard.c"   "$BUILD_DIR/keyboard.o"
+  build_echo "$RAMDISK_DIR/ramdisk.c"   "$BUILD_DIR/ramdisk.o"
+  build_echo "$CALC_DIR/calc.c"         "$BUILD_DIR/calc.o"
+  build_echo "$STRING_DIR/string.c"     "$BUILD_DIR/string.o"
+  build_echo "$RTC_DIR/rtc.c"           "$BUILD_DIR/rtc.o"
+  build_echo "$BEEP_DIR/beep.c"         "$BUILD_DIR/beep.o"
+  build_echo "$ACPI_DIR/acpi.c"         "$BUILD_DIR/acpi.o"
+  build_echo "$TIMER_DIR/timer.c"       "$BUILD_DIR/timer.o"
+  build_echo "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
+  build_echo "$UART_DIR/serial.c"       "$BUILD_DIR/serial.o"
+  build_echo "$IDE_DIR/ide.c"           "$BUILD_DIR/ide.o"
 
   for job in "${build_jobs[@]}"; do
     wait "$job"
   done
 
   echo -n "Building version.o..."
-  if [[ -f "$VER_DIR/version.txt" ]]; then
     objcopy -I binary -O elf$BITS-i386 -B i386 \
             "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
-    echo " Done!"
-  else
-    echo " Skipped (version.txt not found)"
-  fi
+  echo " Done!"
 
-  echo
-
-  if [[ -f "$BOOT_DIR/boot.S" ]]; then
-    echo -n "Assembling bootloader..."
+  echo -n "Assembling bootloader..."
     $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
-    echo " Done!"
-    
-    if [[ -f "$BOOT_DIR/boot.ld" ]]; then
-      echo -n "Linking bootloader..."
-      $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
-      echo " Done!"
+  echo " Done!"
+  
+  echo -n "Linking bootloader..."
+    $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
+  echo " Done!"
       
-      echo -n "Converting boot.elf into boot.bin..."
-      objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
-      echo " Done!"
-    else
-      echo "Error: $BOOT_DIR/boot.ld not found"
-      exit 1
-    fi
-  else
-    echo "Error: $BOOT_DIR/boot.S not found"
-    exit 1
-  fi
-  
-  echo
+  echo -n "Converting boot.elf into boot.bin..."
+    objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
+  echo " Done!"
 
-  if [[ -f "$KERNEL_DIR/kernel.ld" ]]; then
-    echo -n "Linking kernel..."
+  echo -n "Linking kernel..."
     $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
-    echo " Done!"
-    
-    echo -n "Stripping kernel..."
-    strip -sv "$KERNEL" > /dev/null 2>&1
-    echo " Done!"
-  else
-    echo "Error: $KERNEL_DIR/kernel.ld not found"
-    exit 1
-  fi
+  echo " Done!"
   
-  echo
-
   echo -n "Building $FLOPPY..."
   cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
   echo " Done!"
@@ -396,8 +289,6 @@ function all {
   echo -n "Pad $FLOPPY..."
   truncate "$FLOPPY" -s '1474560'
   echo " Done!"
-
-  echo
 
   echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
   dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
