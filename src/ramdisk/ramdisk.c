@@ -17,7 +17,6 @@
  */
 
 #include "ramdisk.h" 
-#include <stdint.h>
 
 static ramdisk_inode_t inodes[32];
 

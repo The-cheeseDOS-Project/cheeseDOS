@@ -685,17 +685,16 @@ void txt(const char *filename) {
     bool saved = true;
     bool is_new = false;
 
-    uint32_t parent_inode = 0;
 
     clear_screen();
 
-    ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
+    ramdisk_inode_t *file = ramdisk_iget_by_name(current_dir_inode_no, filename);
     if (!file) {
-        if (ramdisk_create_file(parent_inode, filename) < 0) {
+        if (ramdisk_create_file(current_dir_inode_no, filename) < 0) {
             putstr("Error: Failed to create file.\n");
             return;
         }
-        file = ramdisk_iget_by_name(parent_inode, filename);
+        file = ramdisk_iget_by_name(current_dir_inode_no, filename);
         if (!file) {
             putstr("Error: File creation succeeded, but lookup failed.\n");
             return;
