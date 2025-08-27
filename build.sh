@@ -203,9 +203,7 @@ build_object() {
 function all {
   start=$(date +%s%N)
 
-  echo -n "Building cheeseDOS "
-  echo -n "$(<src/version/version.txt)"
-  echo "..."
+  echo "Building cheeseDOS $(<src/version/version.txt)..."
 
   echo
 
