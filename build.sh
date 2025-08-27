@@ -283,16 +283,16 @@ function all {
   echo " Done!"
   
   echo -n "Building $FLOPPY..."
-  cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
+    cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
   echo " Done!"
     
   echo -n "Pad $FLOPPY..."
-  truncate "$FLOPPY" -s '1474560'
+    truncate "$FLOPPY" -s '1474560'
   echo " Done!"
 
   echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
-  dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
-  > /dev/null 2>&1
+    dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
+     > /dev/null 2>&1
   echo " Done!"
 
   echo
