@@ -33,8 +33,8 @@ uint32_t heap_ptr;
 
 void kmain() {
     char buf[16];
-    clear_screen();
-    qprint("Loading cheeseDOS... Done!\n");
+    
+    qprint("Loading cheeseDOS...\n");
 
     qprint("Setting Heap pointer...");
     heap_ptr = (uint32_t)&_end;
@@ -61,7 +61,4 @@ void kmain() {
 
     qprint("Loading Shell...");
     shell_run();
-
-    while (1)
-        __asm__("hlt");
 }
