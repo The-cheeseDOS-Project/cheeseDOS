@@ -15,7 +15,7 @@
 
 cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, live, Single Address Space Diskette Operating System that loads into RAM.
 
-![`ban` command](https://github.com/user-attachments/assets/16b79519-f3fe-4948-b7f7-7bf7eb0b7a50)
+![`ban` command](https://github.com/user-attachments/assets/f91031dd-f8e3-4d08-a1ca-24ea8fb9ff12)
 
 > [!WARNING]
 > On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
