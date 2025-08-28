@@ -1587,13 +1587,8 @@ static void ban(const char*) {
         scroll_bottom = (scroll_bottom + 1) % kstrlen(banner_bottom);
 
         for (int i = 0; i < count; i++) {
-            x[i] += vx[i];
+            x[i] = (x[i] + vx[i] + sw) % sw;
             y[i] += vy[i];
-
-            if (x[i] <= 0 || x[i] + gw >= sw) {
-                vx[i] = -vx[i];
-                color_index = (color_index + 1) % (sizeof(colors) / sizeof(colors[0]));
-            }
 
             if (y[i] <= 1 || y[i] + gh >= sh - 1) {
                 vy[i] = -vy[i];
@@ -1603,9 +1598,9 @@ static void ban(const char*) {
             for (int row = 0; row < gh; row++) {
                 for (int col = 0; col < gw; col++) {
                     if (glyphs[i][row] & (1 << (7 - col))) {
-                        int px = x[i] + col;
+                        int px = (x[i] + col) % sw;
                         int py = y[i] + row;
-                        if (px >= 0 && px < sw && py >= 1 && py < sh - 1) {
+                        if (py >= 1 && py < sh - 1) {
                             vga[py * sw + px] = ' ' | (colors[color_index] << 8);
                         }
                     }
@@ -1613,7 +1608,7 @@ static void ban(const char*) {
             }
         }
 
-    delay(50);
+        delay(50);
     }
 
     clear_screen();
