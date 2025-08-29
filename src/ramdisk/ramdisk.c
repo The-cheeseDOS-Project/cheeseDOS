@@ -18,28 +18,10 @@
 
 #include "stddef.h"
 #include "stdint.h"
-#include "ramdisk.h" 
+#include "ramdisk.h"
+#include "string.h"
 
 static ramdisk_inode_t inodes[32];
-
-static int strcmp(const char *a, const char *b) {
-    while (*a && (*a == *b)) { a++; b++; }
-    return (unsigned char)*a - (unsigned char)*b;
-}
-
-static size_t kstrlen(const char *str) {
-    size_t len = 0;
-    while (str[len] != '\0') {
-        len++;
-    }
-    return len;
-}
-
-static char *kstrcpy(char *dest, const char *src) {
-    char *original_dest = dest;
-    while ((*dest++ = *src++) != '\0');
-    return original_dest;
-}
 
 static void *mem_copy(void *dest, const void *src, size_t n) {
     uint8_t *d = dest;
@@ -68,6 +50,12 @@ void ramdisk_init() {
     for (size_t i = 0; i < sizeof(root_name) && i < RAMDISK_FILENAME_MAX; i++) inodes[0].name[i] = root_name[i];
 }
 
+static void inode_search_callback(const char *entry_name, uint32_t inode_no) {
+    if (kstrcmp(entry_name, search_name) == 0) {
+        search_result = ramdisk_iget(inode_no);
+    }
+}
+
 ramdisk_inode_t* ramdisk_iget(uint32_t inode_no) {
     if (inode_no >= 32) return NULL;
     if (inodes[inode_no].type == RAMDISK_INODE_TYPE_UNUSED) return NULL;
@@ -80,7 +68,7 @@ int ramdisk_create_file(uint32_t parent_dir_inode_no, const char *filename) {
 
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED) {
-            if (strcmp(inodes[i].name, filename) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
+            if (kstrcmp(inodes[i].name, filename) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
         }
     }
     for (int i = 0; i < 32; i++) {
@@ -103,7 +91,7 @@ int ramdisk_create_dir(uint32_t parent_dir_inode_no, const char *dirname) {
 
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED) {
-            if (strcmp(inodes[i].name, dirname) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
+            if (kstrcmp(inodes[i].name, dirname) == 0 && inodes[i].parent_inode_no == parent_dir_inode_no) return -1;
         }
     }
     for (int i = 0; i < 32; i++) {
@@ -123,7 +111,7 @@ int ramdisk_create_dir(uint32_t parent_dir_inode_no, const char *dirname) {
 int ramdisk_remove_file(uint32_t parent_dir_inode_no, const char *filename) {
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED && inodes[i].parent_inode_no == parent_dir_inode_no) {
-            if (strcmp(inodes[i].name, filename) == 0) {
+            if (kstrcmp(inodes[i].name, filename) == 0) {
                 if (inodes[i].type == RAMDISK_INODE_TYPE_DIR) {
                     int is_empty = 1;
                     for (int k = 0; k < 32; k++) {
@@ -190,7 +178,7 @@ ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name) {
     for (int i = 0; i < 32; i++) {
         if (inodes[i].type != RAMDISK_INODE_TYPE_UNUSED &&
             inodes[i].parent_inode_no == parent_inode &&
-            strcmp(inodes[i].name, name) == 0) {
+            kstrcmp(inodes[i].name, name) == 0) {
             return &inodes[i];
         }
     }
@@ -248,4 +236,45 @@ int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size) {
     }
 
     return 0;
+}
+
+ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name) {
+    search_name = name;
+    search_result = NULL;
+    ramdisk_readdir(dir, inode_search_callback);
+    return search_result;
+}
+
+void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst) {
+    if (!src || !dst) return;
+
+    if (src->type == RAMDISK_INODE_TYPE_FILE) {
+        int bytes = src->size;
+        if (bytes > RAMDISK_DATA_SIZE_BYTES) bytes = RAMDISK_DATA_SIZE_BYTES;
+        for (int i = 0; i < bytes; ++i) {
+            dst->data[i] = src->data[i];
+        }
+        dst->size = bytes;
+    } else if (src->type == RAMDISK_INODE_TYPE_DIR) {
+        copy_src = src;
+        copy_dst = dst;
+
+        ramdisk_readdir(src, copy_inode_callback);
+    }
+}
+
+static void copy_inode_callback(const char *name, uint32_t inode_no) {
+    ramdisk_inode_t *child_src = ramdisk_iget(inode_no);
+    if (!child_src) return;
+
+    if (child_src->type == RAMDISK_INODE_TYPE_FILE) {
+        if (ramdisk_create_file(copy_dst->inode_no, name) != 0) return;
+    } else if (child_src->type == RAMDISK_INODE_TYPE_DIR) {
+        if (ramdisk_create_dir(copy_dst->inode_no, name) != 0) return;
+    }
+
+    ramdisk_inode_t *child_dst = ramdisk_iget_by_name(copy_dst->inode_no, name);
+    if (!child_dst) return;
+
+    copy_inode(child_src, child_dst);
 }

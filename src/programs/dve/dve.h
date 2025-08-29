@@ -1,0 +1,1 @@
+void dve(const char*);

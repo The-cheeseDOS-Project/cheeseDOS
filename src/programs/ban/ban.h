@@ -1,0 +1,1 @@
+void ban(const char*);

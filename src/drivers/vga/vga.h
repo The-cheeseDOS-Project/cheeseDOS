@@ -40,6 +40,9 @@
 
 #define VGA_COLOR(fg, bg) ((bg << 4) | (fg & 0x0F))
 
+static uint8_t default_text_fg_color = COLOR_WHITE;
+static uint8_t default_text_bg_color = COLOR_BLACK;
+
 void vga_putchar(char c);
 void print(const char* str);
 void clear_screen();
@@ -55,6 +58,6 @@ void putchar(char ch);
 void vga_set_cursor(uint8_t row, uint8_t col);
 void vga_get_cursor(uint8_t *row, uint8_t *col);
 void vga_move_cursor(uint8_t row, uint8_t col);
-
+void print_uint(uint32_t num);
 
 #endif

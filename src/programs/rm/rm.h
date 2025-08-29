@@ -1,0 +1,1 @@
+void rm(const char* args);

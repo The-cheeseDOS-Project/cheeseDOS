@@ -1,0 +1,1 @@
+void bit(const char* args);

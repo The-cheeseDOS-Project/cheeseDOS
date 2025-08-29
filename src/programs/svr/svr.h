@@ -1,0 +1,1 @@
+void svr(const char*);

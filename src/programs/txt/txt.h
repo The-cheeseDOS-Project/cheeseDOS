@@ -1,0 +1,1 @@
+void txt(const char* args);

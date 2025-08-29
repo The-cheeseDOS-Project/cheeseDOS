@@ -1,0 +1,1 @@
+void ver(const char*);

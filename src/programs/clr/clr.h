@@ -1,0 +1,1 @@
+void clr(const char* args);

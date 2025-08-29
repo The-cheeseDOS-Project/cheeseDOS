@@ -1,0 +1,1 @@
+void mkd(const char* args);

@@ -1,0 +1,1 @@
+void mus(const char* args);

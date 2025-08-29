@@ -1,0 +1,1 @@
+void hi(const char*);

@@ -1,0 +1,1 @@
+void cls(const char*);

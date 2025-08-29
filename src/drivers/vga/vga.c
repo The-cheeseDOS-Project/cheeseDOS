@@ -195,3 +195,19 @@ void vga_move_cursor(uint8_t row, uint8_t col) {
     vga_cursor_y = row;
     set_cursor(row * SCREEN_WIDTH + col);
 }
+
+void print_uint(uint32_t num) {
+    char buf[12];
+    int i = 0;
+    if (num == 0) {
+        vga_putchar('0');
+        return;
+    }
+    while (num > 0) {
+        buf[i++] = (num % 10) + '0';
+        num /= 10;
+    }
+    for (int j = i - 1; j >= 0; j--) {
+        vga_putchar(buf[j]);
+    }
+}

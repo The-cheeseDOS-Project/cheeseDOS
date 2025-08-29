@@ -1,0 +1,1 @@
+void cpy(const char* args);

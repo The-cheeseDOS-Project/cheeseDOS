@@ -1,0 +1,1 @@
+void hey(const char* args);

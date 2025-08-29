@@ -1,0 +1,1 @@
+void res(const char*);

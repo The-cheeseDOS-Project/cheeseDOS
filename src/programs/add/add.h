@@ -1,0 +1,1 @@
+void add(const char* args);
