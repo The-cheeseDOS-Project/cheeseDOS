@@ -1,6 +1,9 @@
 #ifndef SVR_H
 #define SVR_H
 
-void svr(const char*);
+#include "vga.h"
+#include "io.h"
+
+void svr(const char*, uint32_t *cwd);
 
 #endif

@@ -1,9 +1,6 @@
-#include "programs.h"
-#include "ramdisk.h"
-#include "vga.h"
-#include "string.h"
+#include "cd.h"
 
-void cd(const char* args) {
+void cd(const char* args, uint32_t *cwd) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: cd <dirname>\n");
@@ -12,13 +9,13 @@ void cd(const char* args) {
     }
     const char *dirname = args;
     if (kstrcmp(dirname, "..") == 0) {
-        if (current_dir_inode_no != 0) {
-            ramdisk_inode_t *cur_dir = ramdisk_iget(current_dir_inode_no);
-            if (cur_dir) current_dir_inode_no = cur_dir->parent_inode_no;
+        if (*cwd != 0) {
+            ramdisk_inode_t *cur_dir = ramdisk_iget(*cwd);
+            if (cur_dir) *cwd = cur_dir->parent_inode_no;
         }
         return;
     }
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get current directory\n");
@@ -32,5 +29,5 @@ void cd(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    current_dir_inode_no = new_dir->inode_no;
+    *cwd = new_dir->inode_no;
 }

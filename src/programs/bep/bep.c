@@ -1,7 +1,6 @@
-#include "programs.h"
 #include "beep.h"
 
-void bep(const char* args) {
+void bep(const char* args, uint32_t *cwd) {
     int hz = 720;
     int ms = 10;
 

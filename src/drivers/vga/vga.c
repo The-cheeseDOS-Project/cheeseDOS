@@ -30,6 +30,11 @@ static int vga_cursor_y = 0;
 static uint8_t current_fg = COLOR_WHITE;
 static uint8_t current_bg = COLOR_BLACK;
 
+uint8_t default_text_fg_color = COLOR_WHITE;
+uint8_t default_text_bg_color = COLOR_BLACK;
+
+
+
 static uint8_t get_vga_color() {
     return VGA_COLOR(current_fg, current_bg);
 }
@@ -196,18 +201,4 @@ void vga_move_cursor(uint8_t row, uint8_t col) {
     set_cursor(row * SCREEN_WIDTH + col);
 }
 
-void print_uint(uint32_t num) {
-    char buf[12];
-    int i = 0;
-    if (num == 0) {
-        vga_putchar('0');
-        return;
-    }
-    while (num > 0) {
-        buf[i++] = (num % 10) + '0';
-        num /= 10;
-    }
-    for (int j = i - 1; j >= 0; j--) {
-        vga_putchar(buf[j]);
-    }
-}
+

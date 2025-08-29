@@ -1,6 +1,10 @@
 #ifndef CLR_H
 #define CLR_H
 
-void clr(const char* args);
+#include "vga.h"
+#include "string.h"
+#include "stdint.h"
+
+void clr(const char* args, uint32_t *cwd);
 
 #endif

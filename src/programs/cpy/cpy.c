@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
+#include "cpy.h"
 
-void cpy(const char* args) {
+void cpy(const char* args, uint32_t *cwd) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: cpy <src> <dst>\n");
@@ -29,7 +27,7 @@ void cpy(const char* args) {
         return;
     }
 
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get current directory\n");
@@ -54,8 +52,8 @@ void cpy(const char* args) {
     }
 
     int create_result = (src_inode->type == RAMDISK_INODE_TYPE_FILE)
-        ? ramdisk_create_file(current_dir_inode_no, dst)
-        : ramdisk_create_dir(current_dir_inode_no, dst);
+        ? ramdisk_create_file(*cwd, dst)
+        : ramdisk_create_dir(*cwd, dst);
 
     if (create_result != 0) {
         set_text_color(COLOR_RED, COLOR_BLACK);

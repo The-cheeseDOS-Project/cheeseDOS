@@ -1,6 +1,5 @@
-#include "programs.h"
-#include "acpi.h"
+#include "off.h"
 
-void off(const char*) {
+void off(const char *args, uint32_t *cwd) {
     shutdown();
 }

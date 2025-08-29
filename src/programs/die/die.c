@@ -1,5 +1,4 @@
-#include "programs.h"
-#include "vga.h"
+#include "die.h"
 
 static unsigned int seed = 123456789;
 
@@ -38,7 +37,7 @@ static void int_to_str(unsigned int value, char* buf) {
     buf[i] = '\0';
 }
 
-void die(const char* args) {
+void die(const char* args, uint32_t *cwd) {
     unsigned int max = parse_int(args);
     if (max == 0) max = 10;
 

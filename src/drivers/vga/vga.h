@@ -20,6 +20,7 @@
 #define VGA_H
 
 #include "stdint.h"
+#include "fmt.h"
 
 #define COLOR_BLACK         0x0
 #define COLOR_DARKBLUE      0x1
@@ -40,8 +41,9 @@
 
 #define VGA_COLOR(fg, bg) ((bg << 4) | (fg & 0x0F))
 
-static uint8_t default_text_fg_color = COLOR_WHITE;
-static uint8_t default_text_bg_color = COLOR_BLACK;
+
+extern uint8_t default_text_fg_color; 
+extern uint8_t default_text_bg_color;
 
 void vga_putchar(char c);
 void print(const char* str);

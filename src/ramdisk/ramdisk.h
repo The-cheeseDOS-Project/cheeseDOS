@@ -53,13 +53,8 @@ int ramdisk_readfile(ramdisk_inode_t *file, uint32_t offset, uint32_t size, char
 int ramdisk_writefile(ramdisk_inode_t *file, uint32_t offset, uint32_t len, const char *buffer);
 int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size);
 ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name);
-static const char *search_name = NULL;
-static ramdisk_inode_t *search_result = NULL;
-static ramdisk_inode_t *copy_src;
-static ramdisk_inode_t *copy_dst;
-static uint32_t current_dir_inode_no = 0;
-static void copy_inode_callback(const char *name, uint32_t inode_no);
-static void inode_search_callback(const char *entry_name, uint32_t inode_no);
+//static void copy_inode_callback(const char *name, uint32_t inode_no);
+//static void inode_search_callback(const char *entry_name, uint32_t inode_no);
 ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name);
 void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst);
 

@@ -1,7 +1,6 @@
-#include "programs.h"
-#include "timer.h"
+#include "dly.h"
 
-void dly(const char* args) {
+void dly(const char* args, uint32_t *cwd) {
     uint32_t ms = 1000;
 
     char buf[16] = {0};

@@ -1,10 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
-#include "keyboard.h"
-#include "string.h"
+#include "txt.h"
 
-void txt(const char *filename) {
+void txt(const char *filename, uint32_t *cwd) {
     if (!filename || *filename == '\0') {
         putstr("Usage: txt <file>\n");
         return;
@@ -15,17 +11,16 @@ void txt(const char *filename) {
     bool saved = true;
     bool is_new = false;
 
-    uint32_t parent_inode = 0;
 
     clear_screen();
 
-    ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
+    ramdisk_inode_t *file = ramdisk_iget_by_name(*cwd, filename);
     if (!file) {
-        if (ramdisk_create_file(parent_inode, filename) < 0) {
+        if (ramdisk_create_file(*cwd, filename) < 0) {
             putstr("Error: Failed to create file.\n");
             return;
         }
-        file = ramdisk_iget_by_name(parent_inode, filename);
+        file = ramdisk_iget_by_name(*cwd, filename);
         if (!file) {
             putstr("Error: File creation succeeded, but lookup failed.\n");
             return;

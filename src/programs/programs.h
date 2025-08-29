@@ -20,9 +20,8 @@
 #define PROGRAMS_H
 
 #include "stdbool.h"
+#include "stdint.h"
 
-bool execute_command(const char* command, const char* args);
-void print_int(int n);
-void print_ansi(const char* ansi_str);
+bool execute_command(const char* command, const char* args, uint32_t *cwd);
 
 #endif

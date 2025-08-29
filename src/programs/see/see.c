@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
+#include "see.h"
 
-void see(const char* args) {
+void see(const char* args, uint32_t *cwd) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: see <filename>\n");
@@ -10,7 +8,7 @@ void see(const char* args) {
         return;
     }
     const char *filename = args;
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get current directory\n");

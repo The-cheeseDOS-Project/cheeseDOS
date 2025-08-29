@@ -22,6 +22,10 @@
 #include "string.h"
 
 static ramdisk_inode_t inodes[32];
+const char *search_name = NULL;
+ramdisk_inode_t *search_result = NULL;
+static ramdisk_inode_t *copy_src;
+static ramdisk_inode_t *copy_dst;
 
 static void *mem_copy(void *dest, const void *src, size_t n) {
     uint8_t *d = dest;
@@ -245,6 +249,23 @@ ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *na
     return search_result;
 }
 
+static void copy_inode_callback(const char *name, uint32_t inode_no) {
+    ramdisk_inode_t *child_src = ramdisk_iget(inode_no);
+    if (!child_src) return;
+
+    if (child_src->type == RAMDISK_INODE_TYPE_FILE) {
+        if (ramdisk_create_file(copy_dst->inode_no, name) != 0) return;
+    } else if (child_src->type == RAMDISK_INODE_TYPE_DIR) {
+        if (ramdisk_create_dir(copy_dst->inode_no, name) != 0) return;
+    }
+
+    ramdisk_inode_t *child_dst = ramdisk_iget_by_name(copy_dst->inode_no, name);
+    if (!child_dst) return;
+
+    copy_inode(child_src, child_dst);
+}
+
+
 void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst) {
     if (!src || !dst) return;
 
@@ -263,18 +284,4 @@ void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst) {
     }
 }
 
-static void copy_inode_callback(const char *name, uint32_t inode_no) {
-    ramdisk_inode_t *child_src = ramdisk_iget(inode_no);
-    if (!child_src) return;
 
-    if (child_src->type == RAMDISK_INODE_TYPE_FILE) {
-        if (ramdisk_create_file(copy_dst->inode_no, name) != 0) return;
-    } else if (child_src->type == RAMDISK_INODE_TYPE_DIR) {
-        if (ramdisk_create_dir(copy_dst->inode_no, name) != 0) return;
-    }
-
-    ramdisk_inode_t *child_dst = ramdisk_iget_by_name(copy_dst->inode_no, name);
-    if (!child_dst) return;
-
-    copy_inode(child_src, child_dst);
-}

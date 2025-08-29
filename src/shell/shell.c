@@ -40,6 +40,9 @@ static int history_view_pos = -1;
 extern void print(const char* str);
 extern void print_ansi(const char* ansi_str);
 
+
+static uint32_t cwd;
+
 static void print_prompt() {
     set_text_color(COLOR_CYAN, COLOR_BLACK); 
     shell_execute("pth"); // Yes I know it's a bit hacky but hey, it works!
@@ -135,7 +138,7 @@ static bool execute_single_command(const char* cmd) {
     }
     sprint("...");
     
-    bool success = execute_command(command, args);
+    bool success = execute_command(command, args, &cwd);
     if (success) {
         sprint(" OK!\n");
     }

@@ -20,10 +20,11 @@
 #define SHELL_H
 
 #include "stdbool.h"
+#include "stdint.h"
 
 void shell_run();
 void print(const char* str);
-bool execute_command(const char* command, const char* args);
+bool execute_command(const char* command, const char* args, uint32_t *cwd);
 void shell_execute(const char* cmd);
 
 #endif

@@ -1,10 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
-#include "shell.h"
-#include "string.h"
+#include "run.h"
 
-void run(const char* args) {
+void run(const char* args, uint32_t *cwd) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: run <filename>\n");
@@ -13,7 +9,7 @@ void run(const char* args) {
     }
     
     const char *filename = args;
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get current directory\n");

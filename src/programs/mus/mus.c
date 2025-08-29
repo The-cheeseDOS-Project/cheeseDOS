@@ -1,7 +1,4 @@
-#include "programs.h"
-#include "vga.h"
-#include "beep.h"
-#include "string.h"
+#include "mus.h"
 
 static void xmas_music() {
     print("Playing: We Wish You a Merry Christmas...");
@@ -76,7 +73,7 @@ static void happy_birthday() {
     print(" OK!\n");
 }
 
-void mus(const char* args) {
+void mus(const char* args, uint32_t *cwd) {
     if (!args || !*args) {
         print("Usage: mus <song>\n");
         print(" Songs:\n");

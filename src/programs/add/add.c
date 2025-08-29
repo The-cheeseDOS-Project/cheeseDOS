@@ -1,10 +1,8 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
-#include "string.h"
+#include "add.h"
 
-void add(const char* args) {
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+
+void add(const char* args, uint32_t *cwd) {
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     ramdisk_inode_t *file = NULL;
 
     if (!args) {
@@ -60,7 +58,7 @@ void add(const char* args) {
 
     file = ramdisk_find_inode_by_name(dir, filename);
     if (!file) {
-        if (ramdisk_create_file(current_dir_inode_no, filename) != 0) {
+        if (ramdisk_create_file(*cwd, filename) != 0) {
             set_text_color(COLOR_RED, COLOR_BLACK);
             print("Failed to create file\n");
             set_text_color(default_text_fg_color, default_text_bg_color);

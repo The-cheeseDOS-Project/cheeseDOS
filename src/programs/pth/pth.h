@@ -1,6 +1,9 @@
 #ifndef PTH_H
 #define PTH_H
 
-void pth(const char*);
+#include "vga.h"
+#include "ramdisk.h"
+
+void pth(const char *args, uint32_t *cwd);
 
 #endif

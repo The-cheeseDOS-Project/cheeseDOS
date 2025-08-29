@@ -1,6 +1,9 @@
 #ifndef DLY_H
 #define DLY_H
 
-void dly(const char* args);
+
+#include "timer.h"
+
+void dly(const char* args, uint32_t *cwd);
 
 #endif

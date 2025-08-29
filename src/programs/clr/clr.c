@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "string.h"
+#include "clr.h"
 
-void clr(const char* args) {
+void clr(const char* args, uint32_t *cwd) {
     uint8_t new_fg_color = default_text_fg_color;
     if (!args || kstrcmp(args, "hlp") == 0) {
         set_text_color(COLOR_DARKBLUE, COLOR_BLACK);        print("darkblue\n");

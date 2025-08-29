@@ -1,7 +1,6 @@
-#include "programs.h"
-#include "vga.h"
+#include "hey.h"
 
-void hey(const char* args) {
+void hey(const char* args, uint32_t *cwd) {
     if (!args || !*args) {
         args = "hello, world!";
     }

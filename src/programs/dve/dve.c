@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "ide.h"
+#include "dve.h"
 
-void dve(const char*) {
+void dve(const char*, uint32_t *cwd) {
     print("Master: ");
     if (ide_detect()) {
         print("True");

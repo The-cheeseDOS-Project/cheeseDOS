@@ -1,7 +1,5 @@
-#include "programs.h"
-#include "vga.h"
-#include "calc.h"
+#include "sum.h"
 
-void sum(const char* args) {
+void sum(const char* args, uint32_t *cwd) {
     calc_command(args ? args : "");
 }

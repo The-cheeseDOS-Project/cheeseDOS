@@ -1,6 +1,5 @@
-#include "programs.h"
-#include "vga.h"
+#include "cls.h"
 
-void cls(const char*) {
+void cls(const char*, uint32_t *) {
     clear_screen();
 }

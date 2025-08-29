@@ -53,20 +53,20 @@ void sprint(const char* str) {
     }
 }
 
-int vsnprintf(char *buffer, size_t size, const char *fmt, va_list) {
-    size_t i;
-    for (i = 0; i < size - 1 && fmt[i]; i++) {
-        buffer[i] = fmt[i];
-    }
-    buffer[i] = '\0';
-    return (int)i;
-}
+//int vsnprintf(char *buffer, size_t size, const char *fmt, va_list) {
+//    size_t i;
+//    for (i = 0; i < size - 1 && fmt[i]; i++) {
+//        buffer[i] = fmt[i];
+//    }
+//    buffer[i] = '\0';
+//    return (int)i;
+//}
 
 void qprint(const char *fmt, ...) {
     char buffer[1024];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    //vsnprintf(buffer, sizeof(buffer), fmt, args);
     va_end(args);
     print(buffer);
     sprint(buffer);

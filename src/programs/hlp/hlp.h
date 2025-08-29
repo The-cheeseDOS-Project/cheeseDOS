@@ -1,6 +1,7 @@
 #ifndef HLP_H
 #define HLP_H
 
-void hlp(const char*);
+#include "vga.h"
+void hlp(const char*, uint32_t *cwd);
 
 #endif

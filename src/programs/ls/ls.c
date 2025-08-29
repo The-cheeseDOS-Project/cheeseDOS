@@ -1,7 +1,4 @@
-#include "programs.h"
-#include "vga.h"
-#include "string.h"
-#include "ramdisk.h"
+#include "ls.h"
 
 static void print_name_callback(const char *name, uint32_t inode) {
     if (kstrcmp(name, "/") == 0) return;
@@ -16,8 +13,8 @@ static void print_name_callback(const char *name, uint32_t inode) {
     }
 }
 
-void ls(const char* args) {
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+void ls(const char* args, uint32_t *cwd) {
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get directory inode\n");

@@ -1,6 +1,10 @@
 #ifndef BOX_H
 #define BOX_H
 
-void box(const char*);
+#include "vga.h"
+#include "io.h"
+#include "stdint.h"
+
+void box(const char*, uint32_t *cwd);
 
 #endif

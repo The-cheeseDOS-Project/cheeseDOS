@@ -1,8 +1,4 @@
-#include "programs.h"
-#include "vga.h"
-#include "kernel.h"
-#include "io.h"
-#include "string.h"
+#include "mem.h"
 
 static void ram_used() {
     uint32_t used = heap_ptr - (uint32_t)&_kernel_start;
@@ -40,7 +36,7 @@ static void ram_allocated() {
     print("K");
 }
 
-void mem(const char*) {
+void mem(const char*, uint32_t *cwd) {
     ram_used();
     print(" / ");
     ram_allocated();

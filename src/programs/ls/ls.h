@@ -1,6 +1,10 @@
 #ifndef LS_H
 #define LS_H
 
-void ls(const char* args);
+#include "vga.h"
+#include "string.h"
+#include "ramdisk.h"
+
+void ls(const char* args, uint32_t *cwd);
 
 #endif

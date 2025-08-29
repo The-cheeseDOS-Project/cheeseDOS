@@ -1,10 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "string.h"
-#include "timer.h"
-#include "io.h"
+#include "ban.h"
 
-void ban(const char*) {
+void ban(const char*, uint32_t *) {
     const uint8_t glyphs[][8] = {
         {0x3C,0x40,0x80,0x80,0x80,0x80,0x40,0x3C},
         {0xFC,0x82,0x81,0x81,0x81,0x81,0x82,0xFC},

@@ -1,6 +1,10 @@
 #ifndef DIE_H
 #define DIE_H
 
-void die(const char* args);
+
+#include "vga.h"
+#include "stdint.h"
+
+void die(const char* args, uint32_t *cwd);
 
 #endif

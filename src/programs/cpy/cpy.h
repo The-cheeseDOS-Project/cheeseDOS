@@ -1,6 +1,10 @@
 #ifndef CPY_H
 #define CPY_H
 
-void cpy(const char* args);
+#include "vga.h"
+#include "ramdisk.h"
+#include "stdint.h"
+
+void cpy(const char* args, uint32_t *cwd);
 
 #endif

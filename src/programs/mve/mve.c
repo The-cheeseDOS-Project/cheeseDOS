@@ -1,9 +1,7 @@
-#include "programs.h"
-#include "ramdisk.h"
-#include "vga.h"
-#include "string.h"
+#include "mve.h"
 
-void mve(const char* args) {
+
+void mve(const char* args, uint32_t *cwd) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: mve <src> <dst>\n");
@@ -32,7 +30,7 @@ void mve(const char* args) {
         return;
     }
 
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    ramdisk_inode_t *dir = ramdisk_iget(*cwd);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get current directory\n");

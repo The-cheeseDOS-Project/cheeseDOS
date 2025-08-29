@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "io.h"
+#include "svr.h"
 
-void svr(const char*) {
+void svr(const char*, uint32_t*) {
     static uint32_t rng_state = 0x12345678;
 
     #define COLOR_COUNT 6

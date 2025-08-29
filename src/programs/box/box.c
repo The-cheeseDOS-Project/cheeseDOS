@@ -1,8 +1,6 @@
-#include "programs.h"
-#include "vga.h"
-#include "io.h"
+#include "box.h"
 
-void box(const char*) {
+void box(const char *args, uint32_t *cwd) {
     uint8_t orig_row, orig_col;
     vga_get_cursor(&orig_row, &orig_col);
     vga_set_cursor(25, 80);

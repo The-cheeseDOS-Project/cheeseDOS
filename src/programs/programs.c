@@ -56,7 +56,7 @@
 
 typedef struct {
     const char* name;
-    void (*func)(const char* args);
+    void (*func)(const char* args, uint32_t *cwd);
 } shell_command_t;
 
 static shell_command_t commands[] = {
@@ -95,10 +95,10 @@ static shell_command_t commands[] = {
     {NULL, NULL}
 };
 
-bool execute_command(const char* command, const char* args) {
+bool execute_command(const char* command, const char* args, uint32_t *cwd) {
     for (int i = 0; commands[i].name != NULL; i++) {
         if (kstrcmp(command, commands[i].name) == 0) {
-            commands[i].func(args);
+            commands[i].func(args, cwd);
             return true;
         }
     }

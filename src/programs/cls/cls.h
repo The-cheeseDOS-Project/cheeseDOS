@@ -1,6 +1,7 @@
 #ifndef CLS_H
 #define CLS_H
 
-void cls(const char*);
+#include "vga.h"
+void cls(const char*, uint32_t *cwd);
 
 #endif

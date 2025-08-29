@@ -1,8 +1,7 @@
-#include "programs.h"
-#include "vga.h"
-#include "ramdisk.h"
+#include "bit.h"
 
-void bit(const char* args) {
+
+void bit(const char* args, uint32_t *cwd) {
     if (!args || *args == '\0') {
         print("Usage: bit <filename>\n");
         return;
