@@ -23,6 +23,8 @@
 #include "beep.h"
 #include "string.h"
 #include "stdint.h"
+#include "bday.h"
+#include "xmas.h"
 
 void mus(const char* args, uint32_t *cwd);
 

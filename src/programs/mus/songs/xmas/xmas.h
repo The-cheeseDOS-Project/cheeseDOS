@@ -16,22 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "mus.h"
+#ifndef _XMAS_H_
+#define _XMAS_H_
 
-void mus(const char* args, uint32_t *cwd) {
-    if (!args || !*args) {
-        print("Usage: mus <song>\n");
-        print(" Songs:\n");
-        print("  bday\n");
-        print("  xmas\n");
-        return;
-    }
+#include "vga.h"
+#include "beep.h"
 
-    if (kstrcmp(args, "xmas") == 0) {
-        xmas_music();
-    } else if (kstrcmp(args, "bday") == 0) {
-        bday_music();
-    } else {
-        print("Unknown song. Try: xmas or bday");
-    }
-}
+void xmas_music();
+
+#endif
