@@ -268,10 +268,7 @@ function all {
   while IFS= read -r src; do
     if [[ -n "$src" ]]; then
       local basename=$(basename "$src" .c)
-      local obj="$BUILD_DIR/${basena
-  while IFS= read -r src; do
-    if [[ -n "$src" ]]; then
-      local basename=me}.o"
+      local obj="$BUILD_DIR/${basename}.o"
       build_c "$src" "$obj"
     fi
   done < <(get_source_files)
