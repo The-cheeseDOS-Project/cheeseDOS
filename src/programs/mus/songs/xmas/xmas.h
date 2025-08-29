@@ -16,26 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "programs.h"
-#include "vga.h"
-#include "string.h"
-#include "xmas.h"
-#include "bday.h"
+#ifndef MUS_H
+#define MUS_H
 
-void mus(const char* args) {
-    if (!args || !*args) {
-        print("Usage: mus <song>\n");
-        print(" Songs:\n");
-        print("  bday\n");
-        print("  xmas\n");
-        return;
-    }
+void xmas_music();
 
-    if (kstrcmp(args, "xmas") == 0) {
-        xmas_music();
-    } else if (kstrcmp(args, "bday") == 0) {
-        bday_music();
-    } else {
-        print("Unknown song. Try: xmas or bday");
-    }
-}
+#endif
