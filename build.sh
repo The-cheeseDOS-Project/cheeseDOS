@@ -148,69 +148,49 @@ BUILD_DIR=build
 
 KERNEL="$BUILD_DIR/kernel.elf"
 BOOT_DIR="$SRC_DIR/boot"
-CALC_DIR="$SRC_DIR/calc"
-DRIVERS_DIR="$SRC_DIR/drivers"
-ACPI_DIR="$DRIVERS_DIR/acpi"
-BEEP_DIR="$DRIVERS_DIR/beep"
-IO_DIR="$DRIVERS_DIR/io"
-KEYBRD_DIR="$DRIVERS_DIR/keyboard"
-UART_DIR="$DRIVERS_DIR/serial"
-VGA_DIR="$DRIVERS_DIR/vga"
-KERNEL_DIR="$SRC_DIR/kernel"
-RAMDISK_DIR="$SRC_DIR/ramdisk"
-SHELL_DIR="$SRC_DIR/shell"
-PROGRAMS_DIR="$SRC_DIR/programs"
-LIB_DIR="$SRC_DIR/libraries"
-STDBOOL_DIR="$LIB_DIR/stdbool"
-STDDEF_DIR="$LIB_DIR/stddef"
-STDINT_DIR="$LIB_DIR/stdint"
-STRING_DIR="$LIB_DIR/string"
-RTC_DIR="$SRC_DIR/rtc"
-TIMER_DIR="$SRC_DIR/timer"
-VER_DIR="$SRC_DIR/version"
-IDE_DIR="$DRIVERS_DIR/ide"
 
-INCLUDES=" \
-  -I$KERNEL_DIR \
-  -I$SHELL_DIR \
-  -I$RAMDISK_DIR \
-  -I$DRIVERS_DIR \
-  -I$VGA_DIR \
-  -I$KEYBRD_DIR \
-  -I$STRING_DIR \
-  -I$CALC_DIR \
-  -I$RTC_DIR \
-  -I$BEEP_DIR \
-  -I$ACPI_DIR \
-  -I$TIMER_DIR \
-  -I$PROGRAMS_DIR \
-  -I$STDDEF_DIR \
-  -I$STDINT_DIR \
-  -I$UART_DIR \
-  -I$STDBOOL_DIR \
-  -I$IO_DIR \
-  -I$VER_DIR \
-  -I$IDE_DIR \
-  -I$KERNEL_DIR"
+get_includes() {
+  local includes=""
+  while IFS= read -r -d '' dir; do
+    includes="$includes -I$dir"
+  done < <(find "$SRC_DIR" -type d -print0)
+  echo "$includes"
+}
 
-OBJS=(
-  "$BUILD_DIR/kernel.o"
-  "$BUILD_DIR/shell.o"
-  "$BUILD_DIR/vga.o"
-  "$BUILD_DIR/keyboard.o"
-  "$BUILD_DIR/ramdisk.o"
-  "$BUILD_DIR/calc.o"
-  "$BUILD_DIR/string.o"
-  "$BUILD_DIR/rtc.o"
-  "$BUILD_DIR/beep.o"
-  "$BUILD_DIR/acpi.o"
-  "$BUILD_DIR/timer.o"
-  "$BUILD_DIR/programs.o"
-  "$BUILD_DIR/serial.o"
-  "$BUILD_DIR/version.o"
-  "$BUILD_DIR/ide.o"
-)
-       
+INCLUDES=$(get_includes)
+
+get_source_files() {
+  find "$SRC_DIR" -name "*.c" -not -path "$BOOT_DIR/*" | sort
+}
+
+get_asm_files() {
+  find "$SRC_DIR" -name "*.S" -not -path "$BOOT_DIR/*" | sort
+}
+
+get_object_files() {
+  local objs=()
+  
+  while IFS= read -r src; do
+    if [[ -n "$src" ]]; then
+      local basename=$(basename "$src" .c)
+      local obj="$BUILD_DIR/${basename}.o"
+      objs+=("$obj")
+    fi
+  done < <(get_source_files)
+  
+  while IFS= read -r src; do
+    if [[ -n "$src" ]]; then
+      local basename=$(basename "$src" .S)
+      local obj="$BUILD_DIR/${basename}.o"
+      objs+=("$obj")
+    fi
+  done < <(get_asm_files)
+  
+  objs+=("$BUILD_DIR/version.o")
+  
+  printf '%s\n' "${objs[@]}"
+}
+
 CFLAGS="-m$BITS \
         -march=$MARCH \
         -O$OPT \
@@ -219,6 +199,8 @@ CFLAGS="-m$BITS \
         $FLAGS \
         $INCLUDES"
 
+ASMFLAGS="--$BITS $INCLUDES"
+
 SKIP_DEPS=0
 for arg in "$@"; do
   if [[ "$arg" == "--no-dep-check" ]]; then
@@ -226,8 +208,12 @@ for arg in "$@"; do
   fi
 done
 
-build_object() {
+build_c_object() {
   $CC $CFLAGS -c "$1" -o "$2"
+}
+
+build_asm_object() {
+  $AS $ASMFLAGS -o "$2" "$1"
 }
 
 function all {
@@ -250,49 +236,64 @@ function all {
   echo " Done!"
 
   build_jobs=()
+  
+  build_c() {
+    local src="$1"
+    local obj="$2"
 
-  build() {
-    src="$1"
-    obj="$2"
-    name="$(basename "$obj")"
+    echo "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
-      if build_object "$src" "$obj" >"$output" 2>&1; then
-        echo "Building $name... Done!"
-      else
-        echo "Building $name... Failed! "
-        cat "$output"
-        exit 1
-      fi
+      build_c_object "$src" "$obj" >"$output" 2>&1 || { cat "$output"; exit 1; }
+      rm -f "$output"
+    } &
+    build_jobs+=($!)
+  }
+  
+  build_asm() {
+    local src="$1"
+    local obj="$2"
+
+    echo "$AS $ASMFLAGS -o $obj $src" | awk '{$1=$1; print}'
+
+    {
+      output=$(mktemp)
+      build_asm_object "$src" "$obj" >"$output" 2>&1 || { cat "$output"; exit 1; }
       rm -f "$output"
     } &
     build_jobs+=($!)
   }
 
-  build "$KERNEL_DIR/kernel.c"     "$BUILD_DIR/kernel.o"
-  build "$SHELL_DIR/shell.c"       "$BUILD_DIR/shell.o"
-  build "$VGA_DIR/vga.c"           "$BUILD_DIR/vga.o"
-  build "$KEYBRD_DIR/keyboard.c"   "$BUILD_DIR/keyboard.o"
-  build "$RAMDISK_DIR/ramdisk.c"   "$BUILD_DIR/ramdisk.o"
-  build "$CALC_DIR/calc.c"         "$BUILD_DIR/calc.o"
-  build "$STRING_DIR/string.c"     "$BUILD_DIR/string.o"
-  build "$RTC_DIR/rtc.c"           "$BUILD_DIR/rtc.o"
-  build "$BEEP_DIR/beep.c"         "$BUILD_DIR/beep.o"
-  build "$ACPI_DIR/acpi.c"         "$BUILD_DIR/acpi.o"
-  build "$TIMER_DIR/timer.c"       "$BUILD_DIR/timer.o"
-  build "$PROGRAMS_DIR/programs.c" "$BUILD_DIR/programs.o"
-  build "$UART_DIR/serial.c"       "$BUILD_DIR/serial.o"
-  build "$IDE_DIR/ide.c"           "$BUILD_DIR/ide.o"
+  while IFS= read -r src; do
+    if [[ -n "$src" ]]; then
+      local basename=$(basename "$src" .c)
+      local obj="$BUILD_DIR/${basena
+  while IFS= read -r src; do
+    if [[ -n "$src" ]]; then
+      local basename=me}.o"
+      build_c "$src" "$obj"
+    fi
+  done < <(get_source_files)
+  
+  while IFS= read -r src; do
+    if [[ -n "$src" ]]; then
+      local basename=$(basename "$src" .S)
+      local obj="$BUILD_DIR/${basename}.o"
+      build_asm "$src" "$obj"
+    fi
+  done < <(get_asm_files)
 
   for job in "${build_jobs[@]}"; do
     wait "$job"
   done
 
-  echo -n "Building version.o..."
-    objcopy -I binary -O elf$BITS-i386 -B i386 \
-            "$VER_DIR/version.txt" "$BUILD_DIR/version.o"
-  echo " Done!"
+  if [[ -f "$SRC_DIR/version/version.txt" ]]; then
+    echo -n "Building version.o..."
+      objcopy -I binary -O elf$BITS-i386 -B i386 \
+              "$SRC_DIR/version/version.txt" "$BUILD_DIR/version.o"
+    echo " Done!"
+  fi
 
   echo -n "Assembling bootloader..."
     $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
@@ -306,8 +307,10 @@ function all {
     objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
   echo " Done!"
 
-  echo -n "Linking kernel..."
-    $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$KERNEL_DIR/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
+  mapfile -t OBJS < <(get_object_files)
+  
+  echo -n "Linking kernel with $(printf '%s ' "${OBJS[@]}" | wc -w) object files..."
+    $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$SRC_DIR/kernel/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
   echo " Done!"
   
   echo -n "Building $FLOPPY..."
