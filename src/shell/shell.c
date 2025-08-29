@@ -181,8 +181,15 @@ void shell_run() {
     char input[INPUT_BUF_SIZE] = {0};
     int idx = 0;
     int cursor_index = 0;
-    qprint(" Done!\n");
+    
+    set_text_color(COLOR_GREEN, COLOR_BLACK);
+    print(" Done!\n");
+    set_text_color(COLOR_WHITE, COLOR_BLACK);
+
+    sprint(" \033[92mDone!\033[0m\n");
+
     print("\n");
+
     shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();

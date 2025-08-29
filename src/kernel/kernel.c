@@ -38,20 +38,41 @@ void kmain() {
 
     qprint("Setting Heap pointer...");
     heap_ptr = (uint32_t)&_end;
-    qprint(" Done!\n");
+
+    set_text_color(COLOR_GREEN, COLOR_BLACK);
+    print(" Done!\n");
+    set_text_color(COLOR_WHITE, COLOR_BLACK);
 
     qprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     qprint(buf);
     qprint("B RAM Disk...");
+    
+    sprint(" \033[92mDone!\033[0m\n");
+
     ramdisk_init();
-    qprint(" Done!\n");
+    
+    set_text_color(COLOR_GREEN, COLOR_BLACK);
+    print(" Done!\n");
+    set_text_color(COLOR_WHITE, COLOR_BLACK);
+
+    sprint(" \033[92mDone!\033[0m\n");
 
     qprint("Looking for IDE master... ");
     if (ide_detect()) {
-        qprint("Found!\nLoading IDE Drive...");
+        set_text_color(COLOR_GREEN, COLOR_BLACK);
+        print(" Found!\n");
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
+
+        sprint(" \033[92mFound!\033[0m\n");
+        
+        qprint("Loading IDE Drive...");
+        
         if (ide_init()) {
-            qprint(" Done!\n");
+            sprint(" \033[92mDone!\033[0m\n");
+            set_text_color(COLOR_GREEN, COLOR_BLACK);
+            print(" Done!\n");
+            set_text_color(COLOR_WHITE, COLOR_BLACK);
         } else {
             qprint(" Failed!\n");
         }
