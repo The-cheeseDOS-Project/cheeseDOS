@@ -16,20 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "rm.h"
 
-void rm(const char* args, uint32_t *cwd) {
-    if (!args) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: rm <filename>\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-    int res = ramdisk_remove_file(*cwd, args);
-    if (res == 0) {
-    } else {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to remove file\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-    }
-}
+
+
+#ifndef _PIX_H_
+#define _PIX_H_
+
+
+#include "vga.h"
+#include "ramdisk.h"
+#include "stdint.h"
+#include "keyboard.h"
+#include "io.h"
+#include "string.h"
+
+void pix(const char *filename, uint32_t *cwd);
+
+
+#endif
