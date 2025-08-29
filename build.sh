@@ -94,10 +94,6 @@ GDBINFO=0
 # 2. c11
 # 3. c18
 # 4. c23
-# 5. gnu99 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
-# 6. gnu11 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
-# 7. gnu18 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
-# 8. gnu23 (NOTE: disable "-pedantic" on FLAGS to enable GNU extensions)
 #
 CVER=c99
 
@@ -113,6 +109,7 @@ CVER=c99
 # 7. "-std=$CVER" - Version of C to use
 # 8. "-pedantic" - Disable GNU extensions (disable if you are using any gnuXX C version)
 #
+#
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
@@ -120,7 +117,8 @@ FLAGS="-ffreestanding \
        -fno-builtin \
        -nostdinc \
        -std=$CVER \
-       -pedantic"
+       -pedantic \
+       -fno-common"
 
 # Flags for ld:
 #
@@ -243,11 +241,13 @@ function all {
 
     echo "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
-    {
-      output=$(mktemp)
-      build_c_object "$src" "$obj" >"$output" 2>&1 || { cat "$output"; exit 1; }
-      rm -f "$output"
-    } &
+  {
+    output=$(mktemp)
+    build_c_object "$src" "$obj" >"$output" 2>&1
+    cat "$output"
+    grep -q "error:" "$output" && exit 1
+    rm -f "$output"
+  } &
     build_jobs+=($!)
   }
   
