@@ -109,7 +109,6 @@ CVER=c99
 # 7. "-std=$CVER" - Version of C to use
 # 8. "-pedantic" - Disable GNU extensions (disable if you are using any gnuXX C version)
 #
-#
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
