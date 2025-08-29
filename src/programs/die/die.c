@@ -18,6 +18,7 @@
 
 #include "die.h"
 
+
 static unsigned int seed = 123456789;
 
 static unsigned int rand_bare() {

@@ -23,6 +23,6 @@
 #include "vga.h"
 #include "ide.h"
 
-void dve(const char*, uint32_t *cwd);
+void dve(const char *args, uint32_t *cwd);
 
 #endif

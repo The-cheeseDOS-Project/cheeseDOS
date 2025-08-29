@@ -25,6 +25,6 @@
 #include "io.h"
 #include "stdint.h"
 
-void ban(const char*, uint32_t *cwd);
+void ban(const char *args, uint32_t *cwd);
 
 #endif

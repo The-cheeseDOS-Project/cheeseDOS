@@ -21,6 +21,6 @@
 
 #include "vga.h"
 
-void hi(const char*, uint32_t *cwd);
+void hi(const char *args, uint32_t *cwd);
 
 #endif

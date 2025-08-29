@@ -54,7 +54,7 @@ static void ram_allocated() {
     print("K");
 }
 
-void mem(const char*, uint32_t *cwd) {
+void mem(const char *args, uint32_t *cwd) {
     ram_used();
     print(" / ");
     ram_allocated();

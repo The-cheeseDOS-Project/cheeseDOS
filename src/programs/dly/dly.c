@@ -17,6 +17,8 @@
  */
 
 #include "dly.h"
+#include "timer.h"
+
 
 void dly(const char* args, uint32_t *cwd) {
     uint32_t ms = 1000;

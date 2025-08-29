@@ -18,7 +18,7 @@
 
 #include "svr.h"
 
-void svr(const char*, uint32_t*) {
+void svr(const char *args, uint32_t *cwd) {
     static uint32_t rng_state = 0x12345678;
 
     #define COLOR_COUNT 6

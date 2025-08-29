@@ -22,6 +22,6 @@
 #include "vga.h"
 #include "io.h"
 
-void svr(const char*, uint32_t *cwd);
+void svr(const char *args, uint32_t *cwd);
 
 #endif

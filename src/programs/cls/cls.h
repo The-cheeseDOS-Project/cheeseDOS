@@ -20,6 +20,6 @@
 #define CLS_H
 
 #include "vga.h"
-void cls(const char*, uint32_t *cwd);
+void cls(const char *args, uint32_t *cwd);
 
 #endif

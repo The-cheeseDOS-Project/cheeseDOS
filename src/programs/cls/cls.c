@@ -18,6 +18,6 @@
 
 #include "cls.h"
 
-void cls(const char*, uint32_t *) {
+void cls(const char *args, uint32_t *cwd) {
     clear_screen();
 }

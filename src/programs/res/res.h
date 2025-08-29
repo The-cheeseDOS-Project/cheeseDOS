@@ -21,6 +21,6 @@
 
 #include "acpi.h"
 
-void res(const char*, uint32_t*);
+void res(const char *args, uint32_t *cwd);
 
 #endif

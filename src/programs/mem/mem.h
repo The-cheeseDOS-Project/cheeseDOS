@@ -25,6 +25,6 @@
 #include "io.h"
 #include "string.h"
 
-void mem(const char*, uint32_t *cwd);
+void mem(const char *args, uint32_t *cwd);
 
 #endif

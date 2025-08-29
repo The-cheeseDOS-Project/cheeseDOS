@@ -161,19 +161,14 @@ void shell_execute(const char* cmd) {
     cmd_copy[INPUT_BUF_SIZE - 1] = '\0';
     
     char *current_cmd = cmd_copy;
-    char *next_amp;
     
     while (current_cmd != NULL) {
-        next_amp = kstrchr(current_cmd, '&');
-        
-        if (next_amp != NULL) {
-            *next_amp = '\0';
-        }
+        const char *next_amp = kstrchr(current_cmd, '&');
         
         execute_single_command(current_cmd);
         
         if (next_amp != NULL) {
-            current_cmd = next_amp + 1;
+            current_cmd = (char*)next_amp + 1;
         } else {
             current_cmd = NULL;
         }

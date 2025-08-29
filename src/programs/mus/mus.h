@@ -19,10 +19,8 @@
 #ifndef MUS_H
 #define MUS_H
 
-#include "vga.h"
-#include "beep.h"
-#include "string.h"
 #include "stdint.h"
+#include "string.h"
 #include "bday.h"
 #include "xmas.h"
 
