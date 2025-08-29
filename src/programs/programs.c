@@ -53,6 +53,7 @@
 #include "die.h"
 #include "dve.h"
 #include "pth.h"
+#include "pix.h"
 
 typedef struct {
     const char* name;
@@ -92,6 +93,7 @@ static shell_command_t commands[] = {
     {"mem", mem},
     {"box", box},
     {"add", add},
+    {"pix", pix},
     {NULL, NULL}
 };
 
