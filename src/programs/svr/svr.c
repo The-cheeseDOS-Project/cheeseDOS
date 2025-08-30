@@ -20,7 +20,7 @@
 #include "vga.h"
 #include "io.h"
 
-void svr(const char*) {
+void svr(const char* *unused) {
     static uint32_t rng_state = 0x12345678;
 
     #define COLOR_COUNT 6

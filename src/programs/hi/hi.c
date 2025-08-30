@@ -19,6 +19,6 @@
 #include "programs.h"
 #include "vga.h"
 
-void hi(const char*) {
+void hi(const char* *unused) {
     print("hello, world\n");
 }

@@ -20,12 +20,11 @@
 #include "vga.h"
 #include "ide.h"
 
-void dve(const char*) {
+void dve(const char *unused) {
     print("Master: ");
     if (ide_detect()) {
         print("True");
-    } 
-    else {
+    } else {
         print(" False\n");
     }
 }

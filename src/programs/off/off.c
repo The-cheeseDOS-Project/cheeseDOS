@@ -19,6 +19,6 @@
 #include "programs.h"
 #include "acpi.h"
 
-void off(const char*) {
+void off(const char* *unused) {
     shutdown();
 }

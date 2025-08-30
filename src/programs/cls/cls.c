@@ -19,6 +19,6 @@
 #include "programs.h"
 #include "vga.h"
 
-void cls(const char*) {
+void cls(const char *unused) {
     clear_screen();
 }

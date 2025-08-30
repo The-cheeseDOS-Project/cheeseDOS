@@ -58,7 +58,7 @@ static void ram_allocated() {
     print("K");
 }
 
-void mem(const char*) {
+void mem(const char* *unused) {
     ram_used();
     print(" / ");
     ram_allocated();
