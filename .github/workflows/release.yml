@@ -44,14 +44,14 @@ jobs:
         run: |
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
-
+      
       - name: Generate changelog from last commit
         run: |
+          mkdir -p .github
           echo "## Changelog" > .github/release.md
-          git log -1 --pretty=format:"%s" | while read msg; do
-            git diff --name-only HEAD~1 HEAD | while read file; do
-              echo "- \`$file\`: $msg" >> .github/release.md
-            done
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          git diff --name-only HEAD~1 HEAD | while read file; do
+            echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
           done
 
       - name: Generate timestamp
