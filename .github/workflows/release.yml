@@ -82,6 +82,13 @@ jobs:
           TAG=$(cat src/version/version.txt)
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
+      - name: Generate changelog from diff
+        run: |
+          echo "## Changelog" >> .github/release.md
+          git diff --name-only HEAD~1 HEAD | while read file; do
+            echo "- \`$file\`: Modified in this build" >> .github/release.md
+          done
+
       - name: Create GitHub Release and Upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
