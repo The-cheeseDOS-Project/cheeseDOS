@@ -45,12 +45,13 @@ jobs:
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
       
-      - name: Generate changelog from last commit
+      - name: Append changelog to release.md
         run: |
-          mkdir -p .github
-          echo "## Changelog" > .github/release.md
+          echo "" >> .github/release.md
+          echo "## Changelog" >> .github/release.md
+          COMMIT_HASH=$(git rev-parse HEAD)
           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          git diff --name-only HEAD~1 HEAD | while read file; do
+          for file in $(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH); do
             echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
           done
 
