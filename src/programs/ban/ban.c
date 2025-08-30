@@ -29,7 +29,7 @@ void ban(const char*, uint32_t *) {
     const int count = sizeof(glyphs) / sizeof(glyphs[0]);
     const int gw = 8, gh = 8;
     const int sw = 80, sh = 25;
-    uint16_t* vga = (uint16_t*)0xB8000;
+    uint16_t *vga = (uint16_t *)0xB8000;
 
     vga_set_cursor(25, 0);
 
@@ -52,8 +52,8 @@ void ban(const char*, uint32_t *) {
     };
     int color_index = 0;
 
-    static const char* banner_top = "The cheese Diskette Operating System | Press ESCAPE (or ESC) key to exit demo. | ";
-    static const char* banner_bottom =
+    static const char *banner_top = "The cheese Diskette Operating System | Press ESCAPE (or ESC) key to exit demo. | ";
+    static const char *banner_bottom =
         "cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, live, Single Address Space Diskette Operating System that loads into RAM. | ";
     static int scroll_top = 0;
     static int scroll_bottom = 0;
@@ -61,7 +61,7 @@ void ban(const char*, uint32_t *) {
     while (1) {
         vga_set_cursor(25, 0);
 
-        if (inb(0x64) & 1 && inb(0x60) == 0x01) break;
+        if ((inb(0x64) & 1) && inb(0x60) == 0x01) break;
 
         for (int i = 0; i < sw * sh; i++) {
             vga[i] = ' ' | (COLOR_WHITE << 8);

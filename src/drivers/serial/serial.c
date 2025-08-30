@@ -17,8 +17,8 @@
  */
 
 #include "vga.h"
-#include "stdint.h"
-#include "stddef.h"
+#include <stdint.h>
+#include <stddef.h>
 
 #define SERIAL_COM1_BASE 0x3F8
 
@@ -37,7 +37,7 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-int serial_is_transmit_ready() {
+int serial_is_transmit_ready(void) {
     return inb(SERIAL_COM1_BASE + 5) & 0x20;
 }
 
@@ -46,7 +46,7 @@ void serial_putchar(char c) {
     outb(SERIAL_COM1_BASE, c);
 }
 
-void sprint(const char* str) {
+void sprint(const char *str) {
     while (*str) {
         if (*str == '\n') serial_putchar('\r');
         serial_putchar(*str++);
