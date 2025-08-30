@@ -13,7 +13,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 name: Build and Release cheeseDOS
+
 on:
   push:
     branches:
@@ -23,14 +25,17 @@ on:
       - 'build.sh'
       - '.github/workflows/**'
   workflow_dispatch:
+
 permissions:
   contents: write
 
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+   
     env:
       TZ: America/Los_Angeles
+   
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
