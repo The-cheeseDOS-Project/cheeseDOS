@@ -81,9 +81,9 @@ scan_floppy:
     int 0x13
     jc scan_floppy
 
-    jmp load_kernel
+    jmp load_init
 
-load_kernel:
+load_init:
     mov ax, ELF_HDR_LOAD/16
     mov ds, ax
     mov si, [elf_phoff]

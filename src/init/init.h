@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
-#ifndef KERNEL_H
-#define KERNEL_H
+
+#ifndef INIT_H
+#define INIT_H
 
 #include "stdint.h"
 
 extern uint32_t heap_ptr;
-extern uint8_t _kernel_start;
+extern uint8_t _init_start;
 
 #endif

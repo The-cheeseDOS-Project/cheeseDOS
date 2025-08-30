@@ -21,7 +21,7 @@
 
 
 #include "vga.h"
-#include "kernel.h"
+#include "init.h"
 #include "io.h"
 #include "string.h"
 

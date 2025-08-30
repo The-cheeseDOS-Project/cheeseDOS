@@ -19,7 +19,7 @@
 #include "mem.h"
 
 static void ram_used() {
-    uint32_t used = heap_ptr - (uint32_t)&_kernel_start;
+    uint32_t used = heap_ptr - (uint32_t)&_init_start;
     uint32_t used_kb = used / 1024;
     char buf[16];
     itoa(used_kb, buf, 10);

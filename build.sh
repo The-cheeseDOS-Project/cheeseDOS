@@ -143,7 +143,7 @@ HDD="build/hdd.img"
 SRC_DIR=src
 BUILD_DIR=build
 
-KERNEL="$BUILD_DIR/kernel.elf"
+OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
 get_includes() {
@@ -305,12 +305,12 @@ function all {
 
   mapfile -t OBJS < <(get_object_files)
   
-  echo -n "Linking kernel with $(printf '%s ' "${OBJS[@]}" | wc -w) object files..."
-    $LD $LDFLAGS -e kmain -z max-page-size=512 -T "$SRC_DIR/kernel/kernel.ld" -o "$KERNEL" "${OBJS[@]}"
+  echo -n "Linking cheeseDOS with $(printf '%s ' "${OBJS[@]}" | wc -w) object files..."
+    $LD $LDFLAGS -e init -z max-page-size=512 -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" "${OBJS[@]}"
   echo " Done!"
   
   echo -n "Building $FLOPPY..."
-    cat "$BUILD_DIR/boot.bin" "$KERNEL" > "$FLOPPY"
+    cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
   echo " Done!"
 
   echo -n "Pad $FLOPPY from $(du -BK "$FLOPPY" | cut -f1) to 1.44MB..."
