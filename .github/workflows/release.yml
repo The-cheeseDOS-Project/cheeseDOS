@@ -23,6 +23,7 @@ on:
     paths:
       - 'src/**'
       - 'build.sh'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 permissions:
@@ -43,6 +44,15 @@ jobs:
         run: |
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
+
+      - name: Generate changelog from last commit
+        run: |
+          echo "## Changelog" > .github/release.md
+          git log -1 --pretty=format:"%s" | while read msg; do
+            git diff --name-only HEAD~1 HEAD | while read file; do
+              echo "- \`$file\`: $msg" >> .github/release.md
+            done
+          done
 
       - name: Generate timestamp
         run: |
@@ -81,13 +91,6 @@ jobs:
         run: |
           TAG=$(cat src/version/version.txt)
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-
-      - name: Generate changelog from diff
-        run: |
-          echo "## Changelog" >> .github/release.md
-          git diff --name-only HEAD~1 HEAD | while read file; do
-            echo "- \`$file\`: Modified in this build" >> .github/release.md
-          done
 
       - name: Create GitHub Release and Upload artifacts
         env:
