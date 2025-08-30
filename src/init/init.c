@@ -24,14 +24,14 @@
 #include "ide.h"
 #include "string.h"
 
-__attribute__((section(".text"))) uint8_t _kernel_start;
+__attribute__((section(".text"))) uint8_t _init_start;
 
-extern uint8_t _kernel_start;
+extern uint8_t _init_start;
 extern uint8_t _end;
 
 uint32_t heap_ptr;
 
-void kmain() {
+void init() {
     char buf[16];
     
     qprint("Loading cheeseDOS...\n");
