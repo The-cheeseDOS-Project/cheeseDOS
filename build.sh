@@ -111,6 +111,8 @@ CVER=c99
 # 6. "-nostdinc" - Disable standard include paths
 # 7. "-std=$CVER" - Version of C to use
 # 8. "-pedantic" - Disable GNU extensions (disable if you are using any gnuXX C version)
+# 9. "-fno-common" - Disable common symbols
+# 10. "-pedantic-errors" - Treat all warnings as errors
 #
 FLAGS="-ffreestanding \
        -Wall \
@@ -120,7 +122,8 @@ FLAGS="-ffreestanding \
        -nostdinc \
        -std=$CVER \
        -pedantic \
-       -fno-common"
+       -fno-common \
+       -pedantic-errors"
 
 # Flags for ld:
 #
