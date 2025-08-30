@@ -75,8 +75,8 @@ MARCH=i386
 # 2. 1
 # 3. 2
 # 4. 3
-# 5. f (fast) (use this when we somehow stop getting all that overlapping .data and .text or whatever junk)
-# 6. s (size) (default, because its speedy and doesnt use a lot of memory)
+# 5. fast (use this when we somehow stop getting all that overlapping .data and .text or whatever junk)
+# 6. s (size) (default, because it doesn't use a lot of memory)
 # 7. g (debug)
 # 8. z (more small) (experimental)
 #
