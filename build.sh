@@ -18,6 +18,9 @@
 
 # CONFIGURATION --------------------------------------------------
 
+# `doas` works too
+SU="sudo"
+
 FLOPPY=cdos-1.44mb-floppy.img
 
 HDD_SIZE="1" # in bytes
@@ -357,6 +360,28 @@ function run {
   -drive file="$HDD",format=raw,if=ide,media=disk
 }
 
+function run-kvm {
+  if [[ ! -f "$FLOPPY" ]]; then
+    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
+    exit 1
+  fi
+  
+  $SU \
+  qemu-system-i386 \
+  -audiodev pa,id=snd0 \
+  -machine pcspk-audiodev=snd0 \
+  -serial stdio \
+  -drive file="$FLOPPY",format=raw,if=floppy \
+  -m "$MEM" \
+  -cpu "$CPU","$CPU_FLAGS" \
+  -vga std \
+  -display gtk \
+  -rtc base=localtime \
+  -nodefaults \
+  -drive file="$HDD",format=raw,if=ide,media=disk \
+  -enable-kvm
+}
+
 function deps {
   echo "Checking for required tools: gcc, binutils, and qemu-system-i386..."
 
@@ -480,6 +505,7 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
+  run-kvm) run-kvm ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|clean} [--no-dep-check]" ; exit 1 ;;
+  *) echo "Usage: $0 {all|run|run-kvm|clean} [--no-dep-check]" ; exit 1 ;;
 esac
