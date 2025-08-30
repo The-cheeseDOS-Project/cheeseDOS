@@ -161,7 +161,7 @@ void shell_execute(const char* cmd) {
     char *next_amp;
     
     while (current_cmd != NULL) {
-        next_amp = kstrchr(current_cmd, '&');
+        next_amp = (char*)kstrchr(current_cmd, '&');
         
         if (next_amp != NULL) {
             *next_amp = '\0';
