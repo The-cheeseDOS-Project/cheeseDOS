@@ -41,7 +41,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 | Display     | Color Monitor or Television (640×400 or better)                     |
 | Audio       | PC Speaker (Piezoelectric BIOS Beeper)                              |
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                                     |
-| Firmware    | CHS-capable BIOS (ACPI Recommended, APM Coming soon!)               |
+| Firmware    | CHS-capable BIOS (ACPI Recommended, APM Coming soonish!)            |
 
 ## Philosophy
 
