@@ -13,9 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 name: Build and Release cheeseDOS
-
 on:
   push:
     branches:
@@ -25,21 +23,20 @@ on:
       - 'build.sh'
       - '.github/workflows/**'
   workflow_dispatch:
-
 permissions:
   contents: write
 
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
-
     env:
       TZ: America/Los_Angeles
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+      
       - name: Correct time
         run: |
           sudo timedatectl set-timezone America/Los_Angeles
@@ -49,17 +46,37 @@ jobs:
         run: |
           echo "" >> .github/release.md
           echo "## Changelog" >> .github/release.md
-          COMMIT_HASH=$(git rev-parse HEAD)
-          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          for file in $(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH); do
-            echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
-          done
-
+          
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          PREV_COMMIT=$(git rev-parse HEAD~1 2>/dev/null || echo "")
+          
+          if [ -n "$PREV_COMMIT" ]; then
+            echo "Comparing $PREV_COMMIT..$CURRENT_COMMIT"
+            CHANGED_FILES=$(git diff --name-only $PREV_COMMIT..$CURRENT_COMMIT)
+            COMMIT_MSG=$(git log -1 --pretty=format:"%s" $CURRENT_COMMIT)
+            
+            if [ -n "$CHANGED_FILES" ]; then
+              echo "$CHANGED_FILES" | while read -r file; do
+                if [ -n "$file" ]; then
+                  echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
+                fi
+              done
+            else
+              echo "- No files changed in this commit" >> .github/release.md
+            fi
+          else
+            COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+            echo "- Initial commit: $COMMIT_MSG" >> .github/release.md
+            find src/ -type f | head -10 | while read -r file; do
+              echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
+            done
+          fi
+          
       - name: Generate timestamp
         run: |
           DATE=$(date +"%m%d%y%H%M")
           echo -n "a$DATE" > src/version/version.txt
-
+      
       - name: Commit version.txt
         run: |
           git config user.name "github-actions"
@@ -74,25 +91,25 @@ jobs:
         run: |
           chmod +x ./build.sh
           ./build.sh all --no-dep-check
-
+      
       # - name: Upload ISO artifact
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: cheeseDOS-iso
       #     path: cheesedos-cdrom.iso
-
+      
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
         with:
           name: cheeseDOS-img
           path: cdos-1.44mb-floppy.img
-
+      
       - name: Read version tag
         id: readtag
         run: |
           TAG=$(cat src/version/version.txt)
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-
+      
       - name: Create GitHub Release and Upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
