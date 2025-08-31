@@ -54,6 +54,7 @@
 #include "dve.h"
 #include "pth.h"
 #include "snk.h"
+#include "key.h"
 
 typedef struct {
     const char* name;
@@ -94,6 +95,7 @@ static shell_command_t commands[] = {
     {"box", box},
     {"add", add},
     {"snk", snk},
+    {"key", key},
     {NULL, NULL}
 };
 

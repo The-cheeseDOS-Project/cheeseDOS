@@ -16,35 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-ENTRY(_start)
+#ifndef KEY_H
+#define KEY_H
 
-MEMORY
-{
-  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 31K
-  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 42K
-}
+void key(const char*);
 
-SECTIONS
-{
-  . = ORIGIN(CODE);
-
-  .text : {
-    *(.text*)
-    *(.rodata*)
-  } > CODE
-
-  .data : {
-    *(.data*)
-  } > DATA
-
-  .bss : {
-    *(.bss*)
-    *(COMMON)
-    . = ALIGN(16);
-    _end = .;
-  } > DATA
-
-  /DISCARD/ : {
-    *(.eh_frame*)
-  }
-}
+#endif
