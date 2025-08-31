@@ -18,7 +18,7 @@ For help with commands, refer to [this](./commands.md).
 
 ## Running on real hardware
 
-Refer to [here](./writing.md)
+Refer to [this](./writing.md).
 
 ## Building from source
 
