@@ -25,6 +25,7 @@
 #include "timer.h"
 #include "beep.h"
 #include "string.h"
+#include "io.h"
 
 #define GAME_WIDTH 80
 #define GAME_HEIGHT 23
@@ -66,15 +67,27 @@ static uint32_t rand_seed = 1;
 static uint32_t last_scroll_time = 0;
 static int scroll_offset = 0;
 
-static inline uint8_t inb(uint16_t port) {
-    uint8_t ret;
-    __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
-
 static uint32_t simple_rand() {
     rand_seed = rand_seed * 1103515245 + 12345;
     return (rand_seed / 65536) % 32768;
+}
+
+static void play_music_frame() {
+    static int music_frame = 0;
+    if (music_frame % 3000 == 0) {
+        int tone_step = (music_frame / 3000) % 4;
+        if (tone_step == 0) {
+            beep(400, 25);
+        } else if (tone_step == 1) {
+            beep(500, 25);
+        } else if (tone_step == 2) {
+            beep(600, 25);
+        } else if (tone_step == 3) {
+            beep(500, 25);
+        }
+    }
+    
+    music_frame++;
 }
 
 static void init_game() {
@@ -318,6 +331,10 @@ void snk(const char* *unused) {
             }
 
             last_move_time = current_time;
+        }
+
+        else {
+            play_music_frame(); // Runs one tone per idle frame
         }
 
         draw_game();
