@@ -17,6 +17,9 @@
  */
 
 // TODO: Hide cursor
+// TODO: Make music better
+// TODO: Fix game over screen
+// TODO: Add more food types
 
 #include "programs.h"
 #include "stdint.h"
@@ -55,6 +58,8 @@ typedef struct {
 #define FOOD '*'
 #define EMPTY ' '
 
+#define MUSIC_FRAME_DURATION 1000
+
 static Snake snake;
 static Point food;
 static int score;
@@ -72,21 +77,16 @@ static uint32_t simple_rand() {
     return (rand_seed / 65536) % 32768;
 }
 
+static int music_frame = 0;
+
 static void play_music_frame() {
-    static int music_frame = 0;
-    if (music_frame % 3000 == 0) {
-        int tone_step = (music_frame / 3000) % 4;
-        if (tone_step == 0) {
-            beep(400, 25);
-        } else if (tone_step == 1) {
-            beep(500, 25);
-        } else if (tone_step == 2) {
-            beep(600, 25);
-        } else if (tone_step == 3) {
-            beep(500, 25);
-        }
+    if (music_frame % MUSIC_FRAME_DURATION == 0) {
+        static const int melody[] = {261, 329, 392, 440, 349, 294, 494, 523};
+        int tone_index = (music_frame / MUSIC_FRAME_DURATION) % 8;
+        int freq = melody[tone_index];
+        beep(freq, 50);
     }
-    
+
     music_frame++;
 }
 
