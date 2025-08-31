@@ -18,33 +18,27 @@
 
 ENTRY(_start)
 
-MEMORY
-{
-  CODE (rx)  : ORIGIN =  0x8000, LENGTH = 31K
-  DATA (rw)  : ORIGIN = 0x10000, LENGTH = 42K
-}
-
 SECTIONS
 {
-  . = ORIGIN(CODE);
-
-  .text : {
-    *(.text*)
-    *(.rodata*)
-  } > CODE
-
-  .data : {
-    *(.data*)
-  } > DATA
-
-  .bss : {
-    *(.bss*)
-    *(COMMON)
-    . = ALIGN(16);
-    _end = .;
-  } > DATA
-
-  /DISCARD/ : {
-    *(.eh_frame*)
-  }
+    . = 0x8000;
+    .text : {
+        *(.text*)
+        *(.rodata*)
+    }
+    
+    . = 0x10000;
+    .data : {
+        *(.data*)
+    }
+    
+    .bss : {
+        *(.bss*)
+        *(COMMON)
+        . = ALIGN(16);
+        _end = .;
+    }
+    
+    /DISCARD/ : {
+        *(.eh_frame*)
+    }
 }
