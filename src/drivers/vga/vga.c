@@ -19,6 +19,7 @@
 #include "stdint.h"
 #include "vga.h"
 #include "keyboard.h"
+#include "stdbool.h"
 
 #define VGA_MEMORY ((uint16_t*)0xB8000)
 #define SCREEN_WIDTH 80
@@ -29,6 +30,7 @@ static int vga_cursor_x = 0;
 static int vga_cursor_y = 0;
 static uint8_t current_fg = COLOR_WHITE;
 static uint8_t current_bg = COLOR_BLACK;
+static bool vga_scrolling_enabled = true;
 
 static uint8_t get_vga_color() {
     return VGA_COLOR(current_fg, current_bg);
@@ -106,8 +108,13 @@ void vga_putchar(char c) {
     }
 
     if (vga_cursor_y >= SCREEN_HEIGHT) {
-        scroll_screen();
-        vga_cursor_y = SCREEN_HEIGHT - 1;
+        if (vga_scrolling_enabled) {
+            scroll_screen();
+            vga_cursor_y = SCREEN_HEIGHT - 1;
+        } else {
+            vga_cursor_y = SCREEN_HEIGHT - 1;
+            vga_cursor_x = 0;
+        }
     }
 
     current_linear_pos = vga_cursor_y * SCREEN_WIDTH + vga_cursor_x;
@@ -210,4 +217,8 @@ void print_uint(uint32_t num) {
     for (int j = i - 1; j >= 0; j--) {
         vga_putchar(buf[j]);
     }
+}
+
+void vga_disable_scroll(bool state) {
+    vga_scrolling_enabled = !state;
 }
