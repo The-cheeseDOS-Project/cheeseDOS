@@ -19,9 +19,6 @@
 .intel_syntax noprefix
 .code16
 
-.include "elf.S"
-.include "gdt.S"
-
 .equ STACK_TOP, 0x7C00
 .equ SELF_LOAD, 0x7C00
 .equ ELF_HDR_LOAD, 0x7E00
@@ -31,6 +28,29 @@
 .equ GEOM_SECTORS, 18
 .equ GEOM_CYLINDERS, 80
 .equ GEOM_HEADS, 2
+
+.equ elf_phoff, 0x1C
+.equ elf_phnum, 0x2C
+.equ elf_entry, 0x18
+
+.equ elf_seg_type, 0x00
+.equ elf_seg_file_offset, 0x04
+.equ elf_seg_paddr, 0x0C
+.equ elf_seg_filesz, 0x10
+.equ elf_seg_memsz, 0x14
+.equ elf_seg_struct_size, 0x20
+
+.equ gdt_fl_pglimit, 0x80
+.equ gdt_fl_32b, 0x40
+
+.equ gdt_a_present, 0x80
+.equ gdt_a_dpl0, 0x00
+.equ gdt_a_nosys, 0x10
+.equ gdt_a_exec, 0x08
+.equ gdt_a_conforming, 0x04
+.equ gdt_a_grow_down, 0x04
+.equ gdt_a_rw, 0x2
+.equ gdt_a_accessed, 0x1
 
 .section .text
 .global start
