@@ -2,7 +2,7 @@
  * cheeseDOS - My x86 DOS
  * Copyright (C) 2025  Connor Thomson
  *
- * This program is free software: you can DARKREDistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
@@ -45,21 +45,20 @@ static uint8_t default_text_fg_color = COLOR_WHITE;
 static uint8_t default_text_bg_color = COLOR_BLACK;
 
 void vga_putchar(char c);
-void print(const char* str);
-void clear_screen();
-void backspace();
-void set_cursor_pos(int pos);
-int get_cursor();
+void print(const char *str);
+void clear_screen(void);
+void backspace(void);
+void set_cursor_pos(uint16_t pos);
+uint16_t get_cursor(void);
 void set_text_color(uint8_t fg, uint8_t bg);
-int get_screen_width();
-int get_screen_height();
-void vga_clear_chars(int start_pos, int count);
-void putstr(const char *str);
+uint8_t get_screen_width(void);
+uint8_t get_screen_height(void);
+void vga_clear_chars(uint16_t start_pos, uint16_t count);
 void putchar(char ch);
 void vga_set_cursor(uint8_t row, uint8_t col);
 void vga_get_cursor(uint8_t *row, uint8_t *col);
 void vga_move_cursor(uint8_t row, uint8_t col);
 void print_uint(uint32_t num);
-void vga_disable_scroll(bool state);
+void vga_disable_scroll(bool disable);
 
 #endif

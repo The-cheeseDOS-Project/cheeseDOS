@@ -15,76 +15,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
 #include "stdint.h"
+#include "stdbool.h"
 #include "vga.h"
 #include "keyboard.h"
-#include "stdbool.h"
+#include "io.h"
 
 #define VGA_MEMORY ((uint16_t*)0xB8000)
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 #define SCREEN_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT)
 
-static int vga_cursor_x = 0;
-static int vga_cursor_y = 0;
+static uint8_t vga_cursor_x = 0;
+static uint8_t vga_cursor_y = 0;
 static uint8_t current_fg = COLOR_WHITE;
 static uint8_t current_bg = COLOR_BLACK;
 static bool vga_scrolling_enabled = true;
 
-static uint8_t get_vga_color() {
+static uint8_t get_vga_color(void) {
     return VGA_COLOR(current_fg, current_bg);
 }
 
-static inline void outb(uint16_t port, uint8_t val) {
-    __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
+void set_cursor(uint16_t position) {
+    outb(0x3D4, 0x0A); outb(0x3D5, 0x00);
+    outb(0x3D4, 0x0B); outb(0x3D5, 0x0F);
+    outb(0x3D4, 0x0F); outb(0x3D5, position & 0xFF);
+    outb(0x3D4, 0x0E); outb(0x3D5, (position >> 8) & 0xFF);
 }
 
-static inline uint8_t inb(uint16_t port) {
-    uint8_t ret;
-    __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
-
-void set_cursor(int position) {
-    outb(0x3D4, 0x0A);
-    outb(0x3D5, 0x00);
-    outb(0x3D4, 0x0B);
-    outb(0x3D5, 0x0F);
-
-    outb(0x3D4, 0x0F);
-    outb(0x3D5, (uint8_t)(position & 0xFF));
-
-    outb(0x3D4, 0x0E);
-    outb(0x3D5, (uint8_t)((position >> 8) & 0xFF));
-}
-
-void scroll_screen() {
-    for (int row = 1; row < SCREEN_HEIGHT; row++) {
-        for (int col = 0; col < SCREEN_WIDTH; col++) {
+void scroll_screen(void) {
+    for (uint8_t row = 1; row < SCREEN_HEIGHT; row++) {
+        for (uint8_t col = 0; col < SCREEN_WIDTH; col++) {
             VGA_MEMORY[(row - 1) * SCREEN_WIDTH + col] =
                 VGA_MEMORY[row * SCREEN_WIDTH + col];
         }
     }
-
     uint8_t color_byte = get_vga_color();
-    for (int col = 0; col < SCREEN_WIDTH; col++) {
+    for (uint8_t col = 0; col < SCREEN_WIDTH; col++) {
         VGA_MEMORY[(SCREEN_HEIGHT - 1) * SCREEN_WIDTH + col] =
             ' ' | (color_byte << 8);
     }
 }
 
-void putchar(char ch) {
-    vga_putchar(ch);
-}
-
-void putstr(const char *str) {
-    print(str);
-}
-
 void vga_putchar(char c) {
     uint8_t color_byte = get_vga_color();
-    int current_linear_pos;
 
     if (c == '\n') {
         vga_cursor_x = 0;
@@ -106,7 +80,6 @@ void vga_putchar(char c) {
         vga_cursor_x = 0;
         vga_cursor_y++;
     }
-
     if (vga_cursor_y >= SCREEN_HEIGHT) {
         if (vga_scrolling_enabled) {
             scroll_screen();
@@ -116,18 +89,16 @@ void vga_putchar(char c) {
             vga_cursor_x = 0;
         }
     }
-
-    current_linear_pos = vga_cursor_y * SCREEN_WIDTH + vga_cursor_x;
-    set_cursor(current_linear_pos);
+    set_cursor(vga_cursor_y * SCREEN_WIDTH + vga_cursor_x);
 }
 
-void print(const char* str) {
+void print(const char *str) {
     while (*str) vga_putchar(*str++);
 }
 
-void clear_screen() {
+void clear_screen(void) {
     uint8_t color_byte = get_vga_color();
-    for (int i = 0; i < SCREEN_SIZE; i++) {
+    for (uint16_t i = 0; i < SCREEN_SIZE; i++) {
         VGA_MEMORY[i] = ' ' | (color_byte << 8);
     }
     vga_cursor_x = 0;
@@ -135,22 +106,15 @@ void clear_screen() {
     set_cursor(0);
 }
 
-void backspace() {
-    vga_putchar('\b');
-}
-
 void vga_set_cursor(uint8_t row, uint8_t col) {
     vga_cursor_x = col;
     vga_cursor_y = row;
-
     uint16_t pos = row * SCREEN_WIDTH + col;
-    outb(0x3D4, 0x0F);
-    outb(0x3D5, (uint8_t)(pos & 0xFF));
-    outb(0x3D4, 0x0E);
-    outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+    outb(0x3D4, 0x0F); outb(0x3D5, pos & 0xFF);
+    outb(0x3D4, 0x0E); outb(0x3D5, (pos >> 8) & 0xFF);
 }
 
-int get_cursor() {
+uint16_t get_cursor(void) {
     return vga_cursor_y * SCREEN_WIDTH + vga_cursor_x;
 }
 
@@ -164,13 +128,10 @@ void vga_get_cursor(uint8_t *row, uint8_t *col) {
     *col = pos % SCREEN_WIDTH;
 }
 
-void set_cursor_pos(int pos) {
-    if (pos < 0) pos = 0;
+void set_cursor_pos(uint16_t pos) {
     if (pos >= SCREEN_SIZE) pos = SCREEN_SIZE - 1;
-
     vga_cursor_x = pos % SCREEN_WIDTH;
     vga_cursor_y = pos / SCREEN_WIDTH;
-
     set_cursor(pos);
 }
 
@@ -179,20 +140,14 @@ void set_text_color(uint8_t fg, uint8_t bg) {
     current_bg = bg & 0x0F;
 }
 
-int get_screen_width() {
-    return SCREEN_WIDTH;
-}
+uint8_t get_screen_width(void) { return SCREEN_WIDTH; }
+uint8_t get_screen_height(void) { return SCREEN_HEIGHT; }
 
-int get_screen_height() {
-    return SCREEN_HEIGHT;
-}
-
-void vga_clear_chars(int start_pos, int count) {
+void vga_clear_chars(uint16_t start_pos, uint16_t count) {
     uint8_t color_byte = get_vga_color();
-    int end_pos = start_pos + count;
+    uint16_t end_pos = start_pos + count;
     if (end_pos > SCREEN_SIZE) end_pos = SCREEN_SIZE;
-
-    for (int i = start_pos; i < end_pos; i++) {
+    for (uint16_t i = start_pos; i < end_pos; i++) {
         VGA_MEMORY[i] = ' ' | (color_byte << 8);
     }
 }
@@ -205,7 +160,7 @@ void vga_move_cursor(uint8_t row, uint8_t col) {
 
 void print_uint(uint32_t num) {
     char buf[12];
-    int i = 0;
+    uint8_t i = 0;
     if (num == 0) {
         vga_putchar('0');
         return;
@@ -214,11 +169,9 @@ void print_uint(uint32_t num) {
         buf[i++] = (num % 10) + '0';
         num /= 10;
     }
-    for (int j = i - 1; j >= 0; j--) {
-        vga_putchar(buf[j]);
-    }
+    while (i--) vga_putchar(buf[i]);
 }
 
-void vga_disable_scroll(bool state) {
-    vga_scrolling_enabled = !state;
+void vga_disable_scroll(bool disable) {
+    vga_scrolling_enabled = !disable;
 }

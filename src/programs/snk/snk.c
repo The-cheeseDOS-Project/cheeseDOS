@@ -334,7 +334,7 @@ void snk(const char* *unused) {
         }
 
         else {
-            play_music_frame(); // Runs one tone per idle frame
+            play_music_frame();
         }
 
         draw_game();
