@@ -20,6 +20,7 @@
 #define VGA_H
 
 #include "stdint.h"
+#include "stdbool.h"
 
 #define COLOR_BLACK         0x0
 #define COLOR_DARKBLUE      0x1
@@ -59,5 +60,6 @@ void vga_set_cursor(uint8_t row, uint8_t col);
 void vga_get_cursor(uint8_t *row, uint8_t *col);
 void vga_move_cursor(uint8_t row, uint8_t col);
 void print_uint(uint32_t num);
+void vga_disable_scroll(bool state);
 
 #endif
