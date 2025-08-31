@@ -178,7 +178,7 @@ void shell_execute(const char* cmd) {
 }
 
 void shell_run() {
-    char input[INPUT_BUF_SIZE] = {0};
+    char input[INPUT_BUF_SIZE];
     int idx = 0;
     int cursor_index = 0;
     

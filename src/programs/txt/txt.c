@@ -28,7 +28,7 @@ void txt(const char *filename) {
         return;
     }
 
-    char buffer[1024] = {0};
+    char buffer[1024];
     size_t index = 0;
     bool saved = true;
     bool is_new = false;

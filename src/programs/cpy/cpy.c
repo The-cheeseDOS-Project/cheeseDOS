@@ -28,8 +28,8 @@ void cpy(const char* args) {
         return;
     }
 
-    char src[RAMDISK_FILENAME_MAX] = {0};
-    char dst[RAMDISK_FILENAME_MAX] = {0};
+    char src[RAMDISK_FILENAME_MAX];
+    char dst[RAMDISK_FILENAME_MAX];
     int i = 0, j = 0;
     while (args[i] == ' ') i++;
     while (args[i] && args[i] != ' ' && j < RAMDISK_FILENAME_MAX - 1) src[j++] = args[i++];

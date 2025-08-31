@@ -23,8 +23,8 @@ void bep(const char* args) {
     int hz = 720;
     int ms = 10;
 
-    char num1[16] = {0};
-    char num2[16] = {0};
+    char num1[16];
+    char num2[16];
     int i = 0, j = 0;
 
     while (args[i] && args[i] != ' ' && i < 15) {

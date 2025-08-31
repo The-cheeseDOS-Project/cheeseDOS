@@ -82,13 +82,19 @@ MARCH=i386
 #
 OPT=s
 
-# "GDBINFO" Options:#
+# "GDBINFO" Options:
 # 1. 0 (none) (default)
 # 2. 1
 # 3. 2
 # 4. 3
 #
 GDBINFO=0
+
+# "STRIP" Options:
+# 1. true (default)
+# 2. false
+#
+STRIP=true
 
 # Version of C to use
 #
@@ -314,7 +320,15 @@ function all {
   echo -n "Linking cheeseDOS with $(printf '%s ' "${OBJS[@]}" | wc -w) object files..."
     $LD $LDFLAGS -e init -z max-page-size=512 -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" "${OBJS[@]}"
   echo " Done!"
-  
+
+  if [[ "$STRIP" == "true" ]]; then
+    echo -n "Stripping debug symbols..."
+      strip -s "$OUTPUT"
+    echo " Done!"
+  else
+    echo "Keeping debug symbols (STRIP=false)"
+  fi
+    
   echo -n "Building $FLOPPY..."
     cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
   echo " Done!"

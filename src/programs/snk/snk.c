@@ -66,7 +66,7 @@ static int score;
 static int game_running;
 static Point last_tail;
 static int speed_boost = 0;
-static uint8_t key_states[256] = {0};
+static uint8_t key_states[256];
 
 static uint32_t rand_seed = 1;
 static uint32_t last_scroll_time = 0;

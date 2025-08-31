@@ -22,7 +22,7 @@
 void dly(const char* args) {
     uint32_t ms = 1000;
 
-    char buf[16] = {0};
+    char buf[16];
     int i = 0;
 
     while (args[i] && i < 15 && args[i] >= '0' && args[i] <= '9') {

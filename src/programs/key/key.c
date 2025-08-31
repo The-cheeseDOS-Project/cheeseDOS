@@ -46,7 +46,7 @@ PianoKey keyboard[NUM_KEYS] = {
     {';', 659, 0}   
 };
 
-static uint8_t key_states[256] = {0};
+static uint8_t key_states[256];
 
 static inline uint8_t inb(uint16_t port) {
     uint8_t ret;
