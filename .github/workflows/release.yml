@@ -54,7 +54,6 @@ jobs:
       
           git log --pretty=format:"%H" --reverse | while read -r commit; do
             COMMIT_MSG=$(git log -1 --pretty=format:"%s" "$commit")
-            # List files changed in this commit
             git diff-tree --no-commit-id --name-only -r "$commit" | while read -r file; do
               if [ -n "$file" ]; then
                 echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
