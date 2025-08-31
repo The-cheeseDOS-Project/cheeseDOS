@@ -18,8 +18,8 @@ For help with commands, refer to [this](./commands.md).
 
 ## Running on real hardware
 
-[Here's](https://github.com/The-cheeseDOS-Project/cDOS-writer/releases/latest) a litte program I wrote for linux that can automatically get the latest iso and burn/image it.
+Refer to [here](./writing.md)
 
 ## Building from source
 
-For instructions on building it from source, refer to [this](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run).
+For instructions on building it from source, refer to [this](./build-and-run.md).
