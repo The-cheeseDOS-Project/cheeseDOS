@@ -1,3 +1,5 @@
+# `build.sh` arguments
+
 | Command              | Description                      |
 |----------------------|----------------------------------|
 | `./build.sh`         | Cleans and compiles cheeseDOS    |
