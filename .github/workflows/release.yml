@@ -47,29 +47,6 @@ jobs:
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
       
-      - name: Append changelog for this release to release.md
-        run: |
-          echo "" >> .github/release.md
-          echo "## Changelog" >> .github/release.md
-      
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-      
-          if [ -n "$LAST_TAG" ]; then
-            echo "Comparing $LAST_TAG..HEAD"
-            git log "$LAST_TAG"..HEAD --pretty=format:"%H" --reverse | while read -r commit; do
-              COMMIT_MSG=$(git log -1 --pretty=format:"%s" "$commit")
-              git diff-tree --no-commit-id --name-only -r "$commit" | while read -r file; do
-                [ -n "$file" ] && echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
-              done
-            done
-          else
-            COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-            echo "- Initial commit: $COMMIT_MSG" >> .github/release.md
-            find src/ -type f | while read -r file; do
-              echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
-            done
-          fi
-
       - name: Generate timestamp
         run: |
           DATE=$(date +"%m%d%y%H%M")
