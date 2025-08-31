@@ -47,25 +47,15 @@ jobs:
           sudo timedatectl set-timezone America/Los_Angeles
           sudo timedatectl set-ntp true
       
-      - name: Append changelog to release.md
+      - name: Append commit/file changelog to release.md
         run: |
           echo "" >> .github/release.md
           echo "## Changelog" >> .github/release.md
       
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-      
-          if [ -n "$LAST_TAG" ]; then
-            RANGE="$LAST_TAG..HEAD"
-            echo "Comparing $RANGE"
-          else
-            FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
-            RANGE="$FIRST_COMMIT..HEAD"
-            echo "No previous tag found — listing all commits"
-          fi
-          
-          git log --reverse --pretty=format:"%H" $RANGE | while read commit; do
+          git log --pretty=format:"%H" --reverse | while read -r commit; do
             COMMIT_MSG=$(git log -1 --pretty=format:"%s" "$commit")
-            git diff-tree --no-commit-id --name-only -r "$commit" | while read file; do
+            # List files changed in this commit
+            git diff-tree --no-commit-id --name-only -r "$commit" | while read -r file; do
               if [ -n "$file" ]; then
                 echo "- \`$file\`: $COMMIT_MSG" >> .github/release.md
               fi
