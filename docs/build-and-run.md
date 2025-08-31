@@ -36,7 +36,7 @@ After that'sone, you now have cheeseDOS compiled, if you just want to use it in 
 ```
 
 ## Writing
-Page moved over [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Writing).
+Page moved over [here](./writing.md).
 
 ## Miscellaneous
-For all build.sh arguments, refer to [this](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/build.sh-arguments).
+For all build.sh arguments, refer to [this](./build.sh-arguments.md).
