@@ -43,13 +43,13 @@ void init() {
     print(" Done!\n");
     set_text_color(COLOR_WHITE, COLOR_BLACK);
 
+    sprint(" \033[92mDone!\033[0m\n");
+
     qprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     qprint(buf);
     qprint("B RAM Disk...");
     
-    sprint(" \033[92mDone!\033[0m\n");
-
     ramdisk_init();
     
     set_text_color(COLOR_GREEN, COLOR_BLACK);
