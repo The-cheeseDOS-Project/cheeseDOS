@@ -31,7 +31,7 @@
 #define GAME_HEIGHT 23
 #define MAX_SNAKE_LENGTH (GAME_WIDTH * GAME_HEIGHT)
 
-#define GUIDE_TEXT "Use arrow keys to switch direction | Hold down an arrow key in the same direction for a speed boost| ESC to quit. | "
+#define GUIDE_TEXT "Use arrow keys to switch direction | Hold down an arrow key in the same direction for a speed boost | ESC to quit. | "
 #define GUIDE_SCROLL_ROW 24  
 #define GUIDE_SCROLL_DELAY 100 
 
