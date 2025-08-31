@@ -247,7 +247,7 @@ static void game_over() {
     vga_set_cursor(GAME_HEIGHT / 2, (GAME_WIDTH - 10) / 2);
     print("GAME OVER!");
 
-    vga_set_cursor(GAME_HEIGHT / 2 + 2, (GAME_WIDTH - 14) / 2); // 14 just feels right for some reason
+    vga_set_cursor(GAME_HEIGHT / 2 + 2, (GAME_WIDTH - 15) / 2);
     print("Final Score: ");
     print_uint(score);
 
