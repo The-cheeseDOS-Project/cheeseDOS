@@ -59,18 +59,17 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 
 ## Building
 
-For instructions on building from source, refer to the [Build and Run Guide](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Build-and-Run).
+For instructions on building from source, refer to the [Build and Run Guide](./docs/build-and-run.md).
 
 ## Documentation
 
-- **The cheeseDOS wiki**: [The cheeseDOS wiki](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki)
+- **The cheeseDOS wiki**: [The cheeseDOS wiki](./docs)
 
 ## Project Guidelines
 
-- **Code of Conduct**: [CODE_OF_CONDUCT.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/CODE_OF_CONDUCT.md)  
-- **Contributing Guide**: [CONTRIBUTING.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/CONTRIBUTING.md)
-- **GPL v3 License**: [LICENSE](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/LICENSE)
-- **Security Policy**: [SECURITY.md](https://github.com/The-cheeseDOS-Project/cheeseDOS/blob/main/SECURITY.md)
+- **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- **GPL v3 License**: [LICENSE](./LICENSE)
+- **Security Policy**: [SECURITY.md](./SECURITY.md)
 
 ### Shoutouts
 - Shout out to [rkapl](https://github.com/rkapl) for cheeseLDR!
