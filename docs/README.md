@@ -12,7 +12,7 @@ You can download the latest iso from the releases page
 
 ## Help with commands
 
-For help with commands, refer to [this](https://github.com/The-cheeseDOS-Project/cheeseDOS/wiki/Commands).
+For help with commands, refer to [this](./commands.md).
 
 ## Running on real hardware
 
