@@ -1,3 +1,5 @@
+# Build and Run
+
 Here's how to get cheeseDOS up and running on your computer or on QEMU
 
 > [!WARNING]
