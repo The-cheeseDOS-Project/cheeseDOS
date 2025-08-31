@@ -1,3 +1,5 @@
+# Commands
+
 ## File Management
 
 | Command              | Description                                                                 |
