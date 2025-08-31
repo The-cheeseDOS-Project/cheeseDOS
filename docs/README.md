@@ -1,3 +1,5 @@
+# The cheeseDOS wiki
+
 ![logo](https://github.com/user-attachments/assets/211cb5b4-9474-482a-81c3-d4a381ce93ee)
 
 Welcome to The cheeseDOS wiki!
