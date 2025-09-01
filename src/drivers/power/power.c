@@ -32,12 +32,14 @@ void reboot(void) {
 }
 
 void shutdown(void) {
-    clear_screen();
     set_text_color(COLOR_WHITE, COLOR_BLACK);
-    qprint("Shutting down...\n");
+    print("Shutting down...\n");
+    sprint("\n");
     set_text_color(COLOR_YELLOW, COLOR_BLACK);
-    print("It is now safe to turn off your computer.\n");
+    clear_screen();
     sprint("Halting CPU...\n");
+    print("It is now safe to turn off your computer.\n");
+    vga_move_cursor(80, 25);
     __asm__ volatile (
         "cli\n\t"
         "hlt\n\t"
