@@ -17,7 +17,7 @@
  */
 
 #include "programs.h"
-#include "acpi.h"
+#include "power.h"
 
 void res(const char* *unused) {
     reboot();

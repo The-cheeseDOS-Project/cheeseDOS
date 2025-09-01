@@ -16,10 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ACPI_H
-#define ACPI_H
+#include "stdint.h"
+#include "io.h"
+#include "vga.h"
+#include "serial.h"
 
-void shutdown(void);
-void reboot(void);
+void reboot(void) {
+    clear_screen();
+    set_text_color(COLOR_WHITE, COLOR_BLACK);
+    qprint("Rebooting...\n");
+    sprint("Wait for keyboard controller...\n");
+    while (inb(0x64) & 0x02);
+    sprint("Sent reset command...\n");
+    outb(0x64, 0xFE);
+}
 
-#endif
+void shutdown(void) {
+    clear_screen();
+    set_text_color(COLOR_WHITE, COLOR_BLACK);
+    qprint("Shutting down...\n");
+    set_text_color(COLOR_YELLOW, COLOR_BLACK);
+    print("It is now safe to turn off your computer.\n");
+    sprint("Halting CPU...\n");
+    __asm__ volatile (
+        "cli\n\t"
+        "hlt\n\t"
+        "jmp .-1"
+    );
+}

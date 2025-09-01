@@ -17,7 +17,7 @@
  */
 
 #include "programs.h"
-#include "acpi.h"
+#include "power.h"
 
 void off(const char* *unused) {
     shutdown();
