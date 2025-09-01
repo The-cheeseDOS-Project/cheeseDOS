@@ -24,10 +24,11 @@
 void reboot(void) {
     clear_screen();
     set_text_color(COLOR_WHITE, COLOR_BLACK);
-    qprint("Rebooting...\n");
-    sprint("Wait for keyboard controller...\n");
+    print("Rebooting...\n");
+    sprint("\n");
+    sprint("Waiting for keyboard controller...");
     while (inb(0x64) & 0x02);
-    sprint("Sent reset command...\n");
+    sprint(" Done!\nSending reset command...\n\n");
     outb(0x64, 0xFE);
 }
 
@@ -37,7 +38,7 @@ void shutdown(void) {
     sprint("\n");
     set_text_color(COLOR_YELLOW, COLOR_BLACK);
     clear_screen();
-    sprint("Halting CPU...\n");
+    sprint("Halting CPU...\n\n");
     print("It is now safe to turn off your computer.\n");
     vga_move_cursor(80, 25);
     __asm__ volatile (
