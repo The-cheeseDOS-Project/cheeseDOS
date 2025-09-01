@@ -46,13 +46,18 @@ There are many ways to contribute, including:
     Submit your changes by opening a pull request on GitHub.
 
 ## Coding Guidelines
-1. Follow the existing coding style and conventions in the project.
-2. Write clear, readable, and well-commented code.
-3. Code must work and be tested with `./build.sh run`.
-4. ONLY `.ld`, `.S`, `.h`, `.c`, `.md` is allowed.
-5. Features must be mostly working before a PR.
-6. Use C99, no C11 or later.
-
+1.  Follow the existing coding style and conventions in the project.
+2.  Write clear, readable, and well-commented code.
+3.  Code must work and be tested with `./build.sh run`.
+4.  ONLY `.ld`, `.S`, `.h`, `.c`, `.md` is allowed.
+5.  Features must be mostly working before a PR.
+6.  Use C99, no C11 or later.
+7.  Uses 100% custom code and libraries (besides the toolchain)
+8.  Only needs one command to compile (including installing dependencies)
+9.  Compiles the same exact way on every system
+10. Super simple to use
+11. Uses Ring 0
+ 
 ## Reporting Issues
 If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
 
