@@ -55,7 +55,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 - Compiles the same exact way on every system
 - Always has a precompiled image of its latest version
 - Super simple to use
-- Uses C99 so you don't need to be up to date with C
+- Uses C99
 - Uses Ring 0
 - Super simple to use
 
