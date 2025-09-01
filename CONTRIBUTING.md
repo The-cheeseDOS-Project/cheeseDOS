@@ -49,12 +49,12 @@ There are many ways to contribute, including:
 1.  Follow the existing coding style and conventions in the project.
 2.  Write clear, readable, and well-commented code.
 3.  Code must work and be tested with `./build.sh run`.
-4.  ONLY `.ld`, `.S`, `.h`, `.c`, `.md` is allowed.
-5.  Features must be mostly working before a PR.
-6.  Use C99, no C11 or later.
-7.  Uses 100% custom code and libraries (besides the toolchain)
-8.  Only needs one command to compile (including installing dependencies)
-9.  Compiles the same exact way on every system
+4.  ONLY `[.ld](https://en.wikipedia.org/wiki/Linker_(computing)#Common_implementations)`, `[.S](https://en.wikipedia.org/wiki/GNU_Assembler)`, `[.h](https://en.wikipedia.org/wiki/Include_directive#C/C++)`, `[.c](https://en.wikipedia.org/wiki/C_(programming_language))`, `[.md](https://en.wikipedia.org/wiki/Markdown#GitHub_Flavored_Markdown)`, `[.json](https://en.wikipedia.org/wiki/JSON)` is allowed.
+5.  Features must be (mostly) working before a [PR](https://en.wikipedia.org/wiki/Distributed_version_control#Pull_requests).
+6.  Use [C99](https://en.wikipedia.org/wiki/C99), no C11 or later.
+7.  Uses 100% custom code and [libraries](https://en.wikipedia.org/wiki/Library_(computing)) (besides the [toolchain](https://en.wikipedia.org/wiki/Toolchain))
+8.  Only needs one command to [compile](https://en.wikipedia.org/wiki/Command_(computing)) (including installing [dependencies](https://www.sonatype.com/resources/articles/what-are-software-dependencies))
+9.  [Compiles](https://en.wikipedia.org/wiki/Compiler) the same exact way on every system
 10. Super simple to use
 11. Uses Ring 0
  
