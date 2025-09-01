@@ -81,8 +81,8 @@ static int music_frame = 0;
 
 static void play_music_frame() {
     if (music_frame % MUSIC_FRAME_DURATION == 0) {
-        static const int melody[] = {261, 329, 392, 440, 349, 294, 494, 523};
-        int tone_index = (music_frame / MUSIC_FRAME_DURATION) % 8;
+        static const int melody[] = {261, 329, 392, 440, 349, 294};
+        int tone_index = (music_frame / MUSIC_FRAME_DURATION) % 6;
         int freq = melody[tone_index];
         beep(freq, 50);
     }
