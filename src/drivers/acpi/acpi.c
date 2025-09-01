@@ -22,79 +22,7 @@
 #include "serial.h"
 #include "io.h"
 
-#define SLP_TYP (5 << 10)
-#define SLP_EN  (1 << 13)
-
 static uint16_t pm1a_cnt = 0;
-
-struct RSDPDescriptor {
-    char     Signature[8];
-    uint8_t  Checksum;
-    char     OEMID[6];
-    uint8_t  Revision;
-    uint32_t RsdtAddress;
-};
-
-struct ACPISDTHeader {
-    char     Signature[4];
-    uint32_t Length;
-    uint8_t  Revision;
-    uint8_t  Checksum;
-    char     OEMID[6];
-    char     OEMTableID[8];
-    uint32_t OEMRevision;
-    uint32_t CreatorID;
-    uint32_t CreatorRevision;
-};
-
-struct FADT {
-    struct ACPISDTHeader h;
-    uint32_t FirmwareCtrl;
-    uint32_t Dsdt;
-    uint8_t  Reserved;
-    uint8_t  PreferredPMProfile;
-    uint16_t SCI_Interrupt;
-    uint32_t SMI_CommandPort;
-    uint8_t  ACPI_Enable;
-    uint8_t  ACPI_Disable;
-    uint8_t  S4BIOS_REQ;
-    uint8_t  PSTATE_Control;
-    uint32_t PM1a_EVT_BLK;
-    uint32_t PM1b_EVT_BLK;
-    uint32_t PM1a_CNT_BLK;
-};
-
-int acpi_checksum(uint8_t* ptr, size_t len) {
-    uint8_t sum = 0;
-    for (size_t i = 0; i < len; i++) {
-        sum += ptr[i];
-    }
-    return sum == 0;
-}
-
-int find_acpi() {
-    for (uint32_t addr = 0x000E0000; addr < 0x00100000; addr += 16) {
-        struct RSDPDescriptor* rsdp = (struct RSDPDescriptor*)addr;
-        if (!__builtin_memcmp(rsdp->Signature, "RSD PTR ", 8) &&
-            acpi_checksum((uint8_t*)rsdp, sizeof(struct RSDPDescriptor))) {
-
-            struct ACPISDTHeader* rsdt = (struct ACPISDTHeader*)(uintptr_t)rsdp->RsdtAddress;
-            if (!__builtin_memcmp(rsdt->Signature, "RSDT", 4)) {
-                size_t entryCount = (rsdt->Length - sizeof(struct ACPISDTHeader)) / 4;
-                uint32_t* entries = (uint32_t*)((uintptr_t)rsdt + sizeof(struct ACPISDTHeader));
-                for (size_t i = 0; i < entryCount; i++) {
-                    struct ACPISDTHeader* hdr = (struct ACPISDTHeader*)(uintptr_t)entries[i];
-                    if (!__builtin_memcmp(hdr->Signature, "FACP", 4)) {
-                        struct FADT* fadt = (struct FADT*)hdr;
-                        pm1a_cnt = (uint16_t)fadt->PM1a_CNT_BLK;
-                        return 1;
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
 
 void shutdown() {
     uint16_t ports[] = { 0xB004, 0x604, 0x4004, 0x600 };
@@ -110,7 +38,7 @@ void shutdown() {
     }
 
     if (pm1a_cnt) {
-        outw(pm1a_cnt, SLP_TYP | SLP_EN);
+        outw(pm1a_cnt, 5 << 10 | 1 << 13);
     }
 }
 
