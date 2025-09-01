@@ -23,7 +23,7 @@ SU="sudo"
 
 FLOPPY=cdos-1.44mb-floppy.img
 
-HDD_SIZE="1" # in bytes
+HDD_SIZE="1024" # in bytes
 
 # "BITS" Options:
 # 1. 32
