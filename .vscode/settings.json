@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "*.h": "c",
+        "*.sh": "shellscript",
+        "*.md": "markdown",
+        "*.S": "assembly"
+    }
+}
