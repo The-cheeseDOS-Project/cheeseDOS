@@ -1,4 +1,7 @@
 # TODO
+
+Main TODO list is [here](./TODO.md).
+
 ## Formating
 Format it like this:
 ```
