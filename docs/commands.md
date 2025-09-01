@@ -37,8 +37,8 @@
 
 | Command              | Description                                                                 |
 |----------------------|-----------------------------------------------------------------------------|
-| `off`                | Turns off computer via ACPI                                                 |
-| `res`                | Resets computer via ACPI                                                    |
+| `off`                | Quit all processes and halt cpu                                             |
+| `res`                | Quit all processes and resets computer                                      |
 
 ## Miscellaneous
 
