@@ -30,7 +30,6 @@ System Volume Information/
 .DS_Store
 Thumbs.db
 core
-.vscode/
 .idea/
 notes*
 todo*
