@@ -1,3 +1,5 @@
+![cdos-logo](./images/cdos-logo.svg)
+
 ## Thank you for visiting the cheeseDOS GitHub page!
 
 > [!NOTE]
@@ -12,8 +14,6 @@
 [![Stargazers](https://img.shields.io/github/stars/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/stargazers)
 [![Forks](https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members)
 [![Build](https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/release.yml?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/actions)
-
-![cdos-logo](./images/cdos-logo.svg)
 
 cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, live, Single Address Space Diskette Operating System that loads into RAM.
 
