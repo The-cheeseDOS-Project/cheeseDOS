@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
-#ifndef CHEESEDOS_ACPI_H
-#define CHEESEDOS_ACPI_H
 
-#include "stdint.h"
+#ifndef ACPI_H
+#define ACPI_H
 
 void shutdown(void);
 void reboot(void);
