@@ -10,7 +10,7 @@ There are many ways to contribute, including:
 - Submitting code patches or new features  
 - Helping with testing and providing feedback
 - Fixing code warnings (if any)
-- Doing stuff in [TODO.md](./TODO/TODO.md)
+- Doing stuff in [TODO](./TODO/README.md)
 
 ## Getting Started
 
