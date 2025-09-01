@@ -55,6 +55,7 @@
 #include "pth.h"
 #include "snk.h"
 #include "key.h"
+#include "pix.h"
 
 typedef struct {
     const char* name;
@@ -96,6 +97,7 @@ static shell_command_t commands[] = {
     {"add", add},
     {"snk", snk},
     {"key", key},
+    {"pix", pix},
     {NULL, NULL}
 };
 
