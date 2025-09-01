@@ -20,13 +20,10 @@
 #include "stddef.h"
 #include "vga.h"
 #include "serial.h"
+#include "io.h"
 
 #define SLP_TYP (5 << 10)
 #define SLP_EN  (1 << 13)
-
-static inline void outw(uint16_t port, uint16_t val) {
-    __asm__ volatile ("outw %0, %1" : : "a"(val), "Nd"(port));
-}
 
 static uint16_t pm1a_cnt = 0;
 
