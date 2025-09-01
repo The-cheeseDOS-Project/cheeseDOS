@@ -57,7 +57,7 @@ void ide_load_identify() {
     }
 }
 
-int print_drive_present(void) {
+int ide_drive_present(void) {
     if (ide_status == 0) {
         return 0;
     }
