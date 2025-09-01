@@ -4,7 +4,7 @@
         "*.h": "c",
         "*.sh": "shellscript",
         "*.md": "markdown",
-        "*.S": "assembly"
+        "*.S": "assembly",
         "*.ld": "linkerscript"
     }
 }
