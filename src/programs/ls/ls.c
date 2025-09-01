@@ -35,7 +35,21 @@ static void print_name_callback(const char *name, uint32_t inode) {
 }
 
 void ls(const char* args) {
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
+    uint32_t target_inode_no = current_dir_inode_no;
+    
+    if (args && kstrlen(args) > 0) {
+        uint32_t found_inode_no;
+        if (ramdisk_find_inode_by_path(args, &found_inode_no) == 0) {
+            target_inode_no = found_inode_no;
+        } else {
+            set_text_color(COLOR_RED, COLOR_BLACK);
+            print("Directory not found\n");
+            set_text_color(default_text_fg_color, default_text_bg_color);
+            return;
+        }
+    }
+
+    ramdisk_inode_t *dir = ramdisk_iget(target_inode_no);
     if (!dir) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Failed to get directory inode\n");

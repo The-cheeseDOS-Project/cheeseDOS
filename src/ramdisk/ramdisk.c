@@ -238,11 +238,61 @@ int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size) {
     return 0;
 }
 
-ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name) {
-    search_name = name;
-    search_result = NULL;
-    ramdisk_readdir(dir, inode_search_callback);
-    return search_result;
+static void trim_whitespace(char *str) {
+    if (!str) return;
+    char *start = str;
+    while (*start == ' ' || *start == '\t') start++;
+    if (start != str) kstrcpy(str, start);
+    size_t len = kstrlen(str);
+    while (len > 0 && (str[len - 1] == ' ' || str[len - 1] == '\t')) {
+        str[len - 1] = '\0';
+        len--;
+    }
+}
+
+ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *start_dir, const char *path) {
+    if (!start_dir || !path) return NULL;
+
+    char temp[RAMDISK_FILENAME_MAX * 4];
+    kstrncpy(temp, path, sizeof(temp) - 1);
+    temp[sizeof(temp) - 1] = '\0';
+    trim_whitespace(temp);
+
+    if (temp[0] == '\0' || kstrcmp(temp, ".") == 0) {
+        return start_dir;
+    }
+
+    if (kstrcmp(temp, "/") == 0) {
+        return ramdisk_iget(0);
+    }
+
+    ramdisk_inode_t *current;
+    if (temp[0] == '/') {
+        current = ramdisk_iget(0);
+        char *p = temp;
+        while (*p == '/') p++;
+        kstrcpy(temp, p);
+    } else {
+        current = start_dir;
+    }
+
+    char *token = kstrtok(temp, "/");
+    while (token) {
+        if (kstrcmp(token, ".") == 0) {
+        } else if (kstrcmp(token, "..") == 0) {
+            if (current->inode_no != 0) {
+                ramdisk_inode_t *parent = ramdisk_iget(current->parent_inode_no);
+                if (parent) current = parent;
+            }
+        } else {
+            ramdisk_inode_t *child = ramdisk_iget_by_name(current->inode_no, token);
+            if (!child) return NULL;
+            current = child;
+        }
+        token = kstrtok(NULL, "/");
+    }
+
+    return current;
 }
 
 void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst) {
@@ -277,4 +327,50 @@ static void copy_inode_callback(const char *name, uint32_t inode_no) {
     if (!child_dst) return;
 
     copy_inode(child_src, child_dst);
+}
+
+int ramdisk_find_inode_by_path(const char *path, uint32_t *inode_no) {
+    if (!path || !inode_no) return -1;
+
+    uint32_t current_inode_no = 0;
+    ramdisk_inode_t* current_dir = ramdisk_iget(0);
+    if (!current_dir) return -1;
+
+    char temp_path[256];
+    kstrcpy(temp_path, path);
+
+    char *token = kstrtok(temp_path, "/");
+
+    if (path[0] != '/') {
+        current_inode_no = current_dir_inode_no;
+        current_dir = ramdisk_iget(current_inode_no);
+        if (!current_dir) return -1;
+    }
+
+    while (token != NULL) {
+        if (kstrcmp(token, ".") == 0) {
+            token = kstrtok(NULL, "/");
+            continue;
+        }
+        if (kstrcmp(token, "..") == 0) {
+            if (current_inode_no != 0) {
+                current_dir = ramdisk_iget(current_dir->parent_inode_no);
+                if (!current_dir) return -1;
+                current_inode_no = current_dir->inode_no;
+            }
+            token = kstrtok(NULL, "/");
+            continue;
+        }
+
+        ramdisk_inode_t* next_dir = ramdisk_iget_by_name(current_inode_no, token);
+        if (!next_dir) {
+            return -1;
+        }
+        current_dir = next_dir;
+        current_inode_no = next_dir->inode_no;
+        token = kstrtok(NULL, "/");
+    }
+
+    *inode_no = current_inode_no;
+    return 0;
 }

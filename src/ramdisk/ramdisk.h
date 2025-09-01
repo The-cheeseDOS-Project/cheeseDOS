@@ -62,5 +62,6 @@ static void copy_inode_callback(const char *name, uint32_t inode_no);
 static void inode_search_callback(const char *entry_name, uint32_t inode_no);
 ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name);
 void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst);
+int ramdisk_find_inode_by_path(const char *path, uint32_t *inode_no);
 
 #endif
