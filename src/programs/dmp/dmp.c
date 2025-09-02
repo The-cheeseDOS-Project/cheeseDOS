@@ -16,9 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
 #include "programs.h"
+#include "serial.h"
 
-void hlp(const char* *unused) {
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, clk, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, svr, &, mus, dve, mem, box, hey, snk, key, dmp.");
+static void byte_to_hex(uint8_t byte, char* out) {
+    const char* hexchars = "0123456789ABCDEF";
+    out[0] = hexchars[(byte >> 4) & 0x0F];
+    out[1] = hexchars[byte & 0x0F];
+    out[2] = '\0';
+}
+
+void dmp(const char *unused) {
+    uint8_t* ram = (uint8_t*)0x0000;
+    for (uint32_t i = 0; i < 0xA0000; i++) {
+        char hex[3];
+        byte_to_hex(ram[i], hex);
+        qprint(hex);
+    }
 }
