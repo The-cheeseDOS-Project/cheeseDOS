@@ -23,7 +23,7 @@ on:
     paths:
       - 'src/**'
       - 'build.sh'
-      - '.github/workflows/**'
+      - '.github/workflows/release.yml'
   workflow_dispatch:
 
 permissions:
