@@ -42,6 +42,10 @@ typedef struct {
     uint8_t data[RAMDISK_DATA_SIZE_BYTES];
 } ramdisk_inode_t;
 
+
+extern uint32_t current_dir_inode_no;
+
+
 void ramdisk_init();
 ramdisk_inode_t* ramdisk_iget(uint32_t inode_no);
 typedef void (*ramdisk_readdir_callback)(const char *name, uint32_t inode_no);
@@ -57,7 +61,6 @@ static const char *search_name = NULL;
 static ramdisk_inode_t *search_result = NULL;
 static ramdisk_inode_t *copy_src;
 static ramdisk_inode_t *copy_dst;
-static uint32_t current_dir_inode_no = 0;
 static void copy_inode_callback(const char *name, uint32_t inode_no);
 static void inode_search_callback(const char *entry_name, uint32_t inode_no);
 ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name);
