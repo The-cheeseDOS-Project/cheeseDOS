@@ -74,7 +74,7 @@ static shell_command_t commands[] = {
     {"rm", rm},
     {"mkd", mkd},
     {"cd", cd},
-    {"rtc", rtc},
+    {"clk", clk},
     {"clr", clr},
     {"ban", ban},
     {"bep", bep},
