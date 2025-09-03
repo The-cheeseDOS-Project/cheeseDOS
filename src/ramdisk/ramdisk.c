@@ -21,7 +21,16 @@
 #include "ramdisk.h"
 #include "string.h"
 
+uint32_t current_dir_inode_no = 0;
 static ramdisk_inode_t inodes[32];
+
+static const char *search_name = NULL;
+static ramdisk_inode_t *search_result = NULL;
+static ramdisk_inode_t *copy_src = NULL;
+static ramdisk_inode_t *copy_dst = NULL;
+
+static void copy_inode_callback(const char *name, uint32_t inode_no);
+static void inode_search_callback(const char *entry_name, uint32_t inode_no);
 
 static void *mem_copy(void *dest, const void *src, size_t n) {
     uint8_t *d = dest;

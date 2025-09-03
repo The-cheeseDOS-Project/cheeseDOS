@@ -23,13 +23,19 @@
 #include "string.h"
 #include "stdbool.h"
 
+#define TXT_BUFFER_SIZE 1024
+
 static void insert_char(char *buffer, size_t *index, int ch) {
-    if (kstrlen(buffer) < sizeof(buffer) - 1) {
-        for (size_t i = kstrlen(buffer); i >= *index && i < sizeof(buffer) - 1; i--) {
-            buffer[i + 1] = buffer[i];
-        }
-        buffer[(*index)++] = (char)ch;
+    size_t len = kstrlen(buffer);
+    if (len >= TXT_BUFFER_SIZE - 1) return; /* no space */
+
+    /* shift right from end to index */
+    for (size_t i = len; i > *index; i--) {
+        buffer[i] = buffer[i - 1];
     }
+    buffer[*index] = (char)ch;
+    (*index)++;
+    buffer[len + 1] = '\0';
 }
 
 static void handle_delete(char *buffer, size_t *index) {
@@ -118,7 +124,7 @@ static void handle_down_arrow(size_t *index, const char *buffer) {
 }
 
 static ramdisk_inode_t* init_editor(const char *filename, char *buffer, size_t *index, bool *is_new) {
-    uint32_t parent_inode = 0;
+    uint32_t parent_inode = current_dir_inode_no;
     ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
     if (!file) {
         if (ramdisk_create_file(parent_inode, filename) < 0) {
@@ -132,8 +138,11 @@ static ramdisk_inode_t* init_editor(const char *filename, char *buffer, size_t *
         }
         *is_new = true;
     } else {
-        memcpy(buffer, file->data, file->size);
-        *index = file->size;
+        size_t copy_bytes = file->size;
+        if (copy_bytes > TXT_BUFFER_SIZE - 1) copy_bytes = TXT_BUFFER_SIZE - 1;
+        memcpy(buffer, file->data, copy_bytes);
+        buffer[copy_bytes] = '\0';
+        *index = copy_bytes;
     }
     return file;
 }
@@ -152,26 +161,6 @@ static void setup_ui(const char *filename, bool is_new, const char* buffer, size
     }
 }
 
-static void redraw_editor(const char *buffer, size_t index) {
-    clear_screen();
-
-    setup_ui("filename", false, buffer, kstrlen(buffer)); 
-
-    uint8_t row = 1, col = 0;
-    for (size_t i = 0; i < index; i++) {
-        if (buffer[i] == '\n') {
-            row++;
-            col = 0;
-        } else {
-            col++;
-            if (col >= get_screen_width()) {
-                row++;
-                col = 0;
-            }
-        }
-    }
-    vga_move_cursor(row, col);
-}
 
 void txt(const char *filename) {
     if (!filename || *filename == '\0') {
@@ -179,7 +168,7 @@ void txt(const char *filename) {
         return;
     }
 
-    char buffer[1024];
+    char buffer[TXT_BUFFER_SIZE];
     size_t index = 0;
     bool saved = true;
     bool is_new = false;
@@ -256,7 +245,7 @@ void txt(const char *filename) {
         }
 
         if (needs_redraw) {
-            redraw_editor(buffer, index);
+            setup_ui(filename, is_new, buffer, index);
         } else {
 
             uint8_t row = 1, col = 0;
