@@ -30,10 +30,11 @@ typedef struct {
 } big32_t;
 
 static void big32_add(const big32_t* a, const big32_t* b, big32_t* result);
+static void big32_divmod(const big32_t* a, const big32_t* b, big32_t* quotient, big32_t* remainder);
 
 static void big32_zero(big32_t* num) {
     for (int i = 0; i < MAX_DIGITS; i++) num->digits[i] = 0;
-    num->size = 0;
+    num->size = 1;
     num->sign = 1;
 }
 
@@ -56,58 +57,83 @@ static void big32_parse(big32_t* num, const char* str) {
     big32_zero(num);
     int len = (int)kstrlen(str);
     int i = 0;
+
     if (str[0] == '-') {
         num->sign = -1;
-        i = 1;
+        i++;
     }
+
     for (; i < len; i++) {
         char c = str[i];
-        if (c >= '0' && c <= '9') {
-            uint32_t carry = c - '0';
-            for (int j = 0; j < num->size || carry; j++) {
-                if (j == num->size) num->digits[num->size++] = 0;
-                uint64_t val = (uint64_t)num->digits[j] * 10 + carry;
-                num->digits[j] = (uint32_t)(val & 0xFFFFFFFF);
-                carry = (uint32_t)(val >> 32);
-            }
+        if (c < '0' || c > '9') break;
+
+        uint32_t carry = c - '0';
+        for (int j = 0; j < num->size || carry; j++) {
+            if (j == num->size) num->digits[num->size++] = 0;
+            uint64_t val = (uint64_t)num->digits[j] * 10 + carry;
+            num->digits[j] = (uint32_t)(val & 0xFFFFFFFF);
+            carry = (uint32_t)(val >> 32);
         }
+    }
+
+    if (num->size == 0 || (num->size == 1 && num->digits[0] == 0)) {
+        num->size = 1;
+        num->digits[0] = 0;
+        num->sign = 1;
     }
 }
 
 static void big32_print(const big32_t* num) {
     big32_t tmp;
     big32_copy(num, &tmp);
-    char buf[MAX_DIGITS * 10];
-    int idx = 0;
     if (tmp.size == 0 || (tmp.size == 1 && tmp.digits[0] == 0)) {
         vga_putchar('0');
         print("\n");
         return;
     }
-    while (tmp.size > 0) {
-        uint32_t rem = 0;
-        for (int i = tmp.size - 1; i >= 0; i--) {
-            uint32_t hi = rem;
-            uint32_t lo = tmp.digits[i];
-            uint32_t q = 0;
-            for (int bit = 31; bit >= 0; bit--) {
-                uint64_t acc = ((uint64_t)q << 1) | ((lo >> bit) & 1);
-                if (acc >= 10) {
-                    acc -= 10;
-                    q = (q << 1) | 1;
-                } else {
-                    q = (q << 1);
-                }
-                hi = (hi << 1) | ((lo >> bit) & 1);
+
+    int max_dec = MAX_DIGITS * 11;
+    uint8_t dec[max_dec];
+    for (int i = 0; i < max_dec; ++i) dec[i] = 0;
+    int dec_len = 1;
+
+    for (int limb = tmp.size - 1; limb >= 0; --limb) {
+        for (int t = 0; t < 32; ++t) {
+            int carry = 0;
+            for (int i = 0; i < dec_len; ++i) {
+                int v = dec[i] * 2 + carry;
+                dec[i] = v % 10;
+                carry = v / 10;
             }
-            tmp.digits[i] = q;
-            rem = hi % 10;
+            while (carry) {
+                dec[dec_len++] = carry % 10;
+                carry /= 10;
+            }
         }
-        buf[idx++] = '0' + rem;
-        while (tmp.size > 0 && tmp.digits[tmp.size - 1] == 0) tmp.size--;
+
+        uint32_t carry32 = tmp.digits[limb];
+        int i = 0;
+        while (carry32 > 0) {
+            if (i >= dec_len) dec[dec_len++] = 0;
+            uint32_t adddigit = carry32 % 10;
+            uint32_t sum = dec[i] + adddigit;
+            dec[i] = sum % 10;
+            uint32_t carrynext = sum / 10;
+            carry32 /= 10;
+            int k = i + 1;
+            while (carrynext) {
+                if (k >= dec_len) dec[dec_len++] = 0;
+                uint32_t s2 = dec[k] + carrynext;
+                dec[k] = s2 % 10;
+                carrynext = s2 / 10;
+                k++;
+            }
+            i++;
+        }
     }
+
     if (num->sign == -1) vga_putchar('-');
-    for (int i = idx - 1; i >= 0; i--) vga_putchar(buf[i]);
+    for (int i = dec_len - 1; i >= 0; --i) vga_putchar('0' + dec[i]);
     print("\n");
 }
 
@@ -118,14 +144,16 @@ static void big32_sub(const big32_t* a, const big32_t* b, big32_t* result) {
         big32_add(a, &t, result);
         return;
     }
+
     if (big32_compare(a, b) < 0) {
         big32_sub(b, a, result);
         result->sign = -1;
         return;
     }
+
     big32_zero(result);
     result->sign = a->sign;
-    int borrow = 0;
+    int64_t borrow = 0;
     for (int i = 0; i < a->size; i++) {
         int64_t x = a->digits[i];
         int64_t y = (i < b->size) ? b->digits[i] : 0;
@@ -138,9 +166,13 @@ static void big32_sub(const big32_t* a, const big32_t* b, big32_t* result) {
         }
         result->digits[i] = (uint32_t)diff;
     }
+
     result->size = a->size;
-    while (result->size > 0 && result->digits[result->size - 1] == 0) result->size--;
-    if (result->size == 0) result->sign = 1;
+    while (result->size > 1 && result->digits[result->size - 1] == 0)
+        result->size--;
+
+    if (result->size == 1 && result->digits[0] == 0)
+        result->sign = 1;
 }
 
 static void big32_add(const big32_t* a, const big32_t* b, big32_t* result) {
@@ -179,35 +211,54 @@ static void big32_mul(const big32_t* a, const big32_t* b, big32_t* result) {
             carry = sum >> 32;
         }
     }
+
     result->size = a->size + b->size;
-    while (result->size > 0 && result->digits[result->size - 1] == 0) result->size--;
-    if (result->size == 0) result->sign = 1;
+    while (result->size > 1 && result->digits[result->size - 1] == 0)
+        result->size--;
+
+    if (result->size == 1 && result->digits[0] == 0)
+        result->sign = 1;
 }
 
 static void big32_divmod(const big32_t* a, const big32_t* b, big32_t* quotient, big32_t* remainder) {
     big32_zero(quotient);
     big32_zero(remainder);
-    big32_t tmp = *a;
-    tmp.sign = 1;
-    big32_t bv = *b;
-    bv.sign = 1;
-    for (int i = tmp.size * 32 - 1; i >= 0; i--) {
-        for (int j = remainder->size; j > 0; j--) {
-            remainder->digits[j] = remainder->digits[j - 1];
+
+    if (b->size == 1 && b->digits[0] == 0) return;
+
+    big32_t dividend, divisor;
+    big32_copy(a, &dividend);
+    big32_copy(b, &divisor);
+    dividend.sign = divisor.sign = 1;
+
+    for (int i = dividend.size * 32 - 1; i >= 0; i--) {
+        uint64_t carry = 0;
+        for (int j = 0; j < remainder->size; j++) {
+            uint64_t val = ((uint64_t)remainder->digits[j] << 1) | carry;
+            remainder->digits[j] = (uint32_t)(val & 0xFFFFFFFF);
+            carry = val >> 32;
         }
-        remainder->digits[0] = (tmp.digits[i / 32] >> (i % 32)) & 1;
-        remainder->size++;
-        while (remainder->size > 0 && remainder->digits[remainder->size - 1] == 0) remainder->size--;
-        if (big32_compare(remainder, &bv) >= 0) {
-            big32_sub(remainder, &bv, remainder);
+        if (carry) remainder->digits[remainder->size++] = (uint32_t)carry;
+        if (remainder->size == 0) remainder->size = 1;
+
+        uint32_t bit = (dividend.digits[i / 32] >> (i % 32)) & 1;
+        remainder->digits[0] |= bit;
+
+        if (big32_compare(remainder, &divisor) >= 0) {
+            big32_sub(remainder, &divisor, remainder);
             quotient->digits[i / 32] |= (1U << (i % 32));
         }
     }
-    quotient->size = tmp.size;
+
+    quotient->size = dividend.size;
+    while (quotient->size > 1 && quotient->digits[quotient->size - 1] == 0)
+        quotient->size--;
+
     quotient->sign = a->sign * b->sign;
-    while (quotient->size > 0 && quotient->digits[quotient->size - 1] == 0) quotient->size--;
     remainder->sign = a->sign;
-    if (remainder->size == 0) remainder->sign = 1;
+
+    if (remainder->size == 1 && remainder->digits[0] == 0)
+        remainder->sign = 1;
 }
 
 void calc_command(const char* expr) {
@@ -215,42 +266,53 @@ void calc_command(const char* expr) {
     char op = 0;
     int pos = 0;
     int length = (int)kstrlen(expr);
+
     while (pos < length && expr[pos] == ' ') pos++;
+
     int start = pos;
+    if (expr[pos] == '-') pos++;
     while (pos < length && expr[pos] >= '0' && expr[pos] <= '9') pos++;
-    if (pos == start) {
+    if (pos == start || (expr[start] == '-' && pos == start + 1)) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Invalid expression\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK); 
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
         return;
     }
+
     char buf_a[128];
     int len_a = pos - start;
     for (int i = 0; i < len_a; i++) buf_a[i] = expr[start + i];
     buf_a[len_a] = 0;
     big32_parse(&a, buf_a);
+
     while (pos < length && expr[pos] == ' ') pos++;
     if (pos >= length) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Invalid operator\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK); 
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
         return;
     }
+
     op = expr[pos++];
+
     while (pos < length && expr[pos] == ' ') pos++;
+
     start = pos;
+    if (expr[pos] == '-') pos++;
     while (pos < length && expr[pos] >= '0' && expr[pos] <= '9') pos++;
-    if (pos == start) {
+    if (pos == start || (expr[start] == '-' && pos == start + 1)) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Invalid expression\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK); 
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
         return;
     }
+
     char buf_b[128];
     int len_b = pos - start;
     for (int i = 0; i < len_b; i++) buf_b[i] = expr[start + i];
     buf_b[len_b] = 0;
     big32_parse(&b, buf_b);
+
     if (op == '+') {
         big32_add(&a, &b, &r);
         big32_print(&r);
@@ -261,19 +323,19 @@ void calc_command(const char* expr) {
         big32_mul(&a, &b, &r);
         big32_print(&r);
     } else if (op == '/') {
-        if (b.size == 0 || (b.size == 1 && b.digits[0] == 0)) { 
+        if (b.size == 1 && b.digits[0] == 0) {
             set_text_color(COLOR_RED, COLOR_BLACK);
             print("Error: Division by zero\n");
-            set_text_color(COLOR_WHITE, COLOR_BLACK); 
+            set_text_color(COLOR_WHITE, COLOR_BLACK);
             return;
         }
         big32_divmod(&a, &b, &r, &mod);
         big32_print(&r);
     } else if (op == '%') {
-        if (b.size == 0 || (b.size == 1 && b.digits[0] == 0)) { 
+        if (b.size == 1 && b.digits[0] == 0) {
             set_text_color(COLOR_RED, COLOR_BLACK);
             print("Error: Division by zero\n");
-            set_text_color(COLOR_WHITE, COLOR_BLACK); 
+            set_text_color(COLOR_WHITE, COLOR_BLACK);
             return;
         }
         big32_divmod(&a, &b, &r, &mod);
@@ -281,6 +343,6 @@ void calc_command(const char* expr) {
     } else {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Unknown operator\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK); 
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
     }
 }
