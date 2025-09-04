@@ -17,7 +17,6 @@
  */
 
 // TODO: Hide cursor
-// TODO: Make music better
 // TODO: Fix game over screen
 // TODO: Add more food types
 
@@ -58,8 +57,6 @@ typedef struct {
 #define FOOD '*'
 #define EMPTY ' '
 
-#define MUSIC_FRAME_DURATION 1000
-
 static Snake snake;
 static Point food;
 static int score;
@@ -75,19 +72,6 @@ static int scroll_offset = 0;
 static uint32_t simple_rand() {
     rand_seed = rand_seed * 1103515245 + 12345;
     return (rand_seed / 65536) % 32768;
-}
-
-static int music_frame = 0;
-
-static void play_music_frame() {
-    if (music_frame % MUSIC_FRAME_DURATION == 0) {
-        static const int melody[] = {261, 329, 392, 440, 349, 294};
-        int tone_index = (music_frame / MUSIC_FRAME_DURATION) % 6;
-        int freq = melody[tone_index];
-        beep(freq, 50);
-    }
-
-    music_frame++;
 }
 
 static void init_game() {
@@ -200,7 +184,7 @@ static void move_snake() {
         score += 10;
         place_food();
 
-        beep(1000, 50);
+        beep(430, 50);
 
         last_tail.x = -1;
         last_tail.y = -1;
@@ -267,9 +251,9 @@ static void game_over() {
     vga_set_cursor(GAME_HEIGHT / 2 + 4, (GAME_WIDTH - 20) / 2);
     print("Press any key to exit");
 
-    beep(500, 500);
-    beep(400, 520);
-    beep(300, 600);
+    beep(60, 100);
+    delay(50);
+    beep(60, 100);
 
     keyboard_getchar();
 }
@@ -331,10 +315,6 @@ void snk(const char* *unused) {
             }
 
             last_move_time = current_time;
-        }
-
-        else {
-            play_music_frame();
         }
 
         draw_game();
