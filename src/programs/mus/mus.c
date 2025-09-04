@@ -19,23 +19,19 @@
 #include "programs.h"
 #include "vga.h"
 #include "string.h"
-#include "xmas.h"
-#include "bday.h"
+#include "free_software_song.h"
 
 void mus(const char* args) {
     if (!args || !*args) {
         print("Usage: mus <song>\n");
         print(" Songs:\n");
-        print("  bday\n");
-        print("  xmas\n");
+        print("  free_software_song\n");
         return;
     }
 
-    if (kstrcmp(args, "xmas") == 0) {
-        xmas_music();
-    } else if (kstrcmp(args, "bday") == 0) {
-        bday_music();
+    if (kstrcmp(args, "free_software_song") == 0) {
+        free_software_song();
     } else {
-        print("Unknown song. Try: xmas or bday");
+        print("Unknown song. Try: free_software_song\n");
     }
 }

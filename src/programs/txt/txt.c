@@ -27,9 +27,8 @@
 
 static void insert_char(char *buffer, size_t *index, int ch) {
     size_t len = kstrlen(buffer);
-    if (len >= TXT_BUFFER_SIZE - 1) return; /* no space */
+    if (len >= TXT_BUFFER_SIZE - 1) return;
 
-    /* shift right from end to index */
     for (size_t i = len; i > *index; i--) {
         buffer[i] = buffer[i - 1];
     }
@@ -160,7 +159,6 @@ static void setup_ui(const char *filename, bool is_new, const char* buffer, size
         vga_putchar(buffer[i]);
     }
 }
-
 
 void txt(const char *filename) {
     if (!filename || *filename == '\0') {

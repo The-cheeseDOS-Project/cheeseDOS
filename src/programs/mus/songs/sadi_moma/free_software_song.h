@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BDAY_H
-#define BDAY_H
+#ifndef FREE_SOFTWARE_SONG_H
+#define FREE_SOFTWARE_SONG_H
 
-void bday_music();
+void free_software_song();
 
 #endif
