@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// TODO: Hide cursor
 // TODO: Fix game over screen
 // TODO: Add more food types
 
@@ -263,6 +262,7 @@ void snk(const char* *unused) {
     vga_get_cursor(&old_row, &old_col);
 
     clear_screen();
+    vga_hide_cursor(true);
 
     vga_disable_scroll(true);  
 
@@ -340,6 +340,7 @@ void snk(const char* *unused) {
     game_over();
 
     vga_disable_scroll(false); 
+    vga_hide_cursor(false);
     vga_set_cursor(old_row, old_col);
     set_text_color(COLOR_WHITE, COLOR_BLACK);
     clear_screen();

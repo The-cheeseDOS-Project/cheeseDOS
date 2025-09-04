@@ -58,6 +58,7 @@ void putchar(char ch);
 void vga_set_cursor(uint8_t row, uint8_t col);
 void vga_get_cursor(uint8_t *row, uint8_t *col);
 void vga_move_cursor(uint8_t row, uint8_t col);
+void vga_hide_cursor(bool hide);
 void print_uint(uint32_t num);
 void vga_disable_scroll(bool disable);
 

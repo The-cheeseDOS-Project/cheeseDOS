@@ -32,16 +32,39 @@ static uint8_t vga_cursor_y = 0;
 static uint8_t current_fg = COLOR_WHITE;
 static uint8_t current_bg = COLOR_BLACK;
 static bool vga_scrolling_enabled = true;
+static bool vga_cursor_hidden = false;
+static uint8_t saved_cursor_start = 0x00;
+static uint8_t saved_cursor_end = 0x0F;
 
 static uint8_t get_vga_color(void) {
     return VGA_COLOR(current_fg, current_bg);
 }
 
 void set_cursor(uint16_t position) {
-    outb(0x3D4, 0x0A); outb(0x3D5, 0x00);
-    outb(0x3D4, 0x0B); outb(0x3D5, 0x0F);
+    if (!vga_cursor_hidden) {
+        outb(0x3D4, 0x0A); outb(0x3D5, saved_cursor_start);
+        outb(0x3D4, 0x0B); outb(0x3D5, saved_cursor_end);
+    }
     outb(0x3D4, 0x0F); outb(0x3D5, position & 0xFF);
     outb(0x3D4, 0x0E); outb(0x3D5, (position >> 8) & 0xFF);
+}
+
+void vga_hide_cursor(bool hide) {
+    if (hide) {
+        if (vga_cursor_hidden) return;
+        outb(0x3D4, 0x0A);
+        saved_cursor_start = inb(0x3D5);
+        outb(0x3D4, 0x0B);
+        saved_cursor_end = inb(0x3D5);
+
+        outb(0x3D4, 0x0A); outb(0x3D5, 0x20);
+        vga_cursor_hidden = true;
+    } else {
+        if (!vga_cursor_hidden) return;
+        outb(0x3D4, 0x0A); outb(0x3D5, saved_cursor_start);
+        outb(0x3D4, 0x0B); outb(0x3D5, saved_cursor_end);
+        vga_cursor_hidden = false;
+    }
 }
 
 void scroll_screen(void) {
