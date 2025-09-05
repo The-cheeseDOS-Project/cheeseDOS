@@ -57,6 +57,7 @@
 |----------------------|-----------------------------------------------------------------------------|
 | `run [FILE]`         | Runs whatever commands are in a file                                        |
 | `[COMMAND 1] & [COMMAND 2]` | Chain commands                                                       |
+| `rep [TIMES] [COMMAND] | Repeat commands
 
 ## Music
 
