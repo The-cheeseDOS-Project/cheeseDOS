@@ -62,7 +62,7 @@ void rep(const char* args) {
     while (*p == ' ') p++;
     if (*p == '\0') {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: rep <times> <command> [args...]\n");
+        print("Usage: rep <times> <command>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
