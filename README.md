@@ -1,5 +1,3 @@
-![cdos-logo](./images/cdos-logo.svg)
-
 ## Thank you for visiting the cheeseDOS GitHub page!
 
 ![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)
@@ -16,8 +14,6 @@ cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, li
 
 > [!NOTE]
 > cheeseDOS isn't "DOS-like" — it follows its own philosophy. The "DOS" in the name simply means it's a **D**isk **O**perating **S**ystem (as in, it's stored on and boots from a disk… not a punch card).
-
-![`ban` command](./images/ban-command.png)
 
 > [!WARNING]
 > On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible damage**. While no such incidents have occurred, this is experimental software—**USE AT YOUR OWN RISK!**
