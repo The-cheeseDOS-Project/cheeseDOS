@@ -1,7 +1,5 @@
 # Shell scripting
 
-![csh logo](../images/csh-logo.svg)
-
 So I have made a scripting "language" for cheeseDOS, its called `csh` or **C**heese **SH**ell its very very simple, here's how to use it.
 
 ## Scripting
