@@ -1,2 +1,1 @@
-*.md linguist-documentation=false
-*.md linguist-detectable=true
+* linguist-detectable=true
