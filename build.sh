@@ -166,7 +166,6 @@ check_dependencies() {
     "ld"
     "strip"
     "truncate"
-    "dd"
   )
 
   local missing_tools=()
@@ -359,11 +358,6 @@ function all {
     truncate "$FLOPPY" -s '1474560'
   echo " Done!"
 
-  echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
-    dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
-     > /dev/null 2>&1
-  echo " Done!"
-
   echo
 
   end=$(date +%s%N)
@@ -373,6 +367,13 @@ function all {
   echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
 
   exit 0
+}
+
+function make_hdd_image {
+  echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
+  dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
+  > /dev/null 2>&1
+  echo " Done!"
 }
 
 MEM=1M
@@ -385,6 +386,10 @@ function run {
     exit 1
   fi
   
+  if [[ ! -f "$HDD" ]]; then
+    make_hdd_image
+  fi
+
   qemu-system-i386 \
   -audiodev pa,id=snd0 \
   -machine pcspk-audiodev=snd0 \
@@ -405,6 +410,10 @@ function run-kvm {
     exit 1
   fi
   
+  if [[ ! -f "$HDD" ]]; then
+    make_hdd_image
+  fi
+
   $SU \
   qemu-system-i386 \
   -audiodev pa,id=snd0 \
