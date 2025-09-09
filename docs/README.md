@@ -1,7 +1,5 @@
 # The cheeseDOS wiki
 
-![logo](../images/cdos-logo.svg)
-
 Welcome to The cheeseDOS wiki!
 
 ## Issue reporting
