@@ -12,7 +12,7 @@ txt hello
 
 Then when you get into `txt` you can type out the script, here's how to make one.
 
-So if i want to make a program that slowly prints out "Welcome to csh!" I would just put this in the csh file,
+So if i want to make a program that slowly prints out "Welcome to csh!" and repeats `csh!` 5 times, I would just put this in the csh file:
 
 ```
 say Welcome
@@ -22,7 +22,7 @@ dly 500
 rep 5 say csh!
 ```
 
-and that would do
+and that would do:
 
 ```
 Welcome
