@@ -137,7 +137,7 @@ static bool execute_single_command(const char* cmd) {
     
     bool success = execute_command(command, args);
     if (success) {
-        sprint(" OK!\n");
+        sprint(" \033[92mDone!\033[0m\n");
     }
     
     return success;
