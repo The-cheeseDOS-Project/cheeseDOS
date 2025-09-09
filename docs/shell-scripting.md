@@ -22,7 +22,13 @@ dly 500
 rep 5 say csh!
 ```
 
-and that would do:
+Even if i want to i could type it out as a single command in the terminel:
+
+```
+say Welcome & dly 500 & say to & dly 500 & rep 5 say csh!
+```
+
+And those would do:
 
 ```
 Welcome
@@ -37,6 +43,7 @@ csh!
 ```
 
 ## Running the script
+
 You can run any script by just typing `run` and in front of that put the filename like:
 
 ```
