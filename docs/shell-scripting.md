@@ -5,31 +5,40 @@ So I have made a scripting "language" for cheeseDOS, its called `csh` or **C**he
 ## Scripting
 
 First make a file, we will call it `hello`, so to open the new file in the text editor `txt`, run:
-```
+
+```csh
 txt hello
 ```
 
 Then when you get into `txt` you can type out the script, here's how to make one.
 
 So if i want to make a program that slowly prints out "Welcome to csh!" I would just put this in the csh file,
-```
+
+```csh
 say Welcome
 dly 500
 say to
 dly 500
-say csh!
+rep 5 say csh!
 ```
 
 and that would do
 
+```csh
 Welcome
 *waits 500ms*
 to
 *waits 500ms*
 csh!
+csh!
+csh!
+csh!
+csh!
+```
 
 ## Running the script
 You can run any script by just typing `run` and in front of that put the filename like:
-```
+
+```csh
 run hello
 ```
