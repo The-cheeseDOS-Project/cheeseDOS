@@ -97,6 +97,7 @@ static void draw_ui() {
 }
 
 void key(const char* *unused) {
+    (void)unused;
     uint8_t old_row, old_col;
     vga_get_cursor(&old_row, &old_col);
 
@@ -118,8 +119,7 @@ void key(const char* *unused) {
         }
 
         if (current_time - last_poll_time >= POLL_DELAY) {
-            int any_key_pressed = 0;
-
+            /* any_key_pressed not used; behavior preserved without storing */
             for (int i = 0; i < NUM_KEYS; i++) {
                 int currently_pressed = is_key_pressed(keyboard[i].key_char);
 
@@ -127,14 +127,12 @@ void key(const char* *unused) {
 
                     keyboard[i].is_pressed = 1;
                     beep(keyboard[i].frequency, POLL_DELAY);
-                    any_key_pressed = 1;
                 } else if (!currently_pressed && keyboard[i].is_pressed) {
 
                     keyboard[i].is_pressed = 0;
                 } else if (currently_pressed && keyboard[i].is_pressed) {
 
                     beep(keyboard[i].frequency, POLL_DELAY);
-                    any_key_pressed = 1;
                 }
             }
 

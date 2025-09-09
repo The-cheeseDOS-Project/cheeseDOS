@@ -21,6 +21,7 @@
 #include "io.h"
 
 void svr(const char* *unused) {
+    (void)unused;
     static uint32_t rng_state = 0x12345678;
 
     #define COLOR_COUNT 6

@@ -20,5 +20,6 @@
 #include "power.h"
 
 void off(const char* *unused) {
+    (void)unused;
     shutdown();
 }

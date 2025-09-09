@@ -21,6 +21,7 @@
 #include "io.h"
 
 void box(const char* *unused) {
+    (void)unused;
     uint8_t orig_row, orig_col;
     vga_get_cursor(&orig_row, &orig_col);
     vga_set_cursor(25, 80);

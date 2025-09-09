@@ -20,5 +20,6 @@
 #include "vga.h"
 
 void hi(const char* *unused) {
+    (void)unused;
     print("hello, world\n");
 }

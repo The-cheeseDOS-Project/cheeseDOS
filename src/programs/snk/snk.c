@@ -258,6 +258,7 @@ static void game_over() {
 }
 
 void snk(const char* *unused) {
+    (void)unused;
     uint8_t old_row, old_col;
     vga_get_cursor(&old_row, &old_col);
 

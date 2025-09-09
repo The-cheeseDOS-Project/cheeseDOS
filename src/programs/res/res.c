@@ -20,5 +20,6 @@
 #include "power.h"
 
 void res(const char* *unused) {
+    (void)unused;
     reboot();
 }

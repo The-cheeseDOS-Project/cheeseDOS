@@ -21,6 +21,7 @@
 #include "vga.h"
 
 void clk(const char* *u) {
+    (void)u;
     rtc_time_t current_time;
     read_rtc_time(&current_time);
     if (current_time.month < 10) vga_putchar('0');

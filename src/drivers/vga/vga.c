@@ -36,6 +36,10 @@ static bool vga_cursor_hidden = false;
 static uint8_t saved_cursor_start = 0x00;
 static uint8_t saved_cursor_end = 0x0F;
 
+/* default text colors (declared extern in vga.h) */
+uint8_t default_text_fg_color = COLOR_WHITE;
+uint8_t default_text_bg_color = COLOR_BLACK;
+
 static uint8_t get_vga_color(void) {
     return VGA_COLOR(current_fg, current_bg);
 }

@@ -20,5 +20,6 @@
 #include "vga.h"
 
 void cls(const char *unused) {
+    (void)unused;
     clear_screen();
 }

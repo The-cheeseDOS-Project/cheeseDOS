@@ -27,6 +27,7 @@ static void byte_to_hex(uint8_t byte, char* out) {
 }
 
 void dmp(const char *unused) {
+    (void)unused;
     uint8_t* ram = (uint8_t*)0x0000;
     for (uint32_t i = 0; i < 0xA0000; i++) {
         char hex[3];

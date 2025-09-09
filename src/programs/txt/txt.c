@@ -55,18 +55,21 @@ static void handle_backspace(char *buffer, size_t *index) {
 }
 
 static void handle_left_arrow(size_t *index, const char *buffer) {
+    (void)buffer;
     if (*index > 0) {
         (*index)--;
     }
 }
 
 static void handle_right_arrow(size_t *index, const char *buffer) {
+    (void)buffer;
     if (*index < kstrlen(buffer)) {
         (*index)++;
     }
 }
 
 static void handle_home(size_t *index, const char *buffer) {
+    (void)buffer;
     size_t line_start = *index;
     while (line_start > 0 && buffer[line_start - 1] != '\n') {
         line_start--;
@@ -75,6 +78,7 @@ static void handle_home(size_t *index, const char *buffer) {
 }
 
 static void handle_end(size_t *index, const char *buffer) {
+    (void)buffer;
     size_t line_end = *index;
     while (line_end < kstrlen(buffer) && buffer[line_end] != '\n' && buffer[line_end] != '\0') {
         line_end++;
@@ -83,6 +87,7 @@ static void handle_end(size_t *index, const char *buffer) {
 }
 
 static void handle_up_arrow(size_t *index, const char *buffer) {
+    (void)buffer;
     size_t line_start = *index;
     while (line_start > 0 && buffer[line_start - 1] != '\n') {
         line_start--;
@@ -103,6 +108,7 @@ static void handle_up_arrow(size_t *index, const char *buffer) {
 }
 
 static void handle_down_arrow(size_t *index, const char *buffer) {
+    (void)buffer;
     size_t line_end = *index;
     while (line_end < kstrlen(buffer) && buffer[line_end] != '\n' && buffer[line_end] != '\0') {
         line_end++;

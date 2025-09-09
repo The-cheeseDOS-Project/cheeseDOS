@@ -54,6 +54,7 @@ void sprint(const char *str) {
 }
 
 int vsnprintf(char *buffer, size_t size, const char *fmt, va_list ap) {
+    (void)ap;
     size_t i;
     for (i = 0; i < size - 1 && fmt[i]; i++) {
         buffer[i] = fmt[i];

@@ -59,6 +59,7 @@ static void ram_allocated() {
 }
 
 void mem(const char* *unused) {
+    (void)unused;
     ram_used();
     print(" / ");
     ram_allocated();
