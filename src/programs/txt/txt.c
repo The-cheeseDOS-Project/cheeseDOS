@@ -155,9 +155,24 @@ static void setup_ui(const char *filename, bool is_new, const char* buffer, size
     set_text_color(COLOR_WHITE, COLOR_BLACK);
     vga_move_cursor(1, 0);
 
-    for (size_t i = 0; i < index; i++) {
+    for (size_t i = 0; buffer[i] != '\0' && i < TXT_BUFFER_SIZE; i++) {
         vga_putchar(buffer[i]);
     }
+
+    uint8_t row = 1, col = 0;
+    for (size_t i = 0; i < index; i++) {
+        if (buffer[i] == '\n') {
+            row++;
+            col = 0;
+        } else {
+            col++;
+            if (col >= get_screen_width()) {
+                row++;
+                col = 0;
+            }
+        }
+    }
+    vga_move_cursor(row, col);
 }
 
 void txt(const char *filename) {
