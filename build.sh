@@ -165,6 +165,8 @@ check_dependencies() {
     "as"
     "ld"
     "strip"
+    "truncate"
+    "dd"
   )
 
   local missing_tools=()
