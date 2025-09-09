@@ -35,11 +35,12 @@ static void big32_divmod(const big32_t* a, const big32_t* b, big32_t* quotient, 
 static void big32_zero(big32_t* num) {
     for (int i = 0; i < MAX_DIGITS; i++) num->digits[i] = 0;
     num->size = 1;
+    num->digits[0] = 0;
     num->sign = 1;
 }
 
 static void big32_copy(const big32_t* src, big32_t* dest) {
-    for (int i = 0; i < MAX_DIGITS; i++) dest->digits[i] = src->digits[i];
+    for (int i = 0; i < src->size; i++) dest->digits[i] = src->digits[i];
     dest->size = src->size;
     dest->sign = src->sign;
 }
@@ -139,9 +140,9 @@ static void big32_print(const big32_t* num) {
 
 static void big32_sub(const big32_t* a, const big32_t* b, big32_t* result) {
     if (a->sign != b->sign) {
-        big32_t t = *b;
-        t.sign *= -1;
-        big32_add(a, &t, result);
+        big32_t temp_b = *b;
+        temp_b.sign *= -1;
+        big32_add(a, &temp_b, result);
         return;
     }
 
@@ -153,26 +154,22 @@ static void big32_sub(const big32_t* a, const big32_t* b, big32_t* result) {
 
     big32_zero(result);
     result->sign = a->sign;
-    int64_t borrow = 0;
+    uint64_t borrow = 0;
     for (int i = 0; i < a->size; i++) {
-        int64_t x = a->digits[i];
-        int64_t y = (i < b->size) ? b->digits[i] : 0;
-        int64_t diff = x - y - borrow;
-        if (diff < 0) {
-            diff += (1LL << 32);
+        uint64_t x = a->digits[i];
+        uint64_t y = (i < b->size) ? b->digits[i] : 0;
+        uint64_t diff = (x - y) - borrow;
+        result->digits[i] = (uint32_t)(diff & 0xFFFFFFFF);
+        if (diff & 0x100000000ULL) {
             borrow = 1;
         } else {
             borrow = 0;
         }
-        result->digits[i] = (uint32_t)diff;
     }
 
     result->size = a->size;
     while (result->size > 1 && result->digits[result->size - 1] == 0)
         result->size--;
-
-    if (result->size == 1 && result->digits[0] == 0)
-        result->sign = 1;
 }
 
 static void big32_add(const big32_t* a, const big32_t* b, big32_t* result) {
@@ -189,7 +186,7 @@ static void big32_add(const big32_t* a, const big32_t* b, big32_t* result) {
             carry = sum >> 32;
         }
         result->size = max;
-        if (carry && result->size < MAX_DIGITS)
+        if (carry)
             result->digits[result->size++] = (uint32_t)carry;
     } else {
         big32_t t = *b;
@@ -204,6 +201,7 @@ static void big32_mul(const big32_t* a, const big32_t* b, big32_t* result) {
     for (int i = 0; i < a->size; i++) {
         uint64_t carry = 0;
         for (int j = 0; j < b->size || carry; j++) {
+            if (i + j >= MAX_DIGITS) break;
             uint64_t x = result->digits[i + j];
             uint64_t y = (j < b->size) ? (uint64_t)a->digits[i] * b->digits[j] : 0;
             uint64_t sum = x + y + carry;
@@ -226,39 +224,45 @@ static void big32_divmod(const big32_t* a, const big32_t* b, big32_t* quotient, 
 
     if (b->size == 1 && b->digits[0] == 0) return;
 
-    big32_t dividend, divisor;
-    big32_copy(a, &dividend);
-    big32_copy(b, &divisor);
-    dividend.sign = divisor.sign = 1;
+    if (big32_compare(a, b) < 0) {
+        big32_copy(a, remainder);
+        return;
+    }
 
-    for (int i = dividend.size * 32 - 1; i >= 0; i--) {
+    big32_t current_dividend, temp_quotient, temp_remainder, divisor;
+    big32_copy(a, &current_dividend);
+    big32_copy(b, &divisor);
+    current_dividend.sign = divisor.sign = 1;
+
+    for (int i = a->size * 32 - 1; i >= 0; i--) {
         uint64_t carry = 0;
         for (int j = 0; j < remainder->size; j++) {
-            uint64_t val = ((uint64_t)remainder->digits[j] << 1) | carry;
-            remainder->digits[j] = (uint32_t)(val & 0xFFFFFFFF);
-            carry = val >> 32;
+            uint64_t temp = ((uint64_t)remainder->digits[j] << 1) | carry;
+            remainder->digits[j] = (uint32_t)temp;
+            carry = temp >> 32;
         }
-        if (carry) remainder->digits[remainder->size++] = (uint32_t)carry;
-        if (remainder->size == 0) remainder->size = 1;
+        if (carry) {
+            remainder->digits[remainder->size] = (uint32_t)carry;
+            remainder->size++;
+        }
 
-        uint32_t bit = (dividend.digits[i / 32] >> (i % 32)) & 1;
-        remainder->digits[0] |= bit;
+        if ((current_dividend.digits[i / 32] >> (i % 32)) & 1) {
+            remainder->digits[0] |= 1;
+        }
 
         if (big32_compare(remainder, &divisor) >= 0) {
-            big32_sub(remainder, &divisor, remainder);
+            big32_sub(remainder, &divisor, &temp_remainder);
+            big32_copy(&temp_remainder, remainder);
             quotient->digits[i / 32] |= (1U << (i % 32));
         }
     }
 
-    quotient->size = dividend.size;
+    quotient->size = (a->size * 32 - 1) / 32 + 1;
     while (quotient->size > 1 && quotient->digits[quotient->size - 1] == 0)
         quotient->size--;
 
     quotient->sign = a->sign * b->sign;
     remainder->sign = a->sign;
-
-    if (remainder->size == 1 && remainder->digits[0] == 0)
-        remainder->sign = 1;
 }
 
 void calc_command(const char* expr) {
