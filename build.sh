@@ -158,6 +158,39 @@ BUILD_DIR=build
 OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
+check_dependencies() {
+  local required_tools=(
+    "gcc"
+    "objcopy"
+    "as"
+    "ld"
+    "strip"
+  )
+
+  local missing_tools=()
+
+  for tool in "${required_tools[@]}"; do
+    echo -n "Checking for $tool..."
+    if command -v "$tool" &> /dev/null; then
+      echo " Found!"
+    else
+      echo " Not Found!"
+      missing_tools+=("$tool")
+    fi
+  done
+
+  if [ "${#missing_tools[@]}" -ne 0 ]; then
+    echo
+    echo "SOME TOOLS ARE NOT FOUND!"
+    local i=1
+    for tool in "${missing_tools[@]}"; do
+      echo "$i. $tool"
+      i=$((i+1))
+    done
+    exit 1
+  fi
+}
+
 get_includes() {
   local includes=""
   while IFS= read -r -d '' dir; do
@@ -210,13 +243,6 @@ CFLAGS="-m$BITS \
 
 ASMFLAGS="--$BITS $INCLUDES"
 
-SKIP_DEPS=0
-for arg in "$@"; do
-  if [[ "$arg" == "--no-dep-check" ]]; then
-    SKIP_DEPS=1
-  fi
-done
-
 build_c_object() {
   $CC $CFLAGS -c "$1" -o "$2"
 }
@@ -225,21 +251,17 @@ build_asm_object() {
   $AS $ASMFLAGS -o "$2" "$1"
 }
 
-function all {
+function all {  
   start=$(date +%s%N)
 
   echo "Building cheeseDOS $(<src/version/version.txt)..."
 
   echo
 
+  check_dependencies
+
   clean
   
-  if [[ "$SKIP_DEPS" -eq 0 ]]; then
-    deps
-  else
-    echo "Skipping dependency check (--no-dep-check)"
-  fi
-
   echo -n "Making directory: $BUILD_DIR..."
   mkdir -p "$BUILD_DIR"
   echo " Done!"
@@ -296,12 +318,10 @@ function all {
     wait "$job"
   done
 
-  if [[ -f "$SRC_DIR/version/version.txt" ]]; then
-    echo -n "Building version.o..."
-      objcopy -I binary -O elf$BITS-i386 -B i386 \
-              "$SRC_DIR/version/version.txt" "$BUILD_DIR/version.o"
-    echo " Done!"
-  fi
+  echo -n "Building version.o..."
+    objcopy -I binary -O elf$BITS-i386 -B i386 \
+      "$SRC_DIR/version/version.txt" "$BUILD_DIR/version.o"
+  echo " Done!"
 
   echo -n "Assembling bootloader..."
     $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
@@ -357,7 +377,7 @@ MEM=1M
 CPU=486
 CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
-function run {
+function run {  
   if [[ ! -f "$FLOPPY" ]]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
@@ -399,119 +419,6 @@ function run-kvm {
   -enable-kvm
 }
 
-function deps {
-  echo "Checking for required tools: gcc, binutils, and qemu-system-i386..."
-
-  if command -v apt &> /dev/null; then
-    pkg_mgr="apt"
-  elif command -v dnf &> /dev/null; then
-    pkg_mgr="dnf"
-  elif command -v zypper &> /dev/null; then
-    pkg_mgr="zypper"
-  elif command -v pacman &> /dev/null; then
-    pkg_mgr="pacman"
-  elif command -v emerge &> /dev/null; then
-    pkg_mgr="emerge"
-  else
-    echo "Unsupported distro. Please install manually."
-    return 1
-  fi
-
-  declare -A pkg_map
-  case "$pkg_mgr" in
-    apt)
-      pkg_map=(
-        [gcc]="gcc"
-        [ld]="binutils"
-        [qemu-system-i386]="qemu-system-x86"
-      )
-      ;;
-    dnf)
-      pkg_map=(
-        [gcc]="gcc"
-        [ld]="binutils"
-        [qemu-system-i386]="qemu-system-x86"
-      )
-      ;;
-    zypper)
-      pkg_map=(
-        [gcc]="gcc"
-        [ld]="binutils"
-        [qemu-system-i386]="qemu"
-      )
-      ;;
-    pacman)
-      missing=()
-      if ! command -v gcc &> /dev/null; then missing+=("gcc"); fi
-      if ! command -v ld &> /dev/null; then missing+=("binutils"); fi
-      if ! command -v qemu-system-i386 &> /dev/null; then missing+=("qemu-arch-extra"); fi
-      
-      if [ ${#missing[@]} -eq 0 ]; then
-        echo "All dependencies are already installed."
-        return 0
-      fi
-      
-      echo "Missing: ${missing[*]}"
-      echo "Attempting to install missing dependencies..."
-      sudo pacman -Syu --noconfirm
-      sudo pacman -S --noconfirm "${missing[@]}"
-      return 0
-      ;;
-    emerge)
-      pkg_map=(
-        [gcc]="sys-devel/gcc"
-        [ld]="sys-devel/binutils"
-        [qemu-system-i386]="app-emulation/qemu"
-      )
-      ;;
-  esac
-
-  missing=()
-  for cmd in "${!pkg_map[@]}"; do
-    if ! command -v "$cmd" &> /dev/null; then
-      missing+=("${pkg_map[$cmd]}")
-    fi
-  done
-
-  if [ ${#missing[@]} -eq 0 ]; then
-    echo "All dependencies are already installed."
-    return 0
-  fi
-
-  echo "Missing: ${missing[*]}"
-  echo "Attempting to install missing dependencies..."
-
-  case "$pkg_mgr" in
-    apt)
-      sudo apt-get update
-      sudo apt-get install -y "${missing[@]}"
-      ;;
-    dnf)
-      install_list=()
-      for pkg in "${missing[@]}"; do
-        if dnf list --quiet available "$pkg" &> /dev/null; then
-          install_list+=("$pkg")
-        else
-          echo "Package not found in repos: $pkg (skipping)"
-        fi
-      done
-      if [ ${#install_list[@]} -gt 0 ]; then
-        sudo dnf install -y "${install_list[@]}"
-      else
-        echo "No installable missing packages found."
-      fi
-      ;;
-    zypper)
-      sudo zypper install -y "${missing[@]}"
-      ;;
-    emerge)
-      for pkg in "${missing[@]}"; do
-        sudo emerge "$pkg"
-      done
-      ;;
-  esac
-}
-
 function clean {
   echo -n "Cleaning up: $BUILD_DIR $FLOPPY $ISO_ROOT..."
   rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
@@ -524,5 +431,5 @@ case "$1" in
   run) run ;;
   run-kvm) run-kvm ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|run-kvm|clean} [--no-dep-check]" ; exit 1 ;;
+  *) echo "Usage: $0 {all|run|run-kvm|clean}" ; exit 1 ;;
 esac
