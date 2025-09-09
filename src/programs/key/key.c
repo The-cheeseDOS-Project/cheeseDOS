@@ -119,7 +119,7 @@ void key(const char* *unused) {
         }
 
         if (current_time - last_poll_time >= POLL_DELAY) {
-            /* any_key_pressed not used; behavior preserved without storing */
+
             for (int i = 0; i < NUM_KEYS; i++) {
                 int currently_pressed = is_key_pressed(keyboard[i].key_char);
 
