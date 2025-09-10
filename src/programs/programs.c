@@ -112,10 +112,14 @@ bool execute_command(const char* command, const char* args) {
     }
 
     set_text_color(COLOR_RED, COLOR_BLACK);
-    sprint(" Failed!: ");
-    qprint(command);
-    qprint(": command not found\n");
+    print(command);
+    print(": command not found\n");
     set_text_color(default_text_fg_color, default_text_bg_color);
+   
+    sprint(" \033[91mFailed!: ");
+    sprint(command);
+    sprint(": command not found\n");
+    sprint("\033[0m");
 
     return false;
 }
