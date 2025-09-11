@@ -19,7 +19,6 @@
 #include "vga.h"
 #include "string.h"
 #include "serial.h"
-#include "programs.h"
 #include "stdbool.h"
 #include "ver.h"
 #include "hlp.h"

@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "programs.h"
 #include "serial.h"
 
 static void byte_to_hex(uint8_t byte, char* out) {

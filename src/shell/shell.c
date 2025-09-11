@@ -20,7 +20,6 @@
 #include "vga.h"
 #include "keyboard.h"
 #include "string.h"
-#include "programs.h"
 #include "beep.h"
 #include "timer.h"
 #include "serial.h"

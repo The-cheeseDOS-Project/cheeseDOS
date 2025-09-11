@@ -16,10 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// TODO: Fix game over screen
-// TODO: Add more food types
-
-#include "programs.h"
 #include "stdint.h"
 #include "vga.h"
 #include "keyboard.h"

@@ -17,7 +17,6 @@
  */
 
 #include "vga.h"
-#include "programs.h"
 
 void hlp(const char* *unused) {
     (void)unused;

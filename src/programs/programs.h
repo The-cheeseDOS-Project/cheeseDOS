@@ -19,10 +19,6 @@
 #ifndef PROGRAMS_H
 #define PROGRAMS_H
 
-#include "stdbool.h"
-
-bool execute_command(const char* command, const char* args);
-void print_int(int n);
-void print_ansi(const char* ansi_str);
+int execute_command(const char* command, const char* args);
 
 #endif

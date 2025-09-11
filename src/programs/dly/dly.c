@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "programs.h"
 #include "timer.h"
 
 void dly(const char* args) {

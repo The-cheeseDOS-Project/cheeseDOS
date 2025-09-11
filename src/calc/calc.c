@@ -229,7 +229,7 @@ static void big32_divmod(const big32_t* a, const big32_t* b, big32_t* quotient, 
         return;
     }
 
-    big32_t current_dividend, temp_quotient, temp_remainder, divisor;
+    big32_t current_dividend, temp_remainder, divisor;
     big32_copy(a, &current_dividend);
     big32_copy(b, &divisor);
     current_dividend.sign = divisor.sign = 1;

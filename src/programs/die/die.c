@@ -16,7 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "programs.h"
 #include "vga.h"
 
 static unsigned int seed = 123456789;

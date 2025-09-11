@@ -18,7 +18,6 @@
 
 #include "vga.h"
 #include "version.h"
-#include "programs.h"
 
 void ver(const char* *unused) {
     (void)unused;
