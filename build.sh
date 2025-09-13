@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# TEMP BAND AID
+. ./config.conf
+
 HDD_SIZE="1024" # in bytes
 
 CC=gcc
@@ -345,7 +348,7 @@ run_kvm() {
     echo "Error: config.conf not found. Run ./configure.sh first."
     exit 1
   fi
-  
+
   if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
