@@ -31,6 +31,6 @@ void dmp(const char *unused) {
     for (uint32_t i = 0; i < 0xA0000; i++) {
         char hex[3];
         byte_to_hex(ram[i], hex);
-        qprint(hex);
+        bprint(hex);
     }
 }

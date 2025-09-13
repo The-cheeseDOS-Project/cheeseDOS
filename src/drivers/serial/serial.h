@@ -24,6 +24,6 @@
 void serial_putchar(char c);
 void sprint(const char* str);
 void serial_write(const char *message);
-void qprint(const char *fmt, ...);
+void bprint(const char *fmt, ...);
 
 #endif

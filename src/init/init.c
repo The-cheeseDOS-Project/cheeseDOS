@@ -34,9 +34,9 @@ uint32_t heap_ptr;
 void init() {
     char buf[16];
     
-    qprint("Loading cheeseDOS...\n");
+    bprint("Loading cheeseDOS...\n");
 
-    qprint("Setting Heap pointer...");
+    bprint("Setting Heap pointer...");
     heap_ptr = (uint32_t)&_end;
 
     set_text_color(COLOR_GREEN, COLOR_BLACK);
@@ -45,10 +45,10 @@ void init() {
 
     sprint(" \033[92mDone!\033[0m\n");
 
-    qprint("Loading ");
+    bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
-    qprint(buf);
-    qprint("B RAM Disk...");
+    bprint(buf);
+    bprint("B RAM Disk...");
     
     ramdisk_init();
     
@@ -58,7 +58,7 @@ void init() {
 
     sprint(" \033[92mDone!\033[0m\n");
 
-    qprint("Looking for IDE master... ");
+    bprint("Looking for IDE master... ");
     if (ide_detect()) {
         set_text_color(COLOR_GREEN, COLOR_BLACK);
         print(" Found!\n");
@@ -66,7 +66,7 @@ void init() {
 
         sprint(" \033[92mFound!\033[0m\n");
         
-        qprint("Loading IDE Drive...");
+        bprint("Loading IDE Drive...");
         
         if (ide_init()) {
             sprint(" \033[92mDone!\033[0m\n");
@@ -74,12 +74,12 @@ void init() {
             print(" Done!\n");
             set_text_color(COLOR_WHITE, COLOR_BLACK);
         } else {
-            qprint(" Failed!\n");
+            bprint(" Failed!\n");
         }
     } else {
-        qprint("Not Found!\n");
+        bprint("Not Found!\n");
     }
 
-    qprint("Loading Shell...");
+    bprint("Loading Shell...");
     shell_run();
 }

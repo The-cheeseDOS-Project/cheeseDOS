@@ -63,7 +63,7 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list ap) {
     return (int)i;
 }
 
-void qprint(const char *fmt, ...) {
+void bprint(const char *fmt, ...) {
     char buffer[1024];
     va_list args;
     va_start(args, fmt);
