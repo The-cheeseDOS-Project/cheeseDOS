@@ -16,110 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# CONFIGURATION --------------------------------------------------
-
-# `doas` works too
-SU="sudo"
-
-FLOPPY=cdos-1.44mb-floppy.img
-
 HDD_SIZE="1024" # in bytes
 
-# "BITS" Options:
-# 1. 32
-# 2. 64
-#
-BITS=32
+CC=gcc
+AS=as
+LD=ld
 
-# "MARCH" Options:
-#  1. i386 (default)
-#  2. i486
-#  3. i586
-#  4. i686
-#  5. pentium
-#  6. pentium-mmx
-#  7. pentiumpro
-#  8. pentium2
-#  9. pentium3
-# 10. pentium4
-# 11. prescott
-# 12. nocona
-# 13. core2
-# 14. nehalem
-# 15. westmere
-# 16. sandybridge
-# 17. ivybridge
-# 18. haswell
-# 19. broadwell
-# 20. skylake
-# 21. cannonlake
-# 22. icelake-client
-# 23. icelake-server
-# 24. tigerlake
-# 25. rocketlake
-# 26. alderlake
-# 27. sapphirerapids
-# 28. meteorlake
-# 29. emeraldrapids
-# 30. graniterapids-d
-# 31. arrowlake
-# 32. lunarlake
-# 33. pantherlake
-# 34. siliconrapids
-# 35. clearlake
-#
-MARCH=i386
-
-# "OPT" Options:
-# 1. 0 (none)
-# 2. 1
-# 3. 2
-# 4. 3
-# 5. fast (use this when we somehow stop getting all that overlapping .data and .text or whatever junk)
-# 6. s (size) (default, because it doesn't use a lot of memory)
-# 7. g (debug)
-# 8. z (more small) (experimental)
-#
-OPT=s
-
-# "GDBINFO" Options:
-# 1. 0 (none) (default)
-# 2. 1
-# 3. 2
-# 4. 3
-#
-GDBINFO=0
-
-# "STRIP" Options:
-# 1. true (default)
-# 2. false
-#
-STRIP=true
-
-# Version of C to use
-#
-# "CVER" Options:
-# 1. c99
-# 2. c11
-# 3. c18
-# 4. c23
-#
 CVER=c99
 
-# Flags for gcc
-#
-# Used flags with meanings:
-# 1. "-freestanding" - Use freestanding environment
-# 2. "-Wall" - Enable all warnings
-# 3. "-Wextra" - Enable extra warnings
-# 4. "-fno-stack-protector" - Disable stack protector
-# 5. "-fno-builtin" - Disable built-in functions
-# 6. "-nostdinc" - Disable standard include paths
-# 7. "-std=$CVER" - Version of C to use
-# 8. "-pedantic" - Disable GNU extensions (disable if you are using any gnuXX C version)
-# 9. "-fno-common" - Disable common symbols
-# 10. "-pedantic-errors" - Treat all warnings as errors
-#
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
@@ -131,24 +35,10 @@ FLAGS="-ffreestanding \
        -fno-common \
        -pedantic-errors"
 
-# Flags for ld:
-#
-# Used flags with meanings:
-# 1. "-m" - Specify the target architecture
-# 2. "elf_i386" - Specify the output format
-# 3. "-z" - Set linker options
-# 4. "noexecstack" - Mark the stack as non-executable
-#
 LDFLAGS="-m \
          elf_i386 \
          -z \
          noexecstack"
-
-# END OF CONFIGURATION --------------------------------------------------
-
-CC=gcc
-AS=as
-LD=ld
 
 HDD="build/hdd.img"
 
@@ -262,6 +152,13 @@ build_asm_object() {
 
 all() {
   start=$(date +%s)
+
+  if [ -f config.conf ]; then
+    . ./config.conf
+  else
+    echo "Error: config.conf not found. Run ./configure.sh first."
+    exit 1
+  fi
 
   echo "Building cheeseDOS $(cat src/version/version.txt)..."
 
@@ -411,6 +308,13 @@ CPU=486
 CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 run() {
+  if [ -f config.conf ]; then
+    . ./config.conf
+  else
+    echo "Error: config.conf not found. Run ./configure.sh first."
+    exit 1
+  fi
+
   if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
@@ -435,6 +339,13 @@ run() {
 }
 
 run_kvm() {
+  if [ -f config.conf ]; then
+    . ./config.conf
+  else
+    echo "Error: config.conf not found. Run ./configure.sh first."
+    exit 1
+  fi
+  
   if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
@@ -466,11 +377,18 @@ clean() {
   echo " Done!"
 }
 
+distclean() {
+  printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
+    rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
+  echo " Done!"
+}
+
 case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
   run-kvm) run_kvm ;;
   clean) clean ;;
-  *) echo "Usage: $0 {all|run|run-kvm|clean}" ; exit 1 ;;
+  distclean) distclean ;;
+  *) echo "Usage: $0 {all|run|run-kvm|clean|distclean}" ; exit 1 ;;
 esac

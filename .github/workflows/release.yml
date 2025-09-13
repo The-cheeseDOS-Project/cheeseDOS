@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cheeseDOS-img
-          path: cdos-1.44mb-floppy.img
+          path: cheeseDOS.img
       
       - name: Read version tag
         id: readtag
@@ -85,4 +85,4 @@ jobs:
         run: |
           TAG="${{ steps.readtag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
-          gh release create "$TAG" cdos-1.44mb-floppy.img --title "$TITLE" --notes-file .github/release.md
+          gh release create "$TAG" cheeseDOS.img --title "$TITLE" --notes-file .github/release.md
