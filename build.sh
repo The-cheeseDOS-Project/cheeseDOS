@@ -375,6 +375,7 @@ all() {
   if [ "$STRIP" = "true" ]; then
     printf "Stripping debug symbols..."
      strip -s "$OUTPUT"
+     strip -s "$BUILD_DIR/boot.elf"
     echo " Done!"
   else
     echo "Keeping debug symbols (STRIP=false)"
