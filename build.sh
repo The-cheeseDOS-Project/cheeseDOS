@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # cheeseDOS - My x86 DOS
 # Copyright (C) 2025  Connor Thomson
@@ -159,32 +159,28 @@ OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  local required_tools=(
-    "gcc"
-    "objcopy"
-    "as"
-    "ld"
-    "strip"
-    "truncate"
-  )
+  required_tools="gcc objcopy as ld strip truncate"
+  missing_tools=""
 
-  local missing_tools=()
-
-  for tool in "${required_tools[@]}"; do
-    echo -n "Checking for $tool..."
-    if command -v "$tool" &> /dev/null; then
+  for tool in $required_tools; do
+    printf "Checking for %s..." "$tool"
+    if command -v "$tool" > /dev/null 2>&1; then
       echo " Found!"
     else
       echo " Not Found!"
-      missing_tools+=("$tool")
+      if [ -z "$missing_tools" ]; then
+        missing_tools="$tool"
+      else
+        missing_tools="$missing_tools $tool"
+      fi
     fi
   done
 
-  if [ "${#missing_tools[@]}" -ne 0 ]; then
+  if [ -n "$missing_tools" ]; then
     echo
     echo "SOME TOOLS ARE NOT FOUND!"
-    local i=1
-    for tool in "${missing_tools[@]}"; do
+    i=1
+    for tool in $missing_tools; do
       echo "$i. $tool"
       i=$((i+1))
     done
@@ -193,10 +189,10 @@ check_dependencies() {
 }
 
 get_includes() {
-  local includes=""
-  while IFS= read -r -d '' dir; do
+  includes=""
+  for dir in $(find "$SRC_DIR" -type d | sort); do
     includes="$includes -I$dir"
-  done < <(find "$SRC_DIR" -type d -print0)
+  done
   echo "$includes"
 }
 
@@ -211,27 +207,39 @@ get_asm_files() {
 }
 
 get_object_files() {
-  local objs=()
+  objs=""
   
-  while IFS= read -r src; do
-    if [[ -n "$src" ]]; then
-      local basename=$(basename "$src" .c)
-      local obj="$BUILD_DIR/${basename}.o"
-      objs+=("$obj")
+  for src in $(get_source_files); do
+    if [ -n "$src" ]; then
+      basename_val=$(basename "$src" .c)
+      obj="$BUILD_DIR/${basename_val}.o"
+      if [ -z "$objs" ]; then
+        objs="$obj"
+      else
+        objs="$objs $obj"
+      fi
     fi
-  done < <(get_source_files)
+  done
   
-  while IFS= read -r src; do
-    if [[ -n "$src" ]]; then
-      local basename=$(basename "$src" .S)
-      local obj="$BUILD_DIR/${basename}.o"
-      objs+=("$obj")
+  for src in $(get_asm_files); do
+    if [ -n "$src" ]; then
+      basename_val=$(basename "$src" .S)
+      obj="$BUILD_DIR/${basename_val}.o"
+      if [ -z "$objs" ]; then
+        objs="$obj"
+      else
+        objs="$objs $obj"
+      fi
     fi
-  done < <(get_asm_files)
+  done
   
-  objs+=("$BUILD_DIR/version.o")
+  if [ -z "$objs" ]; then
+    objs="$BUILD_DIR/version.o"
+  else
+    objs="$objs $BUILD_DIR/version.o"
+  fi
   
-  printf '%s\n' "${objs[@]}"
+  echo "$objs"
 }
 
 CFLAGS="-m$BITS \
@@ -252,10 +260,10 @@ build_asm_object() {
   $AS $ASMFLAGS -o "$2" "$1"
 }
 
-function all {  
-  start=$(date +%s%N)
+all() {
+  start=$(date +%s)
 
-  echo "Building cheeseDOS $(<src/version/version.txt)..."
+  echo "Building cheeseDOS $(cat src/version/version.txt)..."
 
   echo
 
@@ -263,116 +271,137 @@ function all {
 
   clean
   
-  echo -n "Making directory: $BUILD_DIR..."
-  mkdir -p "$BUILD_DIR"
+  printf "Making directory: %s..." "$BUILD_DIR"
+    mkdir -p "$BUILD_DIR"
   echo " Done!"
 
-  build_jobs=()
+  build_pids=""
   
   build_c() {
-    local src="$1"
-    local obj="$2"
+    src="$1"
+    obj="$2"
 
     echo "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
-  {
-    output=$(mktemp)
-    build_c_object "$src" "$obj" >"$output" 2>&1
-    cat "$output"
-    grep -q "error:" "$output" && exit 1
-    rm -f "$output"
-  } &
-    build_jobs+=($!)
+    {
+      output=$(mktemp)
+      if build_c_object "$src" "$obj" > "$output" 2>&1; then
+        cat "$output"
+        rm -f "$output"
+      else
+        cat "$output"
+        rm -f "$output"
+        exit 1
+      fi
+    } &
+    if [ -z "$build_pids" ]; then
+      build_pids="$!"
+    else
+      build_pids="$build_pids $!"
+    fi
   }
   
   build_asm() {
-    local src="$1"
-    local obj="$2"
+    src="$1"
+    obj="$2"
 
     echo "$AS $ASMFLAGS -o $obj $src" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
-      build_asm_object "$src" "$obj" >"$output" 2>&1 || { cat "$output"; exit 1; }
-      rm -f "$output"
+      if build_asm_object "$src" "$obj" > "$output" 2>&1; then
+        rm -f "$output"
+      else
+        cat "$output"
+        rm -f "$output"
+        exit 1
+      fi
     } &
-    build_jobs+=($!)
+    if [ -z "$build_pids" ]; then
+      build_pids="$!"
+    else
+      build_pids="$build_pids $!"
+    fi
   }
 
-  while IFS= read -r src; do
-    if [[ -n "$src" ]]; then
-      local basename=$(basename "$src" .c)
-      local obj="$BUILD_DIR/${basename}.o"
+  for src in $(get_source_files); do
+    if [ -n "$src" ]; then
+      basename_val=$(basename "$src" .c)
+      obj="$BUILD_DIR/${basename_val}.o"
       build_c "$src" "$obj"
     fi
-  done < <(get_source_files)
+  done
   
-  while IFS= read -r src; do
-    if [[ -n "$src" ]]; then
-      local basename=$(basename "$src" .S)
-      local obj="$BUILD_DIR/${basename}.o"
+  for src in $(get_asm_files); do
+    if [ -n "$src" ]; then
+      basename_val=$(basename "$src" .S)
+      obj="$BUILD_DIR/${basename_val}.o"
       build_asm "$src" "$obj"
     fi
-  done < <(get_asm_files)
-
-  for job in "${build_jobs[@]}"; do
-    wait "$job"
   done
 
-  echo -n "Building version.o..."
+  for pid in $build_pids; do
+    wait "$pid"
+  done
+
+  printf "Building version.o..."
     objcopy -I binary -O elf$BITS-i386 -B i386 \
       "$SRC_DIR/version/version.txt" "$BUILD_DIR/version.o"
   echo " Done!"
 
-  echo -n "Assembling bootloader..."
+  printf "Assembling bootloader..."
     $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
   echo " Done!"
   
-  echo -n "Linking bootloader..."
+  printf "Linking bootloader..."
     $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
   echo " Done!"
       
-  echo -n "Converting boot.elf into boot.bin..."
+  printf "Converting boot.elf into boot.bin..."
     objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
   echo " Done!"
 
-  mapfile -t OBJS < <(get_object_files)
+  OBJS=$(get_object_files)
   
-  echo -n "Linking cheeseDOS with $(printf '%s ' "${OBJS[@]}" | wc -w) object files..."
-    $LD $LDFLAGS -e init -z max-page-size=512 -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" "${OBJS[@]}"
+  obj_count=0
+  for obj in $OBJS; do
+    obj_count=$((obj_count + 1))
+  done
+  
+  printf "Linking cheeseDOS with %d object files..." "$obj_count"
+    $LD $LDFLAGS -e init -z max-page-size=512 -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
   echo " Done!"
 
-  if [[ "$STRIP" == "true" ]]; then
-    echo -n "Stripping debug symbols..."
-      strip -s "$OUTPUT"
+  if [ "$STRIP" = "true" ]; then
+    printf "Stripping debug symbols..."
+     strip -s "$OUTPUT"
     echo " Done!"
   else
     echo "Keeping debug symbols (STRIP=false)"
   fi
     
-  echo -n "Building $FLOPPY..."
+  printf "Building %s..." "$FLOPPY"
     cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
   echo " Done!"
 
-  echo -n "Pad $FLOPPY from $(du -BK "$FLOPPY" | cut -f1) to 1.44MB..."
+  printf "Pad %s from %s to 1.44MB..." "$FLOPPY" "$(du -BK "$FLOPPY" | cut -f1)"
     truncate "$FLOPPY" -s '1474560'
   echo " Done!"
 
   echo
 
-  end=$(date +%s%N)
-  elapsed_ns=$((end - start))
-  elapsed_sec=$(printf "%d.%03d\n" $((elapsed_ns / 1000000000)) $(((elapsed_ns / 1000000) % 1000)))
+  end=$(date +%s)
+  elapsed_sec=$((end - start))
 
   echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
 
   exit 0
 }
 
-function make_hdd_image {
-  echo -n "Creating ${HDD_SIZE}B disk image to $HDD..."
-  dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
-  > /dev/null 2>&1
+make_hdd_image() {
+  printf "Creating %sB disk image to %s..." "$HDD_SIZE" "$HDD"
+    dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
+      > /dev/null 2>&1
   echo " Done!"
 }
 
@@ -380,59 +409,59 @@ MEM=1M
 CPU=486
 CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
-function run {  
-  if [[ ! -f "$FLOPPY" ]]; then
+run() {
+  if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
   fi
   
-  if [[ ! -f "$HDD" ]]; then
+  if [ ! -f "$HDD" ]; then
     make_hdd_image
   fi
 
   qemu-system-i386 \
-  -audiodev pa,id=snd0 \
-  -machine pcspk-audiodev=snd0 \
-  -serial stdio \
-  -drive file="$FLOPPY",format=raw,if=floppy \
-  -m "$MEM" \
-  -cpu "$CPU","$CPU_FLAGS" \
-  -vga std \
-  -display gtk \
-  -rtc base=localtime \
-  -nodefaults \
-  -drive file="$HDD",format=raw,if=ide,media=disk
+    -audiodev pa,id=snd0 \
+    -machine pcspk-audiodev=snd0 \
+    -serial stdio \
+    -drive file="$FLOPPY",format=raw,if=floppy \
+    -m "$MEM" \
+    -cpu "$CPU","$CPU_FLAGS" \
+    -vga std \
+    -display gtk \
+    -rtc base=localtime \
+    -nodefaults \
+    -drive file="$HDD",format=raw,if=ide,media=disk
 }
 
-function run-kvm {
-  if [[ ! -f "$FLOPPY" ]]; then
+run_kvm() {
+  if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
   fi
   
-  if [[ ! -f "$HDD" ]]; then
+  if [ ! -f "$HDD" ]; then
     make_hdd_image
   fi
 
   $SU \
   qemu-system-i386 \
-  -audiodev pa,id=snd0 \
-  -machine pcspk-audiodev=snd0 \
-  -serial stdio \
-  -drive file="$FLOPPY",format=raw,if=floppy \
-  -m "$MEM" \
-  -cpu "$CPU","$CPU_FLAGS" \
-  -vga std \
-  -display gtk \
-  -rtc base=localtime \
-  -nodefaults \
-  -drive file="$HDD",format=raw,if=ide,media=disk \
-  -enable-kvm
+    -audiodev pa,id=snd0 \
+    -machine pcspk-audiodev=snd0 \
+    -serial stdio \
+    -drive file="$FLOPPY",format=raw,if=floppy \
+    -m "$MEM" \
+    -cpu "$CPU","$CPU_FLAGS" \
+    -vga std \
+    -display gtk \
+    -rtc base=localtime \
+    -nodefaults \
+    -drive file="$HDD",format=raw,if=ide,media=disk \
+    -enable-kvm
 }
 
-function clean {
-  echo -n "Cleaning up: $BUILD_DIR $FLOPPY $ISO_ROOT..."
-  rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
+clean() {
+  printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
+    rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
   echo " Done!"
 }
 
@@ -440,7 +469,7 @@ case "$1" in
   "") all ;;
   all) all ;;
   run) run ;;
-  run-kvm) run-kvm ;;
+  run-kvm) run_kvm ;;
   clean) clean ;;
   *) echo "Usage: $0 {all|run|run-kvm|clean}" ; exit 1 ;;
 esac
