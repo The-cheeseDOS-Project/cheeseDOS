@@ -61,6 +61,11 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure cheeseDOS
+        run: |
+          chmod +x ./configure.sh
+          ./configure.sh
           
       - name: Build cheeseDOS
         run: |
