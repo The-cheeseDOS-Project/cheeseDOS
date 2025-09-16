@@ -16,8 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# TEMP BAND AID
-. ./config.conf
+if [ -f config.conf ]; then
+    . ./config.conf
+  else
+      echo "Error: config.conf not found. Run ./configure.sh first."
+      exit 1
+fi
 
 HDD_SIZE="1024" # in bytes
 
@@ -154,15 +158,6 @@ build_asm_object() {
 }
 
 all() {
-  start=$(date +%s)
-
-  if [ -f config.conf ]; then
-    . ./config.conf
-  else
-    echo "Error: config.conf not found. Run ./configure.sh first."
-    exit 1
-  fi
-
   echo "Building cheeseDOS $(cat src/version/version.txt)..."
 
   echo
@@ -288,14 +283,7 @@ all() {
   printf "Pad %s from %s to 1.44MB..." "$FLOPPY" "$(du -BK "$FLOPPY" | cut -f1)"
     truncate "$FLOPPY" -s '1474560'
   echo " Done!"
-
-  echo
-
-  end=$(date +%s)
-  elapsed_sec=$((end - start))
-
-  echo "Build completed, made floppy at $FLOPPY in $elapsed_sec seconds."
-
+  
   exit 0
 }
 
@@ -342,13 +330,6 @@ run() {
 }
 
 run_kvm() {
-  if [ -f config.conf ]; then
-    . ./config.conf
-  else
-    echo "Error: config.conf not found. Run ./configure.sh first."
-    exit 1
-  fi
-
   if [ ! -f "$FLOPPY" ]; then
     echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
     exit 1
