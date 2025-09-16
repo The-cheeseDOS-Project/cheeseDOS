@@ -49,7 +49,7 @@ jobs:
       
       - name: Generate timestamp
         run: |
-          sed -i 's/#define VERSION ".*"/#define VERSION "a'$(date +"%m%d%y%H%M")'"/' src/version/version.txt
+          sed -i 's/#define VERSION ".*"/#define VERSION "a'$(date +"%m%d%y%H%M")'"/' src/version/version.h
 
       - name: Commit version.h
         run: |
