@@ -1,5 +1,5 @@
 # cheeseDOS - My x86 DOS
-# Copyright (C) 2025  Connor Thomson
+# Copyright (C) 2025  Connor Thomson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -8,11 +8,11 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 name: Build and Release cheeseDOS
 
@@ -32,10 +32,10 @@ permissions:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
-   
+    
     env:
       TZ: America/Los_Angeles
-   
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -48,9 +48,11 @@ jobs:
           sudo timedatectl set-ntp true
       
       - name: Generate timestamp
+        id: generate_tag
         run: |
-          $TAG="a$(date +"%m%d%y%H%M")"
-          sed -i 's/#define VERSION ".*"/#define VERSION "$TAG"/' src/version/version.h
+          TAG="a$(date +"%m%d%y%H%M")"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          sed -i "s/#define VERSION \".*\"/#define VERSION \"$TAG\"/" src/version/version.h
 
       - name: Commit version.h
         run: |
@@ -71,23 +73,16 @@ jobs:
         run: |
           chmod +x ./build.sh
           ./build.sh
-            
+          
       - name: Upload IMG artifact
         uses: actions/upload-artifact@v4
         with:
           name: cheeseDOS-img
           path: cheeseDOS.img
       
-      - name: Read version tag
-        id: readtag
-        run: |
-          TAG=$(cat src/version/version.txt)
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-      
       - name: Create GitHub Release and Upload artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ steps.readtag.outputs.tag }}"
           TITLE="cheeseDOS alpha (build: $TAG)"
           gh release create "$TAG" cheeseDOS.img --title "$TITLE" --notes-file .github/release.md
