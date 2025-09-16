@@ -49,15 +49,14 @@ jobs:
       
       - name: Generate timestamp
         run: |
-          DATE=$(date +"%m%d%y%H%M")
-          echo -n "a$DATE" > src/version/version.txt
-      
-      - name: Commit version.txt
+          sed -i 's/#define VERSION ".*"/#define VERSION "a'$(date +"%m%d%y%H%M")'"/' src/version/version.txt
+
+      - name: Commit version.h
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add src/version/version.txt
-          git commit -m "Update version.txt to $(cat src/version/version.txt)"
+          git add src/version/version.h
+          git commit -m "Update version.h to $(cat src/version/version.h)"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

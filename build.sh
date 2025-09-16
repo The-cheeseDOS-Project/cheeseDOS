@@ -26,9 +26,6 @@ fi
 HDD_SIZE="1024" # in bytes
 
 CC=gcc
-AS=as
-LD=ld
-
 CVER=c99
 
 FLAGS="-ffreestanding \
@@ -42,10 +39,19 @@ FLAGS="-ffreestanding \
        -fno-common \
        -pedantic-errors"
 
-LDFLAGS="-m \
-         elf_i386 \
+LDFLAGS="-m$BITS \
          -z \
-         noexecstack"
+         noexecstack \
+         -Wl,--strip-all"
+
+TOOL_FLAGS="-march=native
+            -mtune=native
+            -Ofast
+            -Wall
+            -Wextra
+            -std=$CVER
+            -pedantic
+            -pedantic-errors"
 
 HDD="build/hdd.img"
 
@@ -56,7 +62,7 @@ OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc objcopy as ld strip truncate"
+  required_tools="gcc"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -130,12 +136,6 @@ get_object_files() {
     fi
   done
   
-  if [ -z "$objs" ]; then
-    objs="$BUILD_DIR/version.o"
-  else
-    objs="$objs $BUILD_DIR/version.o"
-  fi
-  
   echo "$objs"
 }
 
@@ -147,14 +147,14 @@ CFLAGS="-m$BITS \
         $FLAGS \
         $INCLUDES"
 
-ASMFLAGS="--$BITS $INCLUDES"
+ASMFLAGS="-m$BITS $INCLUDES"
 
 build_c_object() {
   $CC $CFLAGS -c "$1" -o "$2"
 }
 
 build_asm_object() {
-  $AS $ASMFLAGS -o "$2" "$1"
+  $CC $ASMFLAGS -c "$1" -o "$2"
 }
 
 all() {
@@ -165,9 +165,13 @@ all() {
   check_dependencies
 
   clean
-  
+
   printf "Making directory: %s..." "$BUILD_DIR"
     mkdir -p "$BUILD_DIR"
+  echo " Done!"
+
+  printf "Building resize..."
+    $CC tools/resize/resize.c -o build/resize $TOOL_FLAGS
   echo " Done!"
 
   build_pids=""
@@ -200,7 +204,7 @@ all() {
     src="$1"
     obj="$2"
 
-    echo "$AS $ASMFLAGS -o $obj $src" | awk '{$1=$1; print}'
+    echo "$CC $ASMFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
@@ -239,23 +243,14 @@ all() {
     wait "$pid"
   done
 
-  printf "Building version.o..."
-    objcopy -I binary -O elf$BITS-i386 -B i386 \
-      "$SRC_DIR/version/version.txt" "$BUILD_DIR/version.o"
-  echo " Done!"
-
   printf "Assembling bootloader..."
-    $AS --32 -I "$BOOT_DIR" -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
+    $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
   echo " Done!"
   
   printf "Linking bootloader..."
-    $LD $LDFLAGS -T "$BOOT_DIR/boot.ld" -o "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.o"
+    $CC $LDFLAGS -Wl,-T,"$BOOT_DIR/boot.ld" -Wl,--oformat=binary -nostdlib -o "$BUILD_DIR/boot.bin" "$BUILD_DIR/boot.o"
   echo " Done!"
       
-  printf "Converting boot.elf into boot.bin..."
-    objcopy -O binary -j .text "$BUILD_DIR/boot.elf" "$BUILD_DIR/boot.bin"
-  echo " Done!"
-
   OBJS=$(get_object_files)
   
   obj_count=0
@@ -264,26 +259,17 @@ all() {
   done
   
   printf "Linking cheeseDOS with %d object files..." "$obj_count"
-    $LD $LDFLAGS -e init -z max-page-size=512 -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
+    $CC $LDFLAGS -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -nostdlib -o "$OUTPUT" $OBJS
   echo " Done!"
 
-  if [ "$STRIP" = "true" ]; then
-    printf "Stripping debug symbols..."
-     strip -s "$OUTPUT"
-     strip -s "$BUILD_DIR/boot.elf"
-    echo " Done!"
-  else
-    echo "Keeping debug symbols (STRIP=false)"
-  fi
-    
   printf "Building %s..." "$FLOPPY"
     cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
   echo " Done!"
 
-  printf "Pad %s from %s to 1.44MB..." "$FLOPPY" "$(du -BK "$FLOPPY" | cut -f1)"
-    truncate "$FLOPPY" -s '1474560'
+  printf "Padding %s..." "$FLOPPY"
+    ./build/resize
   echo " Done!"
-  
+
   exit 0
 }
 

@@ -19,8 +19,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-extern const char _binary_src_version_version_txt_start[];
-extern const char _binary_src_version_version_txt_end[];
-extern const int  _binary_src_version_version_txt_size;
+#define VERSION "1.0.0"
 
 #endif

@@ -22,6 +22,6 @@
 void ver(const char* *unused) {
     (void)unused;
     print("cheeseDOS version ");
-    print(_binary_src_version_version_txt_start);
+    print(VERSION);
     print("\n");
 }
