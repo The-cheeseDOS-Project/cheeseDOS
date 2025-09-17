@@ -52,7 +52,8 @@ TOOL_FLAGS="-march=native
             -std=$CVER
             -pedantic
             -pedantic-errors
-            -D_POSIX_C_SOURCE=200112L"
+            -D_POSIX_C_SOURCE=200112L
+            -Wl,--strip-all"
 
 HDD="build/hdd.img"
 

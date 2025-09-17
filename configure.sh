@@ -19,17 +19,12 @@
 CONFIG=config.conf
 
 VALID_BITS="32 64"
-VALID_MARCH="i386 i486 i586 i686 pentium pentium-mmx pentiumpro pentium2 pentium3 pentium4 prescott nocona core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake cannonlake icelake-client icelake-server tigerlake rocketlake alderlake sapphirerapids meteorlake emeraldrapids graniterapids-d arrowlake lunarlake pantherlake siliconrapids clearlake"
-VALID_OPT="0 1 2 3 fast s g z"
-VALID_GDBINFO="0 1 2 3"
-VALID_STRIP="true false"
+VALID_OPT="0 1 2 3 fast s"
 VALID_SUDO="sudo doas"
 
 BITS=32
 MARCH=i386
 OPT=s
-GDBINFO=0
-STRIP=true
 FLOPPY=cheeseDOS.img
 SU=sudo
 
@@ -41,19 +36,10 @@ for arg in "$@"; do
       ;;
     --march=*)
       MARCH="${arg#*=}"
-      echo "$VALID_MARCH" | grep -qw "$MARCH" || { echo "Invalid --march=$MARCH"; exit 1; }
+      echo "$VALID_MARCH" | grep -qw "$MARCH" }
       ;;
     --optimize=*)
       OPT="${arg#*=}"
-      echo "$VALID_OPT" | grep -qw "$OPT" || { echo "Invalid --optimize=$OPT"; exit 1; }
-      ;;
-    --debug-info=*)
-      GDBINFO="${arg#*=}"
-      echo "$VALID_GDBINFO" | grep -qw "$GDBINFO" || { echo "Invalid --debug-info=$GDBINFO"; exit 1; }
-      ;;
-    --strip=*)
-      STRIP="${arg#*=}"
-      echo "$VALID_STRIP" | grep -qw "$STRIP" || { echo "Invalid --strip=$STRIP"; exit 1; }
       ;;
     --floppy=*)
       FLOPPY="${arg#*=}"
@@ -85,7 +71,5 @@ echo "Configured cheeseDOS with:"
 echo "  BITS=$BITS"
 echo "  MARCH=$MARCH"
 echo "  OPT=$OPT"
-echo "  GDBINFO=$GDBINFO"
-echo "  STRIP=$STRIP"
 echo "  FLOPPY=$FLOPPY"
 echo "  SUDO=$SU"
