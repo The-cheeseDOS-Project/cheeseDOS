@@ -158,7 +158,7 @@ build_asm_object() {
 }
 
 all() {
-  echo "Building cheeseDOS $(cat src/version/version.txt)..."
+  echo "Building cheeseDOS..."
 
   echo
 
