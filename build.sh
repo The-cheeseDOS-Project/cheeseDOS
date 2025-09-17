@@ -44,14 +44,14 @@ LDFLAGS="-m$BITS \
          noexecstack \
          -Wl,--strip-all"
 
-TOOL_FLAGS="-march=native
-            -mtune=native
-            -Ofast
-            -Wall
-            -Wextra
-            -std=$CVER
-            -pedantic
-            -pedantic-errors"
+#TOOL_FLAGS="-march=native
+#            -mtune=native
+#            -Ofast
+#            -Wall
+#            -Wextra
+#            -std=$CVER
+#            -pedantic
+#            -pedantic-errors"
 
 HDD="build/hdd.img"
 
@@ -62,7 +62,7 @@ OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc"
+  required_tools="gcc sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -170,10 +170,6 @@ all() {
     mkdir -p "$BUILD_DIR"
   echo " Done!"
 
-  printf "Building resize..."
-    $CC tools/resize/resize.c -o build/resize $TOOL_FLAGS
-  echo " Done!"
-
   build_pids=""
   
   build_c() {
@@ -267,7 +263,7 @@ all() {
   echo " Done!"
 
   printf "Padding %s..." "$FLOPPY"
-    ./build/resize
+    truncate -s 1474560 "$FLOPPY"
   echo " Done!"
 
   exit 0
