@@ -24,26 +24,13 @@
 #include "ide.h"
 #include "string.h"
 
-__attribute__((section(".text"))) uint8_t _init_start;
-
 extern uint8_t _init_start;
 extern uint8_t _end;
-
-uint32_t heap_ptr;
 
 void init() {
     char buf[16];
     
     bprint("Loading cheeseDOS...\n");
-
-    bprint("Setting Heap pointer...");
-    heap_ptr = (uint32_t)&_end;
-
-    set_text_color(COLOR_GREEN, COLOR_BLACK);
-    print(" Done!\n");
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-    sprint(" \033[92mDone!\033[0m\n");
 
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);

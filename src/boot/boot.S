@@ -146,13 +146,6 @@ load_segment:
     int 0x13
     jc err
 
-    mov ecx, [si + elf_seg_memsz]
-    mov edi, [si + elf_seg_filesz]
-    sub ecx, edi
-    xor al, al
-    cld
-    rep stosb
-
 skip_seg:
     pop cx
     add si, elf_seg_struct_size
@@ -229,7 +222,6 @@ print:
     ret
 
 err:
-    xor bx, bx
     mov ds, bx
     mov si, offset msg_failed
     call print

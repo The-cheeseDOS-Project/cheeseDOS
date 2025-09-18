@@ -41,7 +41,6 @@
 #include "clk.h"
 #include "clr.h"
 #include "cpy.h"
-#include "mem.h"
 #include "mus.h"
 #include "box.h"
 #include "svr.h"
@@ -92,7 +91,6 @@ static shell_command_t commands[] = {
     {"mus", mus},
     {"dve", dve},
     {"hey", hey},
-    {"mem", mem},
     {"box", box},
     {"add", add},
     {"snk", snk},
