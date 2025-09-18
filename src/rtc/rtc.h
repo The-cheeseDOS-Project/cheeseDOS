@@ -19,17 +19,15 @@
 #ifndef RTC_H
 #define RTC_H
 
-#include "stdint.h"
+struct rtc_time {
+    unsigned short year;
+    unsigned char  month;
+    unsigned char  day;
+    unsigned char  hour;
+    unsigned char  minute;
+    unsigned char  second;
+};
 
-typedef struct {
-    uint16_t year;
-    uint8_t  month;
-    uint8_t  day;
-    uint8_t  hour;
-    uint8_t  minute;
-    uint8_t  second;
-} rtc_time_t;
-
-void read_rtc_time(rtc_time_t* time);
+void read_rtc_time(struct rtc_time* time);
 
 #endif

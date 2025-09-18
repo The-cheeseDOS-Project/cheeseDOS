@@ -19,6 +19,7 @@
 #include "vga.h"
 #include "ide.h"
 #include "string.h"
+#include "stdint.h"
 
 static void size() {
     uint32_t sectors = (uint32_t)identify_buffer[60] | ((uint32_t)identify_buffer[61] << 16);

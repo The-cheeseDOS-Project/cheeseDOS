@@ -18,6 +18,7 @@
 
 #include "vga.h"
 #include "io.h"
+#include "stdint.h"
 
 void svr(const char* *unused) {
     (void)unused;

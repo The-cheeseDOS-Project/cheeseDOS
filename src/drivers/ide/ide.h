@@ -19,14 +19,7 @@
 #ifndef IDE_H
 #define IDE_H
 
-#include "stdint.h"
-
 #define IDE_DATA         0x1F0
-#define IDE_ERROR        0x1F1
-#define IDE_SECTOR_COUNT 0x1F2
-#define IDE_SECTOR_NUM   0x1F3
-#define IDE_CYL_LOW      0x1F4
-#define IDE_CYL_HIGH     0x1F5
 #define IDE_DRIVE_HEAD   0x1F6
 #define IDE_STATUS       0x1F7
 #define IDE_COMMAND      0x1F7
@@ -34,14 +27,12 @@
 #define IDE_CMD_IDENTIFY 0xEC
 #define IDE_DRIVE_MASTER 0xA0
 
-extern uint16_t identify_buffer[256];
+extern unsigned short identify_buffer[256];
 
-int  ide_init(void);             
-int  ide_detect(void);           
-void ide_load_identify(void);    
-
-void ide_wait_ready(void);       
-
+int ide_init(void);
+int ide_detect(void);
+void ide_load_identify(void);
+void ide_wait_ready(void);
 int ide_drive_present(void);
 
 #endif 

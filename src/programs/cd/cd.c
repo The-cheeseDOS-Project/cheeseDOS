@@ -19,6 +19,7 @@
 #include "ramdisk.h"
 #include "vga.h"
 #include "string.h"
+#include "stdint.h"
 
 extern uint32_t current_dir_inode_no;
 extern uint8_t default_text_fg_color;

@@ -19,43 +19,43 @@
 #ifndef RAMDISK_H
 #define RAMDISK_H
 
-#include "stdint.h"
-#include "stddef.h"
-
 #define RAMDISK_FILENAME_MAX 32
 #define RAMDISK_DATA_SIZE_BYTES 512
 
 #define ROOT_INODE 0
 
-typedef enum {
+enum ramdisk_inode_type {
     RAMDISK_INODE_TYPE_UNUSED = 0,
     RAMDISK_INODE_TYPE_FILE = 1,
     RAMDISK_INODE_TYPE_DIR = 2,
-} ramdisk_inode_type_t;
+};
 
-typedef struct {
-    uint32_t inode_no;
-    ramdisk_inode_type_t type;
-    uint32_t size;
-    uint32_t parent_inode_no;
+typedef struct ramdisk_inode ramdisk_inode_t;
+typedef void (*ramdisk_readdir_callback)(const char *name, unsigned int inode_no);
+
+struct ramdisk_inode {
+    unsigned int inode_no;
+    enum ramdisk_inode_type type;
+    unsigned int size;
+    unsigned int parent_inode_no;
     char name[RAMDISK_FILENAME_MAX];
-    uint8_t data[RAMDISK_DATA_SIZE_BYTES];
-} ramdisk_inode_t;
+    unsigned char data[RAMDISK_DATA_SIZE_BYTES];
+};
 
-extern uint32_t current_dir_inode_no;
+extern unsigned int current_dir_inode_no;
+
 void ramdisk_init();
-ramdisk_inode_t* ramdisk_iget(uint32_t inode_no);
-typedef void (*ramdisk_readdir_callback)(const char *name, uint32_t inode_no);
-void ramdisk_readdir(ramdisk_inode_t *dir, ramdisk_readdir_callback cb);
-int ramdisk_create_file(uint32_t parent_dir_inode_no, const char *filename);
-int ramdisk_create_dir(uint32_t parent_dir_inode_no, const char *dirname);
-int ramdisk_remove_file(uint32_t parent_dir_inode_no, const char *filename);
-int ramdisk_readfile(ramdisk_inode_t *file, uint32_t offset, uint32_t size, char *buffer);
-int ramdisk_writefile(ramdisk_inode_t *file, uint32_t offset, uint32_t len, const char *buffer);
-int ramdisk_get_path(uint32_t inode_no, char *buffer, size_t buffer_size);
-ramdisk_inode_t* ramdisk_iget_by_name(uint32_t parent_inode, const char *name);
-ramdisk_inode_t *ramdisk_find_inode_by_name(ramdisk_inode_t *dir, const char *name);
-void copy_inode(ramdisk_inode_t *src, ramdisk_inode_t *dst);
-int ramdisk_find_inode_by_path(const char *path, uint32_t *inode_no);
+struct ramdisk_inode* ramdisk_iget(unsigned int inode_no);
+void ramdisk_readdir(struct ramdisk_inode *dir, void (*cb)(const char *name, unsigned int inode_no));
+int ramdisk_create_file(unsigned int parent_dir_inode_no, const char *filename);
+int ramdisk_create_dir(unsigned int parent_dir_inode_no, const char *dirname);
+int ramdisk_remove_file(unsigned int parent_dir_inode_no, const char *filename);
+int ramdisk_readfile(struct ramdisk_inode *file, unsigned int offset, unsigned int size, char *buffer);
+int ramdisk_writefile(struct ramdisk_inode *file, unsigned int offset, unsigned int len, const char *buffer);
+int ramdisk_get_path(unsigned int inode_no, char *buffer, unsigned int buffer_size);
+struct ramdisk_inode* ramdisk_iget_by_name(unsigned int parent_inode, const char *name);
+struct ramdisk_inode* ramdisk_find_inode_by_name(struct ramdisk_inode *dir, const char *name);
+void copy_inode(struct ramdisk_inode *src, struct ramdisk_inode *dst);
+int ramdisk_find_inode_by_path(const char *path, unsigned int *inode_no);
 
 #endif

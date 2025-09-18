@@ -18,7 +18,6 @@
 
 #include "rtc.h"
 #include "io.h"
-#include "stdbool.h"
 
 #define CMOS_ADDRESS      0x70
 #define CMOS_DATA         0x71
@@ -35,23 +34,23 @@
 
 #define TIMEZONE_OFFSET   0
 
-static uint8_t get_rtc_register(uint8_t reg) {
+static unsigned char get_rtc_register(unsigned char reg) {
     outb(CMOS_ADDRESS, reg);
     return inb(CMOS_DATA);
 }
 
-static uint8_t bcd_to_bin(uint8_t bcd) {
+static unsigned char bcd_to_bin(unsigned char bcd) {
     return (bcd & 0x0F) + ((bcd >> 4) * 10);
 }
 
-void read_rtc_time(rtc_time_t* time) {
-    uint8_t second, minute, hour, day, month, year, century;
-    uint8_t status_b;
-    bool is_bcd, is_12h;
+void read_rtc_time(struct rtc_time* time) {
+    unsigned char second, minute, hour, day, month, year, century;
+    unsigned char status_b;
+    int is_bcd, is_12h;
 
     while (get_rtc_register(RTC_STATUS_A) & 0x80);
 
-    uint8_t s1, s2, m1, m2, h1, h2, d1, d2, mo1, mo2, y1, y2, c1, c2;
+    unsigned char s1, s2, m1, m2, h1, h2, d1, d2, mo1, mo2, y1, y2, c1, c2;
     do {
         s1  = get_rtc_register(RTC_SECONDS);
         m1  = get_rtc_register(RTC_MINUTES);

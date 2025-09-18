@@ -17,6 +17,7 @@
  */
 
 #include "timer.h"
+#include "stdint.h"
 
 void dly(const char* args) {
     uint32_t ms = 1000;

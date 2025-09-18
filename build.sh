@@ -178,9 +178,9 @@ check_headers() {
     done
 
     if [ "$found" -eq 1 ]; then
-      echo "Checking for \"<$hdr>\"... Found!"
+      echo "Checking for <$hdr>... Found!"
     else
-      echo "Checking for \"<$hdr>\"... Not Found!"
+      echo "Checking for <$hdr>... Not Found!"
       missing="$missing $hdr"
     fi
   done

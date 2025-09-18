@@ -18,6 +18,7 @@
 
 #include "vga.h"
 #include "string.h"
+#include "stdint.h"
 
 void clr(const char* args) {
     uint8_t new_fg_color = default_text_fg_color;

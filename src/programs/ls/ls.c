@@ -19,6 +19,7 @@
 #include "vga.h"
 #include "string.h"
 #include "ramdisk.h"
+#include "stdint.h"
 
 static void print_name_callback(const char *name, uint32_t inode) {
     if (kstrcmp(name, "/") == 0) return;

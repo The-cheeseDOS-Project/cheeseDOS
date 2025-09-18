@@ -23,6 +23,7 @@
 #include "beep.h"
 #include "string.h"
 #include "io.h"
+#include "stdbool.h"
 
 #define GAME_WIDTH 80
 #define GAME_HEIGHT 23

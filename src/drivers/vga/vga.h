@@ -15,12 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 #ifndef VGA_H
 #define VGA_H
-
-#include "stdint.h"
-#include "stdbool.h"
 
 #define COLOR_BLACK         0x0
 #define COLOR_DARKBLUE      0x1
@@ -41,25 +38,25 @@
 
 #define VGA_COLOR(fg, bg) ((bg << 4) | (fg & 0x0F))
 
-extern uint8_t default_text_fg_color;
-extern uint8_t default_text_bg_color;
+extern unsigned char default_text_fg_color;
+extern unsigned char default_text_bg_color;
 
 void vga_putchar(char c);
 void print(const char *str);
 void clear_screen(void);
 void backspace(void);
-void set_cursor_pos(uint16_t pos);
-uint16_t get_cursor(void);
-void set_text_color(uint8_t fg, uint8_t bg);
-uint8_t get_screen_width(void);
-uint8_t get_screen_height(void);
-void vga_clear_chars(uint16_t start_pos, uint16_t count);
+void set_cursor_pos(unsigned short pos);
+unsigned short get_cursor(void);
+void set_text_color(unsigned char fg, unsigned char bg);
+unsigned char get_screen_width(void);
+unsigned char get_screen_height(void);
+void vga_clear_chars(unsigned short start_pos, unsigned short count);
 void putchar(char ch);
-void vga_set_cursor(uint8_t row, uint8_t col);
-void vga_get_cursor(uint8_t *row, uint8_t *col);
-void vga_move_cursor(uint8_t row, uint8_t col);
-void vga_hide_cursor(bool hide);
-void print_uint(uint32_t num);
-void vga_disable_scroll(bool disable);
+void vga_set_cursor(unsigned char row, unsigned char col);
+void vga_get_cursor(unsigned char *row, unsigned char *col);
+void vga_move_cursor(unsigned char row, unsigned char col);
+void vga_hide_cursor(int hide);
+void print_uint(unsigned int num);
+void vga_disable_scroll(int disable);
 
 #endif

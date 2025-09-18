@@ -18,6 +18,7 @@
 
 #include "vga.h"
 #include "ramdisk.h"
+#include "stdint.h"
 
 void bit(const char* args) {
     if (!args || *args == '\0') {

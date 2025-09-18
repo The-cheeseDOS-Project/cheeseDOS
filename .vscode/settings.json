@@ -5,6 +5,9 @@
         "*.sh": "shellscript",
         "*.md": "markdown",
         "*.S": "assembly",
-        "*.ld": "linkerscript"
+        "*.ld": "linkerscript",
+        "compare": "c",
+        "cstdint": "c",
+        "chrono": "c"
     }
 }

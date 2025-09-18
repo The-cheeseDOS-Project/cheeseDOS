@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "stdint.h"
-
 void timer_init(void);
-uint32_t timer_millis(void);
-void delay(uint32_t ms);
+unsigned int timer_millis(void);
+void delay(unsigned int ms);
 
 #endif

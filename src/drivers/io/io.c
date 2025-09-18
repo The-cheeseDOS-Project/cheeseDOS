@@ -16,12 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INIT_H
-#define INIT_H
+#include "io.h"
 
-#include "stdint.h"
+void outb(unsigned short port, unsigned char val) {
+    __asm__ __volatile__("outb %0, %1" : : "a"(val), "Nd"(port));
+}
 
-extern uint32_t heap_ptr;
-extern uint8_t _init_start;
+unsigned char inb(unsigned short port) {
+    unsigned char ret;
+    __asm__ __volatile__("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
 
-#endif
+unsigned short inw(unsigned short port) {
+    unsigned short ret;
+    __asm__ __volatile__("inw %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+
+void outw(unsigned short port, unsigned short val) {
+    __asm__ __volatile__("outw %0, %1" : : "a"(val), "Nd"(port));
+}

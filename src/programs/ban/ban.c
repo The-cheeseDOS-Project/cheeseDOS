@@ -20,6 +20,7 @@
 #include "string.h"
 #include "timer.h"
 #include "io.h"
+#include "stdint.h"
 
 void ban(const char *unused) {
     (void)unused;

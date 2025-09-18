@@ -36,7 +36,6 @@ static bool vga_cursor_hidden = false;
 static uint8_t saved_cursor_start = 0x00;
 static uint8_t saved_cursor_end = 0x0F;
 
-/* default text colors (declared extern in vga.h) */
 uint8_t default_text_fg_color = COLOR_WHITE;
 uint8_t default_text_bg_color = COLOR_BLACK;
 
@@ -53,7 +52,7 @@ void set_cursor(uint16_t position) {
     outb(0x3D4, 0x0E); outb(0x3D5, (position >> 8) & 0xFF);
 }
 
-void vga_hide_cursor(bool hide) {
+void vga_hide_cursor(int hide) {
     if (hide) {
         if (vga_cursor_hidden) return;
         outb(0x3D4, 0x0A);
@@ -200,6 +199,6 @@ void print_uint(uint32_t num) {
     while (i--) vga_putchar(buf[i]);
 }
 
-void vga_disable_scroll(bool disable) {
+void vga_disable_scroll(int disable) {
     vga_scrolling_enabled = !disable;
 }

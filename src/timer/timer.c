@@ -18,6 +18,7 @@
 
 #include "timer.h"
 #include "io.h"
+#include "stdint.h"
 
 #define PIT_CMD  0x43
 #define PIT_CH0  0x40

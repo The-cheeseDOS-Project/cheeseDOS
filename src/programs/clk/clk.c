@@ -18,10 +18,11 @@
 
 #include "rtc.h"
 #include "vga.h"
+#include "stdint.h"
 
 void clk(const char* *u) {
     (void)u;
-    rtc_time_t current_time;
+    struct rtc_time current_time;
     read_rtc_time(&current_time);
     if (current_time.month < 10) vga_putchar('0');
     print_uint(current_time.month);
