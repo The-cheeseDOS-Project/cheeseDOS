@@ -12,12 +12,12 @@ Here's how to get cheeseDOS up and running on your computer or on QEMU
 > If you have any problems, please open an issue, you **WILL** get help!
 
 ## Prerequisites
-You will need `gcc`, `git`, and standared UNIX utilities.
+You will need `gcc`, `git`, and standard UNIX utilities.
 
 ## Cloning
 You will need to get the latest version of cheeseDOS: 
 ```bash
-git clone https://github.com/The-cheeseDOS-Project/cheeseDOS.git && \
+git clone --depth=1 https://github.com/The-cheeseDOS-Project/cheeseDOS.git && \
 cd cheeseDOS
 ```
 
