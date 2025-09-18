@@ -20,4 +20,4 @@ Refer to [this](./writing.md).
 
 ## Building from source
 
-For instructions on building it from source, refer to [this](./build-and-run.md).
+For instructions on building it from source, refer to [this](./build.md).
