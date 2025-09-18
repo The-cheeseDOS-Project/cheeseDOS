@@ -35,14 +35,12 @@ by itself and that will use the default options, but you can use diffrent option
 
 ### Configure flags
 
-Here are all the configure flags
-
-- `--march=1` 
-- `--bits= 1`
-- `--optimize=`
-- `--debug-info=`
-- `--strip=`
-- `--floppy=`
+| Flag          | Purpose                 | Applicable values               |
+|---------------|-------------------------|---------------------------------|
+| `--march=`    | Target CPU architecture | Varies                          |
+| `--bits=`     | Target bit width        | `32`, `64`                      |
+| `--optimize=` | Optimization level      | `0`, `1`, `2`, `3`, `s`, `fast` |
+| `--floppy=`   | Target filename         | Any                             |
 
 ## Compilation
 Then you want to compile cheeseDOS, this also will auto check and install (if not found) dependencies so if it asks for sudo that's why and this only should take <1 second to 5 seconds maximum to compile:
