@@ -16,7 +16,7 @@ You will need `gcc`, `git`, and standard UNIX utilities.
 
 ## Cloning
 You will need to get the latest version of cheeseDOS: 
-```bash
+```sh
 git clone --depth=1 https://github.com/The-cheeseDOS-Project/cheeseDOS.git && \
 cd cheeseDOS
 ```
@@ -25,7 +25,7 @@ cd cheeseDOS
 
 You need to configure cheeseDOS before compiling, you can just run:
 
-```
+```sh
 ./configure.sh
 ```
 
@@ -43,13 +43,13 @@ by itself and that will use the default options (`i386`, `32`, `s`, `cheeseDOS.i
 
 ## Compilation
 Then you want to compile cheeseDOS, this also will auto check and install (if not found) dependencies so if it asks for sudo that's why and this only should take <1 second to 5 seconds maximum to compile:
-```bash
+```sh
 ./build.sh
 ```
 
 ## Testing
 After that'sone, you now have cheeseDOS compiled, if you just want to use it in QEMU, you can run:
-```bash
+```sh
 ./build.sh run
 ```
 
