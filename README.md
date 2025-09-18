@@ -56,7 +56,7 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 
 ## Building
 
-For instructions on building from source, refer to the [Build and Run Guide](./docs/build-and-run.md).
+For instructions on building from source, refer to the [Build and Run Guide](./docs/build.md).
 
 ## Documentation
 
