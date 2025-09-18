@@ -12,9 +12,7 @@ Here's how to get cheeseDOS up and running on your computer or on QEMU
 > If you have any problems, please open an issue, you **WILL** get help!
 
 ## Prerequisites
-You will need to be using `apt`, `dnf`, `zypper`, `pacman`, or `portage` based Linux distributions.
-
-You also will need to have `git` and `bash` installed.
+You will need `gcc`, `git`, and standared UNIX utilities.
 
 ## Cloning
 You will need to get the latest version of cheeseDOS: 
