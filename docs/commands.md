@@ -33,7 +33,7 @@
 
 ## Power Management
 | Command | Description                            |
-|---------|---- -----------------------------------|
+|---------|----------------------------------------|
 | `off`   | Quit all processes and halt cpu        |
 | `res`   | Quit all processes and resets computer |
 
