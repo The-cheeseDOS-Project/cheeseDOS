@@ -8,6 +8,7 @@
         "*.ld": "linkerscript",
         "compare": "c",
         "cstdint": "c",
-        "chrono": "c"
+        "chrono": "c",
+        "ostream": "c"
     }
 }

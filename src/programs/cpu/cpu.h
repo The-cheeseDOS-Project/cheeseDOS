@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
+#ifndef CPU_H
+#define CPU_H
 
-void hlp(const char* *unused) {
-    (void)unused;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, clk, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, svr, &, mus, dve, box, hey, snk, key, rep, cpu.\n");
-}
+void cpu(const char*);
+
+#endif
