@@ -18,6 +18,8 @@
 
 // NOTE: This needs CPUID and this is super quick and dirty.
 
+#include "vga.h"
+
 char vendor[13];
 int family = 0;
 int model = 0;
