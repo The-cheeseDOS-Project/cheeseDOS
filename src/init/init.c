@@ -16,16 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdint.h"
+#include "string.h"
 #include "vga.h"
 #include "serial.h"
 #include "shell.h"
 #include "ramdisk.h"
 #include "ide.h"
-#include "string.h"
-
-extern uint8_t _init_start;
-extern uint8_t _end;
 
 void init() {
     char buf[16];
@@ -61,10 +57,18 @@ void init() {
             print(" Done!\n");
             set_text_color(COLOR_WHITE, COLOR_BLACK);
         } else {
-            bprint(" Failed!\n");
+            set_text_color(COLOR_RED, COLOR_BLACK);
+            print(" Failed!\n");
+            set_text_color(COLOR_WHITE, COLOR_BLACK);
+
+            sprint(" \033[91mFailed!\033[0m\n");
         }
     } else {
-        bprint("Not Found!\n");
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Not Found!\n");
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
+
+        sprint("\033[91mNot Found!\033[0m\n");
     }
 
     bprint("Loading Shell...");
