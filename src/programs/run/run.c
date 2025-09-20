@@ -28,7 +28,7 @@ void run(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    
+
     const char *filename = args;
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
     if (!dir) {
@@ -50,7 +50,7 @@ void run(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-    
+
     char buf[RAMDISK_DATA_SIZE_BYTES + 1];
     int read = ramdisk_readfile(file, 0, sizeof(buf) - 1, buf);
     if (read < 0) {
@@ -60,7 +60,7 @@ void run(const char* args) {
         return;
     }
     buf[read] = '\0';
-    
+
     char *script_line = buf;
     char *next_line;
     while ((next_line = (char*)kstrchr(script_line, '\n')) != NULL) {

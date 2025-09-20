@@ -119,7 +119,7 @@ static void handle_down_arrow(size_t *index, const char *buffer) {
             next_end++;
         }
         size_t next_len = next_end - next_start;
-        size_t col_target = *index - (line_end - (kstrlen(buffer) - *index) ); 
+        size_t col_target = *index - (line_end - (kstrlen(buffer) - *index) );
         if (col_target > next_len) {
             col_target = next_len;
         }
@@ -219,12 +219,12 @@ void txt(const char *filename) {
         bool needs_redraw = false;
 
         switch (ch) {
-            case 27: 
+            case 27:
                 goto end_loop;
             case KEY_INSERT:
                 saved = false;
                 goto end_loop;
-            case 8: 
+            case 8:
                 handle_backspace(buffer, &index);
                 needs_redraw = true;
                 break;

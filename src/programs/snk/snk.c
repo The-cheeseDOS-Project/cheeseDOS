@@ -30,8 +30,8 @@
 #define MAX_SNAKE_LENGTH (GAME_WIDTH * GAME_HEIGHT)
 
 #define GUIDE_TEXT "Use arrow keys to switch direction | Hold down an arrow key in the same direction for a speed boost | ESC to quit. | "
-#define GUIDE_SCROLL_ROW 24  
-#define GUIDE_SCROLL_DELAY 100 
+#define GUIDE_SCROLL_ROW 24
+#define GUIDE_SCROLL_DELAY 100
 
 typedef struct {
     int x, y;
@@ -262,7 +262,7 @@ void snk(const char* *unused) {
     clear_screen();
     vga_hide_cursor(true);
 
-    vga_disable_scroll(true);  
+    vga_disable_scroll(true);
 
     init_game();
 
@@ -271,7 +271,7 @@ void snk(const char* *unused) {
     print("snk");
 
     set_text_color(COLOR_WHITE, COLOR_BLACK);
-    for (int y = 1; y < GAME_HEIGHT; y++) {  
+    for (int y = 1; y < GAME_HEIGHT; y++) {
         for (int x = 0; x < GAME_WIDTH; x++) {
             vga_set_cursor(y, x);
             vga_putchar(EMPTY);
@@ -337,7 +337,7 @@ void snk(const char* *unused) {
 
     game_over();
 
-    vga_disable_scroll(false); 
+    vga_disable_scroll(false);
     vga_hide_cursor(false);
     vga_set_cursor(old_row, old_col);
     set_text_color(COLOR_WHITE, COLOR_BLACK);

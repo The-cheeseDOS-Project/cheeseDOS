@@ -36,7 +36,7 @@ static void print_name_callback(const char *name, uint32_t inode) {
 
 void ls(const char* args) {
     uint32_t target_inode_no = current_dir_inode_no;
-    
+
     if (args && kstrlen(args) > 0) {
         uint32_t found_inode_no;
         if (ramdisk_find_inode_by_path(args, &found_inode_no) == 0) {

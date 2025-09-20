@@ -25,19 +25,19 @@ SECTIONS
         *(.text*)
         *(.rodata*)
     }
-    
+
     . = 0x10000;
     .data : {
         *(.data*)
     }
-    
+
     .bss : {
         *(.bss*)
         *(COMMON)
         . = ALIGN(16);
         _end = .;
     }
-    
+
     /DISCARD/ : {
         *(.eh_frame*)
     }

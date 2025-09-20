@@ -22,50 +22,50 @@
 
 void free_software_song() {
     print("Join us now and share the software;\n");
-    beep(587, 500); delay(50);   
-    beep(523, 250); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(440, 500); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(523, 250); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(440, 250); delay(50);   
-    beep(392, 500); delay(50);   
-   
-    print("You'll be free, hackers, you'll be free.\n");
-    beep(392, 750); delay(50);   
-    beep(440, 750); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(523, 750); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(587, 250); delay(50);
-    beep(440, 750); delay(50);   
-    beep(440, 1000); delay(50);  
     beep(587, 500); delay(50);
-    beep(523, 250); delay(50);   
-    beep(494, 1000); delay(50);  
-    
+    beep(523, 250); delay(50);
+    beep(494, 500); delay(50);
+    beep(440, 500); delay(50);
+    beep(494, 500); delay(50);
+    beep(523, 250); delay(50);
+    beep(494, 250); delay(50);
+    beep(440, 250); delay(50);
+    beep(392, 500); delay(50);
+
+    print("You'll be free, hackers, you'll be free.\n");
+    beep(392, 750); delay(50);
+    beep(440, 750); delay(50);
+    beep(494, 250); delay(50);
+    beep(523, 750); delay(50);
+    beep(494, 500); delay(50);
+    beep(494, 250); delay(50);
+    beep(587, 250); delay(50);
+    beep(440, 750); delay(50);
+    beep(440, 1000); delay(50);
+    beep(587, 500); delay(50);
+    beep(523, 250); delay(50);
+    beep(494, 1000); delay(50);
+
     print("Hoarders can get piles of money,\n");
-    beep(587, 500); delay(50);   
-    beep(523, 250); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(440, 500); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(523, 250); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(440, 250); delay(50);   
-    beep(392, 500); delay(50);   
-    
+    beep(587, 500); delay(50);
+    beep(523, 250); delay(50);
+    beep(494, 500); delay(50);
+    beep(440, 500); delay(50);
+    beep(494, 500); delay(50);
+    beep(523, 250); delay(50);
+    beep(494, 250); delay(50);
+    beep(440, 250); delay(50);
+    beep(392, 500); delay(50);
+
     print("That is true, hackers, that is true.\n");
-    beep(392, 750); delay(50);   
-    beep(440, 750); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(523, 750); delay(50);   
-    beep(494, 500); delay(50);   
-    beep(494, 250); delay(50);   
-    beep(587, 250); delay(50);   
-    beep(440, 750); delay(50);   
-    beep(440, 1000); delay(50);  
-    beep(440, 1750); delay(100); 
+    beep(392, 750); delay(50);
+    beep(440, 750); delay(50);
+    beep(494, 250); delay(50);
+    beep(523, 750); delay(50);
+    beep(494, 500); delay(50);
+    beep(494, 250); delay(50);
+    beep(587, 250); delay(50);
+    beep(440, 750); delay(50);
+    beep(440, 1000); delay(50);
+    beep(440, 1750); delay(100);
 }

@@ -33,16 +33,16 @@ typedef struct {
 } PianoKey;
 
 PianoKey keyboard[NUM_KEYS] = {
-    {'a', 262, 0},  
-    {'s', 294, 0},  
-    {'d', 330, 0},  
-    {'f', 349, 0},  
-    {'g', 392, 0},  
-    {'h', 440, 0},  
-    {'j', 494, 0},  
-    {'k', 523, 0},  
-    {'l', 587, 0},  
-    {';', 659, 0}   
+    {'a', 262, 0},
+    {'s', 294, 0},
+    {'d', 330, 0},
+    {'f', 349, 0},
+    {'g', 392, 0},
+    {'h', 440, 0},
+    {'j', 494, 0},
+    {'k', 523, 0},
+    {'l', 587, 0},
+    {';', 659, 0}
 };
 
 static uint8_t key_states[256];
@@ -103,7 +103,7 @@ void key(const char* *unused) {
     clear_screen();
     draw_ui();
 
-    key_states[0x01] = 0;  
+    key_states[0x01] = 0;
 
     int running = 1;
     uint32_t last_poll_time = timer_millis();

@@ -35,4 +35,4 @@ void ide_load_identify(void);
 void ide_wait_ready(void);
 int ide_drive_present(void);
 
-#endif 
+#endif

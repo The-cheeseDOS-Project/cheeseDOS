@@ -112,7 +112,7 @@ bool execute_command(const char* command, const char* args) {
     print(command);
     print(": command not found\n");
     set_text_color(default_text_fg_color, default_text_bg_color);
-   
+
     sprint(" \033[91mFailed!: ");
     sprint(command);
     sprint(": command not found\n");

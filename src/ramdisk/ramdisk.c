@@ -42,10 +42,10 @@ void ramdisk_init() {
         inodes[i].type = RAMDISK_INODE_TYPE_UNUSED;
         inodes[i].size = 0;
         inodes[i].parent_inode_no = 0;
-        for (size_t j = 0; j < RAMDISK_FILENAME_MAX; j++) { 
+        for (size_t j = 0; j < RAMDISK_FILENAME_MAX; j++) {
             inodes[i].name[j] = 0;
         }
-        for (size_t j = 0; j < sizeof(inodes[i].data); j++) { 
+        for (size_t j = 0; j < sizeof(inodes[i].data); j++) {
             inodes[i].data[j] = 0;
         }
     }
@@ -127,8 +127,8 @@ int ramdisk_remove_file(uint32_t parent_dir_inode_no, const char *filename) {
                 inodes[i].type = RAMDISK_INODE_TYPE_UNUSED;
                 inodes[i].size = 0;
                 inodes[i].parent_inode_no = 0;
-                for (size_t j = 0; j < RAMDISK_FILENAME_MAX; j++) inodes[i].name[j] = 0; 
-                for (size_t j = 0; j < sizeof(inodes[i].data); j++) inodes[i].data[j] = 0; 
+                for (size_t j = 0; j < RAMDISK_FILENAME_MAX; j++) inodes[i].name[j] = 0;
+                for (size_t j = 0; j < sizeof(inodes[i].data); j++) inodes[i].data[j] = 0;
                 return 0;
             }
         }

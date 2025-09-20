@@ -41,7 +41,7 @@ extern void print(const char* str);
 extern void print_ansi(const char* ansi_str);
 
 static void print_prompt() {
-    set_text_color(COLOR_CYAN, COLOR_BLACK); 
+    set_text_color(COLOR_CYAN, COLOR_BLACK);
     shell_execute("pth"); // Yes I know it's a bit hacky but hey, it works!
     set_text_color(COLOR_YELLOW, COLOR_BLACK);
     print("> ");
@@ -83,10 +83,10 @@ static void load_history_line(char *input, int *idx, int *cursor_index, int pos)
 
 static void trim_whitespace(char *str) {
     if (!str) return;
-    
+
     int start = 0;
     while (str[start] == ' ' || str[start] == '\t') start++;
-    
+
     if (start > 0) {
         int i;
         for (i = 0; str[start + i]; i++) {
@@ -94,7 +94,7 @@ static void trim_whitespace(char *str) {
         }
         str[i] = '\0';
     }
-    
+
     int end = kstrlen(str) - 1;
     while (end >= 0 && (str[end] == ' ' || str[end] == '\t')) {
         str[end] = '\0';
@@ -105,28 +105,28 @@ static void trim_whitespace(char *str) {
 static bool execute_single_command(const char* cmd) {
     char command[INPUT_BUF_SIZE];
     const char *args;
-    
+
     kstrncpy(command, cmd, INPUT_BUF_SIZE - 1);
     command[INPUT_BUF_SIZE - 1] = '\0';
-    
+
     trim_whitespace(command);
-    
+
     if (command[0] == '\0') return true;
-    
+
     args = kstrchr(command, ' ');
     if (args) {
         size_t command_len = (size_t)(args - command);
         char temp_cmd[INPUT_BUF_SIZE];
         kstrncpy(temp_cmd, command, command_len);
         temp_cmd[command_len] = '\0';
-        
+
         kstrcpy(command, temp_cmd);
         args++;
-        
+
         while (*args == ' ') args++;
         if (*args == '\0') args = NULL;
     }
-    
+
     sprint("Running: ");
     sprint(command);
     if (args) {
@@ -134,12 +134,12 @@ static bool execute_single_command(const char* cmd) {
         sprint(args);
     }
     sprint("...");
-    
+
     bool success = execute_command(command, args);
     if (success) {
         sprint(" \033[92mDone!\033[0m\n");
     }
-    
+
     return success;
 }
 
@@ -147,28 +147,28 @@ void shell_execute(const char* cmd) {
     if (cmd[0] == '\0') return;
 
     const char *amp_pos = kstrchr(cmd, '&');
-    
+
     if (amp_pos == NULL) {
         execute_single_command(cmd);
         return;
     }
-    
+
     char cmd_copy[INPUT_BUF_SIZE];
     kstrncpy(cmd_copy, cmd, INPUT_BUF_SIZE - 1);
     cmd_copy[INPUT_BUF_SIZE - 1] = '\0';
-    
+
     char *current_cmd = cmd_copy;
     char *next_amp;
-    
+
     while (current_cmd != NULL) {
         next_amp = (char*)kstrchr(current_cmd, '&');
-        
+
         if (next_amp != NULL) {
             *next_amp = '\0';
         }
-        
+
         execute_single_command(current_cmd);
-        
+
         if (next_amp != NULL) {
             current_cmd = next_amp + 1;
         } else {
@@ -181,7 +181,7 @@ void shell_run() {
     char input[INPUT_BUF_SIZE];
     int idx = 0;
     int cursor_index = 0;
-    
+
     set_text_color(COLOR_GREEN, COLOR_BLACK);
     print(" Done!\n");
     set_text_color(COLOR_WHITE, COLOR_BLACK);
@@ -193,7 +193,7 @@ void shell_run() {
     shell_execute("ver");
     print_prompt();
     prompt_start_vga_pos = get_cursor();
-    
+
     // Startup sound, made Aug 25, 2025 by Connor Thomson
     // Short, but effective and catchy!
     beep(300, 50);

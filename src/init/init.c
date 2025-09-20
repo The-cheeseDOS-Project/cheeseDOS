@@ -25,16 +25,16 @@
 
 void init() {
     char buf[16];
-    
+
     bprint("Loading cheeseDOS...\n");
 
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     bprint(buf);
     bprint("B RAM Disk...");
-    
+
     ramdisk_init();
-    
+
     set_text_color(COLOR_GREEN, COLOR_BLACK);
     print(" Done!\n");
     set_text_color(COLOR_WHITE, COLOR_BLACK);
@@ -48,9 +48,9 @@ void init() {
         set_text_color(COLOR_WHITE, COLOR_BLACK);
 
         sprint(" \033[92mFound!\033[0m\n");
-        
+
         bprint("Loading IDE Drive...");
-        
+
         if (ide_init()) {
             sprint(" \033[92mDone!\033[0m\n");
             set_text_color(COLOR_GREEN, COLOR_BLACK);

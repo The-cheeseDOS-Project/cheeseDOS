@@ -25,7 +25,7 @@
 #define COLOR_DARKCYAN      0x3
 #define COLOR_DARKRED       0x4
 #define COLOR_PURPLE        0x5
-#define COLOR_BROWN         0x6 
+#define COLOR_BROWN         0x6
 #define COLOR_LIGHT_GREY    0x7
 #define COLOR_DARK_GREY     0x8
 #define COLOR_BLUE          0x9
@@ -33,8 +33,8 @@
 #define COLOR_CYAN          0xB
 #define COLOR_RED           0xC
 #define COLOR_MAGENTA       0xD
-#define COLOR_YELLOW        0xE 
-#define COLOR_WHITE         0xF 
+#define COLOR_YELLOW        0xE
+#define COLOR_WHITE         0xF
 
 #define VGA_COLOR(fg, bg) ((bg << 4) | (fg & 0x0F))
 
