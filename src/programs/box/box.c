@@ -19,6 +19,7 @@
 #include "vga.h"
 #include "io.h"
 #include "stdint.h"
+#include "random.h"
 
 void box(const char* *unused) {
     (void)unused;
@@ -32,11 +33,10 @@ void box(const char* *unused) {
     int height = get_screen_height();
     uint16_t* vga_mem = (uint16_t*)0xB8000;
 
-    static unsigned int seed = 1;
-    seed = seed * 1103515245 + 12345;
-    unsigned int rand_x = (seed / 65536) % 32768;
-    seed = seed * 1103515245 + 12345;
-    unsigned int rand_y = (seed / 65536) % 32768;
+    random();
+    unsigned int rand_x = random_get();
+    random();
+    unsigned int rand_y = random_get();
 
     const int size = 2;
     int x = size + (rand_x % (width - 2 * size));
@@ -46,8 +46,8 @@ void box(const char* *unused) {
     uint8_t bg_colors[] = {9, 10, 11, 12, 13, 14};
     int num_colors = sizeof(bg_colors) / sizeof(bg_colors[0]);
 
-    seed = seed * 1103515245 + 12345;
-    uint8_t current_bg = bg_colors[(seed / 65536) % num_colors];
+    random();
+    uint8_t current_bg = bg_colors[random_get() % num_colors];
     uint8_t attr = (current_bg << 4) | 0;
 
     while (1) {
@@ -76,11 +76,11 @@ void box(const char* *unused) {
         }
 
         if (collided) {
-            seed = seed * 1103515245 + 12345;
             uint8_t new_bg;
             do {
-                new_bg = bg_colors[(seed / 65536) % num_colors];
-                seed = seed * 1103515245 + 12345;
+                random();
+                new_bg = bg_colors[random_get() % num_colors];
+                random();
             } while (new_bg == current_bg);
             current_bg = new_bg;
             attr = (current_bg << 4) | 0;

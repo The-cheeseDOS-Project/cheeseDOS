@@ -17,12 +17,11 @@
  */
 
 #include "vga.h"
-
-static unsigned int seed = 123456789;
+#include "random.h"
 
 static unsigned int rand_bare() {
-    seed = (1664525 * seed + 1013904223);
-    return seed;
+    random();
+    return random_get();
 }
 
 static unsigned int parse_int(const char* str) {

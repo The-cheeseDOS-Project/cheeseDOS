@@ -24,6 +24,7 @@
 #include "string.h"
 #include "io.h"
 #include "stdbool.h"
+#include "random.h"
 
 #define GAME_WIDTH 80
 #define GAME_HEIGHT 23
@@ -61,13 +62,12 @@ static Point last_tail;
 static int speed_boost = 0;
 static uint8_t key_states[256];
 
-static uint32_t rand_seed = 1;
 static uint32_t last_scroll_time = 0;
 static int scroll_offset = 0;
 
 static uint32_t simple_rand() {
-    rand_seed = rand_seed * 1103515245 + 12345;
-    return (rand_seed / 65536) % 32768;
+    random();
+    return random_get();
 }
 
 static void init_game() {
@@ -85,7 +85,7 @@ static void init_game() {
     score = 0;
     game_running = 1;
 
-    rand_seed = timer_millis();
+    random_seed(timer_millis());
 
     food.x = simple_rand() % GAME_WIDTH;
     food.y = simple_rand() % GAME_HEIGHT;

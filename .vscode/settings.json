@@ -9,6 +9,7 @@
         "compare": "c",
         "cstdint": "c",
         "chrono": "c",
-        "ostream": "c"
+        "ostream": "c",
+        "any": "c"
     }
 }
