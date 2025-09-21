@@ -22,7 +22,7 @@
 | `hi`              | Prints `hello, world!`                                                                   |
 | `say [WORDS]`     | Prints the given words (e.g., `say Hello` → `Hello`)                                     |
 | `cls`             | Clears all text from the screen                                                          |
-| `clk`             | Shows 12-Hour time and date pulled from the real-time clock                              |
+| `tme`             | Shows 12-Hour time and date pulled from the real-time clock                              |
 | `clr [COLOR]`     | (`[COLOR]` is not needed) Changes shell color                                            |
 | `bep [HZ] [MS]`   | (`[HZ]` and `[MS]` are not needed, but they need each other) Beeps the PC speaker        |
 | `dly [MS]`        | Delay command… Nothing more.                                                             |    

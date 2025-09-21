@@ -38,7 +38,7 @@
 #include "mkd.h"
 #include "ban.h"
 #include "cd.h"
-#include "clk.h"
+#include "tme.h"
 #include "clr.h"
 #include "cpy.h"
 #include "mus.h"
@@ -73,7 +73,7 @@ static shell_command_t commands[] = {
     {"rm", rm},
     {"mkd", mkd},
     {"cd", cd},
-    {"clk", clk},
+    {"tme", tme},
     {"clr", clr},
     {"ban", ban},
     {"bep", bep},

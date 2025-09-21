@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CLK_H
-#define CLK_H
+#ifndef TME_H
+#define TME_H
 
-void clk(const char* args);
+void tme(const char* args);
 
 #endif

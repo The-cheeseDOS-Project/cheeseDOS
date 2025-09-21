@@ -20,7 +20,7 @@
 #include "vga.h"
 #include "stdint.h"
 
-void clk(const char* *u) {
+void tme(const char* *u) {
     (void)u;
     struct rtc_time current_time;
     read_rtc_time(&current_time);
