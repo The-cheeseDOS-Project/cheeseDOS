@@ -86,5 +86,8 @@ void tme(const char* *unused) {
             }
         }
         frame_counter = 10;
+
     }
+    clear_screen();
+
 }
