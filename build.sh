@@ -64,7 +64,7 @@ OUTPUT="$BUILD_DIR/cheesedos.elf"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
+  required_tools="gcc strip as ld cpp sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -151,51 +151,6 @@ CFLAGS="-m$BITS \
 
 ASMFLAGS="-m$BITS $INCLUDES"
 
-check_headers() {
-  headers="
-    stdio.h
-    stdlib.h
-    stdint.h
-    string.h
-    fcntl.h
-    unistd.h
-    sys/mman.h
-    sys/stat.h
-    elf.h
-  "
-
-  missing=""
-  i=1
-
-  for hdr in $headers; do
-    path=$(echo "$hdr" | sed 's|\.h$||' | sed 's|\.|/|g').h
-    found=0
-    for dir in /usr/include /usr/local/include /usr/include/linux /usr/include/x86_64-linux-gnu; do
-      if [ -f "$dir/$path" ]; then
-        found=1
-        break
-      fi
-    done
-
-    if [ "$found" -eq 1 ]; then
-      echo "Checking for <$hdr>... Found!"
-    else
-      echo "Checking for <$hdr>... Not Found!"
-      missing="$missing $hdr"
-    fi
-  done
-
-  if [ -n "$missing" ]; then
-    echo
-    echo "C HEADERS NOT FOUND!:"
-    for hdr in $missing; do
-      echo "$i. <$hdr>"
-      i=$((i+1))
-    done
-    exit 1
-  fi
-}
-
 build_c_object() {
   $CC $CFLAGS -c "$1" -o "$2"
 }
@@ -211,16 +166,10 @@ all() {
 
   check_dependencies
 
-  check_headers
-
   clean
 
   printf "Making directory: %s..." "$BUILD_DIR"
     mkdir -p "$BUILD_DIR"
-  echo " Done!"
-
-  printf "Building strip..."
-    $CC $TOOL_FLAGS -o "$BUILD_DIR/strip" "strip.c"
   echo " Done!"
 
   build_pids=""
@@ -312,7 +261,7 @@ all() {
   echo " Done!"
 
   printf "Stripping %s..." "$OUTPUT"
-    "$BUILD_DIR/strip"
+    strip -s "$OUTPUT"
   echo " Done!"
 
   printf "Building %s..." "$FLOPPY"
