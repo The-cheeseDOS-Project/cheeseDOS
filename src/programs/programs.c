@@ -49,7 +49,7 @@
 #include "run.h"
 #include "hey.h"
 #include "die.h"
-#include "dve.h"
+#include "chs.h"
 #include "pth.h"
 #include "snk.h"
 #include "key.h"
@@ -89,7 +89,7 @@ static shell_command_t commands[] = {
     {"bit", bit},
     {"svr", svr},
     {"mus", mus},
-    {"dve", dve},
+    {"chs", chs},
     {"hey", hey},
     {"box", box},
     {"add", add},

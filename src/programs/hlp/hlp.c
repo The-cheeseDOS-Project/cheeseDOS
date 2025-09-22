@@ -20,5 +20,5 @@
 
 void hlp(const char* *unused) {
     (void)unused;
-    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, svr, &, mus, dve, box, hey, snk, key, rep, cpu.\n");
+    print("Commands: hlp, cls, say, ver, hi, ls, see, add, rm, mkd, cd, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, svr, &, mus, ide, box, hey, snk, key, rep, cpu.\n");
 }

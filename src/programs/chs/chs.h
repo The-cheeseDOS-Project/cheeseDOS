@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DVE_H
-#define DVE_H
+#ifndef CHS_H
+#define CHS_H
 
-void dve(const char*);
+void chs(const char*);
 
 #endif

@@ -136,7 +136,7 @@ static void cache() {
     }
 }
 
-void dve(const char *unused) {
+void chs(const char *unused) {
     (void)unused;
     if (identify_buffer[0] == 0) {
         print("No IDE Master detected\n");
