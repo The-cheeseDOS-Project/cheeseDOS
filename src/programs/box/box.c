@@ -63,16 +63,16 @@ void box(const char* *unused) {
 
         int collided = 0;
 
-        if (x - size <= 0 || x + size >= width) {
+        if (x - size - 2 < 0 || x + size + 2 >= width) {
             vx = -vx;
             collided = 1;
-            x = (x - size <= 0) ? size + 1 : width - size - 1;
+            x = (x - size - 2 < 0) ? size + 2 : width - size - 3;
         }
 
-        if (y - size <= 0 || y + size >= height) {
+        if (y - size < 0 || y + size >= height) {
             vy = -vy;
             collided = 1;
-            y = (y - size <= 0) ? size + 1 : height - size - 1;
+            y = (y - size < 0) ? size : height - size - 1;
         }
 
         if (collided) {
