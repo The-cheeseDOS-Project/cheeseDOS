@@ -191,6 +191,9 @@ void shell_run() {
     print("\n");
 
     shell_execute("ver");
+
+    print("\ncheeseDOS is free software: you may redistribute and/or modify it under the \nterms of the GNU GPLv3. It comes with ABSOLUTELY NO WARRANTY, to the extent \npermitted by law.\n\n");
+
     print_prompt();
     prompt_start_vga_pos = get_cursor();
 
