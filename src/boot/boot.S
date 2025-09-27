@@ -233,9 +233,9 @@ drives:
     .byte 0x00
 
 msg_loading:
-    .ascii "Loading cheeseDOS...\r\0"
+    .ascii "Starting cheeseDOS...\r\0"
 msg_failed:
-    .ascii "Loading cheeseDOS... Failed!\0"
+    .ascii "Starting cheeseDOS... Failed!\0"
 
 gdt_code:
     .word 0xFFFF

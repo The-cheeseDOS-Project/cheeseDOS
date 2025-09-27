@@ -26,7 +26,7 @@
 void init() {
     char buf[16];
 
-    bprint("Loading cheeseDOS...\n");
+    bprint("Starting cheeseDOS...\n");
 
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
