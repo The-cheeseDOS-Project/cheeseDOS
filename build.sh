@@ -60,11 +60,15 @@ HDD="build/hdd.img"
 SRC_DIR=src
 BUILD_DIR=build
 
-OUTPUT="$BUILD_DIR/cheesedos.elf"
+ELF="cheesedos.elf"
+STRIPPED_ELF="cheesedos.stripped.elf"
+OUTPUT="$BUILD_DIR/$ELF"
+STRIPPED_OUTPUT="$BUILD_DIR/$STRIPPED_ELF"
+
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc strip as ld cpp sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
+  required_tools="gcc strip objcopy as ld cpp sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -261,7 +265,20 @@ all() {
   echo " Done!"
 
   printf "Stripping %s..." "$OUTPUT"
-    strip -s "$OUTPUT"
+    objcopy \
+       --remove-section=.interp \
+       --remove-section=.dynsym \
+       --remove-section=.dynstr \
+       --remove-section=.gnu.hash \
+       --remove-section=.note.gnu.property \
+       --remove-section=.note.gnu.build-id \
+       --remove-section=.rel.dyn \
+       --remove-section=.dynamic \
+       --remove-section=.got.plt \
+       --remove-section=.comment \
+       $OUTPUT $STRIPPED_OUTPUT
+
+       strip -s $STRIPPED_OUTPUT
   echo " Done!"
 
   printf "Building %s..." "$FLOPPY"
