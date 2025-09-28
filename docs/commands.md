@@ -27,8 +27,7 @@
 | `bep [HZ] [MS]`   | (`[HZ]` and `[MS]` are not needed, but they need each other) Beeps the PC speaker        |
 | `dly [MS]`        | Delay command… Nothing more.                                                             |    
 | `die [UP-TO-NUM]` | (if you dont pass `[UP-TO-NUM]`, it will use 10) Picks a random number between 1 and arg |
-| `chs`             | Shows `True` if master IDE drive is present, shows `False` if not                        |                                  
-| `cpu`             | Uses CPUID and shows what CPU it is                                                      | 
+| `chs`             | Shows info about master                                                                  |                                  
 
 ## Power Management
 | Command | Description                            |
@@ -41,7 +40,6 @@
 |----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `hlp`                | Shows all available commands                                                                                                                                                                                       |
 | `ban`                | Shows a banner with color                                                                                                                                                                                          |
-| `svr`                | Cool rainbow screensaver                                                                                                                                                                                           |
 | `mus [song]`         | (if you don't add `song` it will show all songs) Library of playable PC Speaker music                                                                                                                              |
 | `box`                | A box bounces around the screen and changes color on impact                                                                                                                                                        |
 | `hey [text]`         | (if you do not pass [text] it will just use `hello, world!`) its like the `say` command but its like prints out "text " and not "text\n" and it keeps doing it forever until you press a key and I think its cool |
