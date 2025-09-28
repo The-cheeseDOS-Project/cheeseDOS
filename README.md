@@ -39,17 +39,12 @@ You can download the precompiled image [here](https://github.com/The-cheeseDOS-P
 
 ## Philosophy
 
-- Fully under the GNU GPL v3
-- Works on vintage hardware
-- Runs as fast as possible
-- Uses 100% custom code and libraries (besides the toolchain)
-- Only needs one command to compile (including installing dependencies)
-- Compiles the same exact way on every system
-- Always has a precompiled image of its latest version
-- Super simple to use
-- Uses C99
-- Uses Ring 0
-- Super simple to use
+- Fully under the GNU GPL v3 Copyleft License
+- Fully compatible with i386-era hardware
+- Uses 100% custom code and clib
+- Compiles identically across all Linux systems
+- Mostly made in C99
+- Runs in a single address space
 
 ## Building
 
