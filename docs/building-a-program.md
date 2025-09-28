@@ -2,6 +2,9 @@
 > [!IMPORTANT]
 > This guide is **W.I.P.!**
 
+> [!NOTE]
+> If you have any problems, please open an issue, you **WILL** get help!
+
 ## 1.0.) Introduction
 So you want to build a program? If so, then you are at the right place!
 
