@@ -182,5 +182,5 @@ nano scn.h
 ```
 Remember to use your own name.
 
-#### 6.1.) Ocupying the header file
+#### 6.1.) Occupying the header file
 Here is a sample header file:
