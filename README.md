@@ -43,7 +43,7 @@ You can build from source, refer to the [Build and Run Guide](./docs/build.md).
 
 ## Philosophy
 
-- Fully under the GNU GPL v3 Copyleft License
+- Fully under the GPLv3 Copyleft License
 - Fully compatible with i386-era hardware
 - Uses 100% custom code and clib
 - Compiles identically across all Linux systems
@@ -57,5 +57,5 @@ You can build from source, refer to the [Build and Run Guide](./docs/build.md).
 ## Project Guidelines
 
 - **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
-- **GPL v3 License**: [LICENSE](./LICENSE)
+- **GPLv3 License**: [LICENSE](./LICENSE)
 - **Security Policy**: [SECURITY.md](./SECURITY.md)
