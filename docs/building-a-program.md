@@ -1,0 +1,186 @@
+# Building a Program
+> [!IMPORTANT]
+> This guide is **W.I.P.!**
+
+## 1.0.) Introduction
+So you want to build a program? If so then you are at the right place!
+
+Building a program on cheeseDOS is a great way to learn low-level programing in C, Be aware that cheeseDOS is non standared so you really only will get to know the really basics of low-level programing.
+
+## 2.0.) Naming your program
+First of all to building your own program you need to name your program.
+
+### 2.1.) Explaining your program in one word
+First step in naming your program for cheeseDOS is explaining what your program does in one word, For example:
+
+| Type                                                         | Word      |
+|--------------------------------------------------------------|-----------|
+| A program that lets you paint a pictrue                      | Paint     |
+| A program that lets you print out a pictrue into the console | Photo     |
+| A program that lets you see raw keyboard scancodes           | Scancodes |
+
+You want them to be direct.
+
+For this demo, we will use Scancodes
+
+### 2.2) Shortening the name to three or less letters long
+For simplicity, cheeseDOS has all the commands three or less letters long. Commands **CANNOT** have numbers or special chareters, only alphabetical, here are some examples:
+
+| Word      | Command |
+|-----------|---------|
+| Paint     | `pnt`   |
+| Photo     | `pto`   |
+| Scancodes | `scn`   |
+
+That will turn our command from Scancodes to `scn`.
+
+Now that we have our name we can move onto the next step.
+
+## 3.0.) Building cheeseDOS
+If you already have the source cheeseDOS, you can safley skip this step, for thoose who have not, please do no skip this.
+
+### 3.1.) Prerequisites
+You will need a working GNU toolchain, `git`, and standard UNIX utilities.
+
+### 3.2.) Cloning
+You will need to get the latest version of cheeseDOS: 
+```sh
+git clone --depth=1 https://github.com/The-cheeseDOS-Project/cheeseDOS.git && \
+cd cheeseDOS
+```
+
+### 3.3.) Configuring
+You need to configure cheeseDOS before compiling, you can just run:
+
+```sh
+./configure.sh
+```
+
+by itself and that will use the default options (`i386`, `32`, `s`, `cheeseDOS.img`, `sudo`.), but you can use diffrent options then the default one.
+
+#### 3.3.1.) Configure flags
+
+| Flag          | Purpose                          | Applicable values               |
+|---------------|----------------------------------|---------------------------------|
+| `--march=`    | Target CPU architecture          | Varies                          |
+| `--bits=`     | Target bit width                 | `32`, `64`                      |
+| `--optimize=` | Optimization level               | `0`, `1`, `2`, `3`, `s`, `fast` |
+| `--floppy=`   | Target filename                  | Any                             |
+| `--sudo=`     | **S**uper**U**ser **DO** command | `sudo`, `doas`                  |
+
+### 3.4.) Compilation
+Then you want to compile cheeseDOS, this also will auto check and install (if not found) dependencies so if it asks for sudo that's why and this only should take <1 second to 5 seconds maximum to compile:
+```sh
+./build.sh
+```
+
+## 4.0.) Registering your soon to be made program
+For the shell to find your program you will need to register it into cheeseDOS.
+
+### 4.1.) programs.c
+#### 4.1.1.) Opening in nano
+We will need to open programs.c in programs.c, I will assume you are using the nano text editor and that you are in the root of the cheeseDOS folder:
+```sh
+nano src/programs/programs.c
+```
+You should now see some source code in C.
+
+#### 4.1.2.) Adding your soon to be made header file
+You should see a bunch of `#include`s, go to the bottem of the includes and put
+```
+#include "name.h"
+```
+Replace `name` with your program.
+
+It should look somthing like this:
+```
+#include "scn.h"
+```
+
+#### 4.1.3.) Adding it to the array
+Adding your program to the array is what make's cheeseDOS find it.
+
+Scroll down and you should see:
+```
+static shell_command_t commands[] = {
+    {"hlp", hlp},
+    {"ver", ver},
+    {"hi", hi},
+    .............
+    {"snk", snk},
+    {"key", key},
+    {"rep", rep},
+    {NULL, NULL}
+};
+```
+
+You want to add your program to the botttom of it (just before `{NULL, NULL}`) just add:
+```
+{"name", name},
+```
+Replace `name` with your programs name
+
+So it should look somthing like:
+```
+static shell_command_t commands[] = {
+    {"hlp", hlp},
+    {"ver", ver},
+    {"hi", hi},
+    .............
+    {"key", key},
+    {"rep", rep},
+    {"scn", scn},
+    {NULL, NULL}
+};
+```
+You now have your program registered in the shell, do not try to compile yet as it will fail due to it not existing yet.
+
+You now may close nano with Ctrl + X
+
+### 4.3.) Registering in hlp
+`hlp` is a program that lists all programs
+
+#### 4.3.1.) Opening in nano
+```
+nano src/programs/hlp/hlp.c
+```
+You now should see source code in C
+
+### 4.3.2.) Adding it
+There will be a line tha has the `print()` function on it
+```
+print("Commands: hlp, cls, say, ... snk, key, rep.\n");
+```
+
+You want to add your program at the end of it so it looks somthing like this:
+```
+print("Commands: hlp, cls, say, ... key, rep, scn.\n");
+```
+
+You now may press Ctrl + X to exit nano.
+
+### 5.0.) Making the program directory
+You now will need to make the directory that will store your programs source files:
+
+```
+mkdir src/programs/scn
+```
+Make sure to use your own name
+
+#### 5.0.1.) Change directory into the newly made directory
+We will do this so we dont have to keep using such long paths:
+```
+cd src/programs/scn
+```
+
+Make sure to use the path from when you made it.
+
+### 6.0.) Making the header file
+You need to make your header file so the shell knows where to look:
+```
+nano scn.h
+```
+Remember to use your own name.
+
+#### 6.1.) Ocupying the header file
+Here is a sample header file:
