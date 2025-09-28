@@ -41,7 +41,7 @@ by itself and that will use the default options (`i386`, `32`, `s`, `cheeseDOS.i
 | `--sudo=`     | **S**uper**U**ser **DO** command | `sudo`, `doas`                  |
 
 ## Compilation
-Then you want to compile cheeseDOS, this also will auto check and install (if not found) dependencies so if it asks for sudo that's why and this only should take <1 second to 5 seconds maximum to compile:
+Then you want to compile cheeseDOS:
 ```sh
 ./build.sh
 ```
