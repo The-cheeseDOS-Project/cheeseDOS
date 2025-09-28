@@ -43,7 +43,7 @@ You can build from source, refer to the [Build and Run Guide](./docs/build.md).
 
 ## Philosophy
 
-- Fully under the GPLv3 Copyleft License
+- Fully under the [GPLv3 License](./LICENSE)
 - Fully compatible with i386-era hardware
 - Uses 100% custom code and clib
 - Compiles identically across all Linux systems
