@@ -69,7 +69,7 @@ by itself and that will use the default options (`i386`, `32`, `s`, `cheeseDOS.i
 | `--sudo=`     | **S**uper**U**ser **DO** command | `sudo`, `doas`                  |
 
 ### 3.4.) Compilation
-Then you want to compile cheeseDOS, this also will auto-check dependencies.
+Then you want to compile cheeseDOS:
 ```sh
 ./build.sh
 ```
