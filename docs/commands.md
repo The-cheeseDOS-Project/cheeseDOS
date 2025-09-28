@@ -27,7 +27,6 @@
 | `bep [HZ] [MS]`   | (`[HZ]` and `[MS]` are not needed, but they need each other) Beeps the PC speaker        |
 | `dly [MS]`        | Delay command… Nothing more.                                                             |    
 | `die [UP-TO-NUM]` | (if you dont pass `[UP-TO-NUM]`, it will use 10) Picks a random number between 1 and arg |
-| `mem`             | Shows how much ram is used                                                               | 
 | `chs`             | Shows `True` if master IDE drive is present, shows `False` if not                        |                                  
 | `cpu`             | Uses CPUID and shows what CPU it is                                                      | 
 
