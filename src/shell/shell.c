@@ -197,17 +197,15 @@ void shell_run() {
     print_prompt();
     prompt_start_vga_pos = get_cursor();
 
-    // Startup sound, made Aug 25, 2025 by Connor Thomson
-    // Short, but effective and catchy!
-    beep(300, 50);
-    beep(500, 50);
-    delay(100);
-    beep(600, 50);
-    beep(800, 50);
-    delay(100);
-    beep(300, 50);
-    beep(500, 50);
-    // End
+    beep(523, 90);
+    beep(587, 90);
+    beep(659, 90);
+    delay(90);
+    beep(659, 90);
+    delay(90);
+    beep(587, 90);
+    delay(90);
+    beep(698, 90);
 
     while (1) {
         int c = keyboard_getchar();
