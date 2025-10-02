@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to fix the holes!
-labels: 'Bug'
+labels: 'bug'
 type: 'Bug'
 ---
 
