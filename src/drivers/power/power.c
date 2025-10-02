@@ -38,7 +38,7 @@ void shutdown(void) {
     sprint("\n");
     set_text_color(COLOR_YELLOW, COLOR_BLACK);
     clear_screen();
-    sprint("Halting CPU...\n\n");
+    sprint("Halting and Catching Fire...\n\n");
     print("It is now safe to turn off your computer.\n");
     vga_move_cursor(80, 25);
     __asm__ volatile (
