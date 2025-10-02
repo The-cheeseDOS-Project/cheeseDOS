@@ -23,11 +23,11 @@ cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, li
 
 ## Getting Started
 
-You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest). Then write it to a floppy, learn more [here](./docs/writing.md).
+You can download the precompiled image [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/latest). Then write it to a floppy, learn more [here](https://github.com/The-cheeseDOS-Project/docs/writing.md).
 
 ***OR***
 
-You can build from source, refer to the [Build and Run Guide](./docs/build.md).
+You can build from source, refer to the [Build and Run Guide](https://github.com/The-cheeseDOS-Project/docs/build.md).
 
 ## System Requirements
 
@@ -52,7 +52,7 @@ You can build from source, refer to the [Build and Run Guide](./docs/build.md).
 
 ## Documentation
 
-- **The cheeseDOS wiki**: [The cheeseDOS wiki](./docs)
+- **The cheeseDOS wiki**: [The cheeseDOS wiki](https://github.com/The-cheeseDOS-Project/docs)
 
 ## Project Guidelines
 
