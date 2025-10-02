@@ -1,10 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for cheeseDOS
-title: ''
-labels: ''
-assignees: ''
-
+labels: 'enhancement'
+type: 'Feature'
 ---
 
 **Describe the change you'd like**
