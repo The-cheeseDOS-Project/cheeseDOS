@@ -21,13 +21,13 @@ ENTRY(_start)
 SECTIONS
 {
     . = 0x8000;
-    .text : {
+    .text : AT(0x8000) {
         *(.text*)
         *(.rodata*)
     }
 
     . = 0x10000;
-    .data : {
+    .data : AT(0x10000) {
         *(.data*)
     }
 
