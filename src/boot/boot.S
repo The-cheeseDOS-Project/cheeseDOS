@@ -16,59 +16,61 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.intel_syntax noprefix
-.code16
+.intel_syntax noprefix  # Use intel syntax
+.code16  # Use 16 bit real mode
 
-.equ STACK_TOP, 0x7C00
-.equ SELF_LOAD, 0x7C00
-.equ ELF_HDR_LOAD, 0x7E00
+.equ STACK_TOP, 0x7C00  # Top of stack
+.equ SELF_LOAD, 0x7C00  # Location of bootloader
+.equ ELF_HDR_LOAD, 0x7E00  # Where cheeseDOS will be loaded
 
-.equ SECT_SIZE, 512
-.equ SECT_SHIFT, 9
-.equ GEOM_SECTORS, 18
-.equ GEOM_CYLINDERS, 80
-.equ GEOM_HEADS, 2
+.equ SECT_SIZE, 512  # Sector size
+.equ SECT_SHIFT, 9  # Number of bits needed to do a bit shift 
+.equ GEOM_SECTORS, 18  # Sectors
+.equ GEOM_CYLINDERS, 80  # Cylinders
+.equ GEOM_HEADS, 2  # Heads
 
-.equ elf_phoff, 0x1C
-.equ elf_phnum, 0x2C
-.equ elf_entry, 0x18
+.equ elf_phoff, 0x1C  # Offset from beginning of the ELF file header to the start of the program header table
+.equ elf_phnum, 0x2C  # Number of entries in PHT
+.equ elf_entry, 0x18  # Virtual memory address of entry point
 
-.equ elf_seg_type, 0x00
-.equ elf_seg_file_offset, 0x04
-.equ elf_seg_paddr, 0x0C
-.equ elf_seg_filesz, 0x10
-.equ elf_seg_memsz, 0x14
-.equ elf_seg_struct_size, 0x20
+.equ elf_seg_type, 0x00  # Segment type field offset
+.equ elf_seg_file_offset, 0x04  # Segment start offset
+.equ elf_seg_paddr, 0x0C  # Address of the segment
+.equ elf_seg_filesz, 0x10  # Size of segment
+.equ elf_seg_memsz, 0x14  # Size of segment in memory
+.equ elf_seg_struct_size, 0x20  # Size of a program header entry
 
-.equ gdt_fl_pglimit, 0x80
-.equ gdt_fl_32b, 0x40
+.equ gdt_fl_pglimit, 0x80  # GDT page granularity
+.equ gdt_fl_32b, 0x40  # GDT 32-bit segment
 
-.equ gdt_a_present, 0x80
-.equ gdt_a_dpl0, 0x00
-.equ gdt_a_nosys, 0x10
-.equ gdt_a_exec, 0x08
-.equ gdt_a_conforming, 0x04
-.equ gdt_a_grow_down, 0x04
-.equ gdt_a_rw, 0x2
-.equ gdt_a_accessed, 0x1
+.equ gdt_a_present, 0x80  # GDT present
+.equ gdt_a_dpl0, 0x00  # GDT ring 0
+.equ gdt_a_nosys, 0x10  # GDT non system segment
+.equ gdt_a_exec, 0x08  # GDT executable
+.equ gdt_a_conforming, 0x04  # GDT conforming code
+.equ gdt_a_grow_down, 0x04  # GDT grow down stack
+.equ gdt_a_rw, 0x2  # GDT readable/writable
+.equ gdt_a_accessed, 0x1  # GDT accessed bit
 
-.section .text
-.global start
-start:
+.section .text  # Start of code section
+.global start  # Export entry point
+start:  # Entry point
 
-cli
-jmp 0:start2
-start2:
+cli  # Disable interrupts
+jmp 0:start2  # Far jump to flush prefetch queue
+start2:  # The "real" stuff begins here
 
-xor cx, cx
-mov ss, cx
-mov sp, STACK_TOP
-mov ds, cx
+xor cx, cx  # Zero CX
+mov ss, cx  # Set stack segment to 0
+mov sp, STACK_TOP  # Set stack pointer to begining of the bootloader
+mov ds, cx  # Set data segment to 0
 
-mov ax, 0xB800
-mov es, ax
-xor di, di
-mov ah, 0x0F
+mov ax, 0xB800  # Video memory segment
+mov es, ax  # Set ES to video memory
+xor di, di  # Start at offset 0
+mov ah, 0x0F  # Change text color to white on black
+
+# Clear screen
 mov al, ' '
 mov cx, 2000
 .clear_loop:
