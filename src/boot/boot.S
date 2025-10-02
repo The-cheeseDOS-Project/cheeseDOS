@@ -71,11 +71,11 @@ xor di, di  # Start at offset 0
 mov ah, 0x0F  # Change text color to white on black
 
 # Clear screen
-mov al, ' '
-mov cx, 2000
-.clear_loop:
-stosw
-loop .clear_loop
+mov al, ' '  # Set character to ASCII space
+mov cx, 2000  # Pixels on screen
+.clear_loop:  # Screen clear loop
+stosw  # Store word
+loop .clear_loop  # Repeat for how many pixels are on screen
 
 mov ah, 0x02
 xor bh, bh
