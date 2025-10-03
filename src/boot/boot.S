@@ -76,40 +76,39 @@ mov cx, 2000  # Pixels on screen
 .clear_loop:  # Screen clear loop
 stosw  # Store word
 loop .clear_loop  # Repeat for how many pixels are on screen
+mov ah, 0x02  # Set cursor
+xor bh, bh  # Target display page 0
+xor dh, dh  # Set cursor to row 0
+xor dl, dl  # Set cursor to column 0
+int 0x10  # Apply changes
 
-mov ah, 0x02
-xor bh, bh
-xor dh, dh
-xor dl, dl
-int 0x10
+mov si, offset msg_loading  # Get msg_loading
+call print  # Print it out
 
-mov si, offset msg_loading
-call print
-
-mov si, drives
+mov si, drives  # Get drives
 
 scan_floppy:
-    lodsb
-    test al, al
-    jz err
-    mov dl, al
+    lodsb  # Grab next drive from list
+    test al, al  # Check if drive ID is empty
+    jz err  # Error out if there is no drives
+    mov dl, al  # Tell BIOS what drive to read
 
-    mov ax, 0x0201
-    mov cx, 0x0002
-    xor dx, dx
-    mov bx, ELF_HDR_LOAD/16
-    mov es, bx
-    xor bx, bx
-    int 0x13
-    jc scan_floppy
+    mov ax, 0x0201  # Ask BIOS to read one sector
+    mov cx, 0x0002  # Read sector two
+    xor dx, dx  # Set head to zero
+    mov bx, ELF_HDR_LOAD/16  # Set segment for loading ELF header
+    mov es, bx  # Tell BIOS where to load the data
+    xor bx, bx  # Set offset to zero
+    int 0x13  # Start reading
+    jc scan_floppy  # If read failed, try next drive 
 
-    jmp load_init
+    jmp load_init  # If succeeded, Load cheeseDOS
 
 load_init:
-    mov ax, ELF_HDR_LOAD/16
-    mov ds, ax
-    mov si, [elf_phoff]
-    mov cl, [elf_phnum]
+    mov ax, ELF_HDR_LOAD/16  # Set segment where the ELF header is loaded
+    mov ds, ax  # Set data segment to the ELF header
+    mov si, [elf_phoff]  # Load program header offset
+    mov cl, [elf_phnum]  # Load number of program headers
 
 load_segment:
     push cx
