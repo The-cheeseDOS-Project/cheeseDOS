@@ -24,9 +24,9 @@
 #include "ide.h"
 
 void init() {
-    char buf[16];
+    char buf[16]; // Buffer for converting numbers to strings
 
-    bprint("Starting cheeseDOS...\n");
+    bprint("Starting cheeseDOS...\n"); // Retain bootloader message
 
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
