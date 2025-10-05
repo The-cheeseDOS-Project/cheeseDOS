@@ -16,12 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Config file
 CONFIG=config.conf
 
+# Valid options
 VALID_BITS="32 64"
 VALID_OPT="0 1 2 3 fast s"
 VALID_SUDO="sudo doas"
 
+# Presets
 BITS=32
 MARCH=i386
 OPT=s
@@ -32,21 +35,21 @@ for arg in "$@"; do
   case $arg in
     --bits=*)
       BITS="${arg#*=}"
-      echo "$VALID_BITS" | grep -qw "$BITS" || { echo "Invalid --bits=$BITS"; exit 1; }
+      echo "$VALID_BITS" | grep -qw "$BITS" || { echo "Invalid --bits=$BITS"; exit 1; } # Check if valid, if so, put it into config file
       ;;
     --march=*)
-      MARCH="${arg#*=}"
-      echo "$VALID_MARCH" | grep -qw "$MARCH" }
+      MARCH="${arg#*=}" # Put into config file
       ;;
     --optimize=*)
       OPT="${arg#*=}"
+      echo "$VALID_OPT" | grep -qw "$OPT" || { echo "Invalid --optimize=$OPT"; exit 1; } # Check if valid, if so, put it into config file
       ;;
     --floppy=*)
-      FLOPPY="${arg#*=}"
+      FLOPPY="${arg#*=}" # Put into config file
       ;;
     --sudo=*)
       SU="${arg#*=}"
-      echo "$VALID_SUDO" | grep -qw "$SU" || { echo "Invalid --sudo=$SU"; exit 1; }
+      echo "$VALID_SUDO" | grep -qw "$SU" || { echo "Invalid --sudo=$SU"; exit 1; } # Check if valid, if so, put it into config file
       ;;
     *)
       echo "Unknown option: $arg"
