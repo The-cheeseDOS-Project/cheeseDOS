@@ -59,3 +59,6 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 - **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
 - **GPLv3 License**: [LICENSE](./LICENSE)
 - **Security Policy**: [SECURITY.md](./SECURITY.md)
+
+## Legacy GRUB Build
+This is a unsupported unmaintaind older build of cheeseDOS that uses GRUB instead of its own bootloader, you can find the iso [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/tag/YV8Zr).
