@@ -16,61 +16,78 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "string.h"
-#include "vga.h"
-#include "serial.h"
-#include "shell.h"
-#include "ramdisk.h"
-#include "ide.h"
+#include "string.h"  // For "itoa()"
+#include "vga.h"     // For "print()" and "set_text_color()"
+#include "serial.h"  // For "bprint()" and "sprint()"
+#include "shell.h"   // For "shell_run()"
+#include "ramdisk.h" // For "ramdisk_init()" and "RAMDISK_DATA_SIZE_BYTES"
+#include "ide.h"     // For "ide_detect()" and "ide_init()"
 
 void init() {
     char buf[16]; // Buffer for converting numbers to strings
 
-    bprint("Starting cheeseDOS...\n"); // Retain bootloader message
+    bprint("Starting cheeseDOS...\n"); // Retain bootloader message and print it out on serial
 
+    // Print out "Loading <SIZE>B RAM Disk..." on both screen and serial
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     bprint(buf);
     bprint("B RAM Disk...");
 
-    ramdisk_init();
+    ramdisk_init(); // Start the RAM Disk
 
+    // Print " Done!\n" as green
     set_text_color(COLOR_GREEN, COLOR_BLACK);
     print(" Done!\n");
     set_text_color(COLOR_WHITE, COLOR_BLACK);
 
+    // Print " Done!\n" as green to serial
     sprint(" \033[92mDone!\033[0m\n");
 
-    bprint("Looking for IDE master... ");
+    bprint("Looking for IDE master... "); // Print out "Looking for IDE master... " on both screen and serial
+    // Check if the IDE driver finds a drive, if so run this loop
     if (ide_detect()) {
+        // Print " Found!\n" as green
         set_text_color(COLOR_GREEN, COLOR_BLACK);
         print(" Found!\n");
         set_text_color(COLOR_WHITE, COLOR_BLACK);
 
+        // Print " Found!\n" as green to serial
         sprint(" \033[92mFound!\033[0m\n");
 
+        // Print "Loading IDE Drive..." on screen and serial
         bprint("Loading IDE Drive...");
 
+        // Check if the IDE drive has been loaded successfully, if so then run this loop
         if (ide_init()) {
-            sprint(" \033[92mDone!\033[0m\n");
+            // Print " Done!\n" as green
             set_text_color(COLOR_GREEN, COLOR_BLACK);
             print(" Done!\n");
             set_text_color(COLOR_WHITE, COLOR_BLACK);
-        } else {
+
+            // Print " Done!\n" as green to serial
+            sprint(" \033[92mDone!\033[0m\n");
+        } else { // If IDE driver failed, run this loop
+            // Print " Failed!\n" as red
             set_text_color(COLOR_RED, COLOR_BLACK);
             print(" Failed!\n");
             set_text_color(COLOR_WHITE, COLOR_BLACK);
 
+            // Print " Failed!\n" as red to serial
             sprint(" \033[91mFailed!\033[0m\n");
         }
-    } else {
+    } else { // If IDE driver can not find drive, run this loop
+        // Print " Not Found!\n" as red
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Not Found!\n");
         set_text_color(COLOR_WHITE, COLOR_BLACK);
 
+        // Print " Not Found!\n" as red to serial
         sprint("\033[91mNot Found!\033[0m\n");
     }
 
+    // Print "Loading shell..." to both screen and serial
     bprint("Loading Shell...");
+    // Run shell
     shell_run();
 }
