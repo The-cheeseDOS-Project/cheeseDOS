@@ -22,7 +22,7 @@
 #include "stdbool.h"
 #include "ver.h"
 #include "hlp.h"
-#include "ls.h"
+#include "shw.h"
 #include "hi.h"
 #include "cls.h"
 #include "say.h"
@@ -66,7 +66,7 @@ static shell_command_t commands[] = {
     {"cls", cls},
     {"say", say},
     {"sum", sum},
-    {"ls", ls},
+    {"shw", shw},
     {"see", see},
     {"rm", rm},
     {"mkd", mkd},

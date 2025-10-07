@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LS_H
-#define LS_H
+#ifndef SHW_H
+#define SHW_H
 
-void ls(const char* args);
+void shw(const char* args);
 
 #endif

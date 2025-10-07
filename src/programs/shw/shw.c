@@ -34,7 +34,7 @@ static void print_name_callback(const char *name, uint32_t inode) {
     }
 }
 
-void ls(const char* args) {
+void shw(const char* args) {
     uint32_t target_inode_no = current_dir_inode_no;
 
     if (args && kstrlen(args) > 0) {
