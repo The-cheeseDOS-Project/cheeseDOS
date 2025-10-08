@@ -61,4 +61,4 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 - **Security Policy**: [SECURITY.md](./SECURITY.md)
 
 ## Legacy GRUB Build
-You can find a older build of cheeseDOS that uses GRUB instead of its own bootloader, you can find the iso [here](https://github.com/The-cheeseDOS-Project/cheeseDOS/releases/tag/YV8Zr). NOTE: It hit its EOL on Augest 2, 2025.
+You can find a older build of cheeseDOS that uses GRUB instead of its own bootloader, you can find it [here](https://github.com/The-cheeseDOS-Project/cheeseDOS-grub). NOTE: It hit its EOL on Augest 2, 2025.
