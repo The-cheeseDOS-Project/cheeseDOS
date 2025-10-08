@@ -16,21 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-ENTRY(start) /* Set entry point to start */
+ENTRY(start)
 
-MEMORY
-{
-  CODE (rwx)  : ORIGIN =  0x7c00, LENGTH = 512 /* Make it BIOS friendly */
+MEMORY {
+  CODE (rwx)  : ORIGIN =  0x7c00, LENGTH = 512
 }
 
-SECTIONS
-{
-  . = ORIGIN(CODE); /* Set the location to the start of the CODE region */
-  .text : {         /* Contains the actual code */
-    *(.text)        /* Include all .text sections */
-  } > CODE          /* Place this section in the CODE memory region */
+SECTIONS {
+  . = ORIGIN(CODE);
+  .text : {
+  *(.text)
+} > CODE
 
-  /DISCARD/ : { /* Discard unwanted sections to save space */
-    *(.note.*)  /* Remove all note sections */
-  }
+/DISCARD/ : {
+  *(.note.gnu.*)
+  *(.rel.text)
+  *(.bss)
+  *(.symtab)
+  *(.strtab)
+  *(.shstrtab)
+}
+
 }
