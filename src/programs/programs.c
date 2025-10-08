@@ -33,7 +33,7 @@
 #include "res.h"
 #include "see.h"
 #include "add.h"
-#include "rm.h"
+#include "del.h"
 #include "txt.h"
 #include "mkd.h"
 #include "ban.h"
@@ -68,7 +68,7 @@ static shell_command_t commands[] = {
     {"sum", sum},
     {"shw", shw},
     {"see", see},
-    {"rm", rm},
+    {"del", del},
     {"mkd", mkd},
     {"cd", cd},
     {"tme", tme},

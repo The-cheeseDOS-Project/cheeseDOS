@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef RM_H
-#define RM_H
+#ifndef DEL_H
+#define DEL_H
 
-void rm(const char* args);
+void del(const char* args);
 
 #endif

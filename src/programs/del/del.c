@@ -19,10 +19,10 @@
 #include "vga.h"
 #include "ramdisk.h"
 
-void rm(const char* args) {
+void del(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: rm <filename>\n");
+        print("Usage: del <filename>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
