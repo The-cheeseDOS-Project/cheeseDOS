@@ -276,9 +276,8 @@ all() {
        --remove-section=.dynamic \
        --remove-section=.got.plt \
        --remove-section=.comment \
+       --remove-section=..shstrtab \
        $OUTPUT $STRIPPED_OUTPUT
-
-       strip -s $STRIPPED_OUTPUT
   echo " Done!"
 
   printf "Building %s..." "$FLOPPY"
