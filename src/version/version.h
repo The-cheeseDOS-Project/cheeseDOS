@@ -19,6 +19,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define VERSION "a1007252052"
+#define VERSION "a1007252248"
 
 #endif
