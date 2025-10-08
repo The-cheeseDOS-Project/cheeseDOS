@@ -39,6 +39,24 @@ SECTIONS
     }
 
     /DISCARD/ : {
-        *(.eh_frame*)
+        *(.interp)
+        *(.dynsym)
+        *(.dynstr)
+        *(.gnu.hash)
+        *(.note.gnu.property)
+        *(.note.gnu.build-id)
+        *(.rel.dyn)
+        *(.dynamic)
+        *(.debug_info)
+        *(.debug_abbrev)
+        *(.debug_loclists)
+        *(.debug_aranges)
+        *(.debug_rnglists)
+        *(.debug_line)
+        *(.debug_str)
+        *(.debug_line_str)
+        *(.comment)
+        *(.eh_frame)
+        *(.eh_frame_hdr)
     }
 }

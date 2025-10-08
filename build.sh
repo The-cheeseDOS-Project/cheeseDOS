@@ -40,20 +40,9 @@ FLAGS="-ffreestanding \
        -pedantic-errors"
 
 LDFLAGS="-m$BITS \
-         -z \
-         noexecstack \
-         -Wl,--strip-all"
-
-TOOL_FLAGS="-march=native
-            -mtune=native
-            -Ofast
-            -Wall
-            -Wextra
-            -std=$CVER
-            -pedantic
-            -pedantic-errors
-            -D_POSIX_C_SOURCE=200112L
-            -Wl,--strip-all"
+         -z noexecstack
+         -nostdlib \
+         -Wl,--build-id=none"
 
 HDD="build/hdd.img"
 
@@ -61,9 +50,7 @@ SRC_DIR=src
 BUILD_DIR=build
 
 ELF="cheesedos.elf"
-STRIPPED_ELF="cheesedos.stripped.elf"
 OUTPUT="$BUILD_DIR/$ELF"
-STRIPPED_OUTPUT="$BUILD_DIR/$STRIPPED_ELF"
 
 BOOT_DIR="$SRC_DIR/boot"
 
@@ -250,7 +237,7 @@ all() {
   echo " Done!"
   
   printf "Linking bootloader..."
-    $CC $LDFLAGS -Wl,-T,"$BOOT_DIR/boot.ld" -Wl,--oformat=binary -nostdlib -o "$BUILD_DIR/boot.bin" "$BUILD_DIR/boot.o"
+    $CC $LDFLAGS -Wl,-T,"$BOOT_DIR/boot.ld" -Wl,--oformat=binary -o "$BUILD_DIR/boot.bin" "$BUILD_DIR/boot.o"
   echo " Done!"
       
   OBJS=$(get_object_files)
@@ -261,23 +248,11 @@ all() {
   done
   
   printf "Linking cheeseDOS with %d object files..." "$obj_count"
-    $CC $LDFLAGS -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -nostdlib -o "$OUTPUT" $OBJS
+    $CC $LDFLAGS -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
   echo " Done!"
 
   printf "Stripping %s..." "$OUTPUT"
-    objcopy \
-       --remove-section=.interp \
-       --remove-section=.dynsym \
-       --remove-section=.dynstr \
-       --remove-section=.gnu.hash \
-       --remove-section=.note.gnu.property \
-       --remove-section=.note.gnu.build-id \
-       --remove-section=.rel.dyn \
-       --remove-section=.dynamic \
-       --remove-section=.got.plt \
-       --remove-section=.comment \
-       --remove-section=..shstrtab \
-       $OUTPUT $STRIPPED_OUTPUT
+    objcopy --strip-all --remove-section=.rel.dyn --remove-section=.got.plt $OUTPUT
   echo " Done!"
 
   printf "Building %s..." "$FLOPPY"
