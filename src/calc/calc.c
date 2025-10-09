@@ -88,7 +88,7 @@ static void big32_print(const big32_t* num) {
     big32_t tmp;
     big32_copy(num, &tmp);
     if (tmp.size == 0 || (tmp.size == 1 && tmp.digits[0] == 0)) {
-        vga_putchar('0');
+        putchar('0');
         print("\n");
         return;
     }
@@ -133,8 +133,8 @@ static void big32_print(const big32_t* num) {
         }
     }
 
-    if (num->sign == -1) vga_putchar('-');
-    for (int i = dec_len - 1; i >= 0; --i) vga_putchar('0' + dec[i]);
+    if (num->sign == -1) putchar('-');
+    for (int i = dec_len - 1; i >= 0; --i) putchar('0' + dec[i]);
     print("\n");
 }
 

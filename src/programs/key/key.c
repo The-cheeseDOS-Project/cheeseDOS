@@ -92,13 +92,13 @@ static void draw_ui() {
     print("+-+-+-+-+-+-+-+-+-+-+\n");
     print("|A|S|D|F|G|H|J|K|L|;|\n");
     print("+-+-+-+-+-+-+-+-+-+-+\n");
-    vga_set_cursor(80, 25);
+    set_cursor(80, 25);
 }
 
 void key(const char* *unused) {
     (void)unused;
     uint8_t old_row, old_col;
-    vga_get_cursor(&old_row, &old_col);
+    get_cursor(&old_row, &old_col);
 
     clear_screen();
     draw_ui();
@@ -141,7 +141,7 @@ void key(const char* *unused) {
         }
     }
 
-    vga_set_cursor(old_row, old_col);
+    set_cursor(old_row, old_col);
     set_text_color(COLOR_WHITE, COLOR_BLACK);
     clear_screen();
 }

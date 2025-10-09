@@ -40,22 +40,22 @@ void tme(const char* *unused) {
 
     while (1) {
         clear_screen();
-        vga_set_cursor(0, 0);
+        set_cursor(0, 0);
         read_rtc_time(&current_time);
         if (tick_counter % MOVE_DELAY == 0) {
             rand_col = rand32() % 70;
             rand_row = rand32() % 25;
         }
 
-        vga_set_cursor(rand_col, rand_row);
+        set_cursor(rand_col, rand_row);
 
-        if (current_time.month < 10) vga_putchar('0');
-        print_uint(current_time.month);
-        vga_putchar('/');
-        if (current_time.day < 10) vga_putchar('0');
-        print_uint(current_time.day);
-        vga_putchar('/');
-        print_uint(current_time.year);
+        if (current_time.month < 10) putchar('0');
+        uprint(current_time.month);
+        putchar('/');
+        if (current_time.day < 10) putchar('0');
+        uprint(current_time.day);
+        putchar('/');
+        uprint(current_time.year);
         print(" ");
         uint8_t display_hour = current_time.hour;
         const char* ampm = "AM";
@@ -65,17 +65,17 @@ void tme(const char* *unused) {
         } else if (display_hour == 0) {
             display_hour = 12;
         }
-        if (display_hour < 10) vga_putchar('0');
-        print_uint(display_hour);
-        vga_putchar(':');
-        if (current_time.minute < 10) vga_putchar('0');
-        print_uint(current_time.minute);
-        vga_putchar(':');
-        if (current_time.second < 10) vga_putchar('0');
-        print_uint(current_time.second);
-        vga_putchar(' ');
+        if (display_hour < 10) putchar('0');
+        uprint(display_hour);
+        putchar(':');
+        if (current_time.minute < 10) putchar('0');
+        uprint(current_time.minute);
+        putchar(':');
+        if (current_time.second < 10) putchar('0');
+        uprint(current_time.second);
+        putchar(' ');
         print(ampm);
-        vga_set_cursor(80, 20);
+        set_cursor(80, 20);
         delay(1000);
         tick_counter++;
 

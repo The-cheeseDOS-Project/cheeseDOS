@@ -94,27 +94,27 @@ static void init_game() {
 static void draw_game() {
     if (last_tail.x >= 0 && last_tail.y >= 0) {
         set_text_color(COLOR_WHITE, COLOR_BLACK);
-        vga_set_cursor(last_tail.y + 1, last_tail.x);
-        vga_putchar(EMPTY);
+        set_cursor(last_tail.y + 1, last_tail.x);
+        putchar(EMPTY);
     }
 
     set_text_color(COLOR_GREEN, COLOR_BLACK);
-    vga_set_cursor(snake.body[0].y + 1, snake.body[0].x);
-    vga_putchar(SNAKE_HEAD);
+    set_cursor(snake.body[0].y + 1, snake.body[0].x);
+    putchar(SNAKE_HEAD);
 
     if (snake.length > 1) {
-        vga_set_cursor(snake.body[1].y + 1, snake.body[1].x);
-        vga_putchar(SNAKE_BODY);
+        set_cursor(snake.body[1].y + 1, snake.body[1].x);
+        putchar(SNAKE_BODY);
     }
 
     set_text_color(COLOR_RED, COLOR_BLACK);
-    vga_set_cursor(food.y + 1, food.x);
-    vga_putchar(FOOD);
+    set_cursor(food.y + 1, food.x);
+    putchar(FOOD);
 
     set_text_color(COLOR_CYAN, COLOR_BLACK);
-    vga_set_cursor(0, 0);
+    set_cursor(0, 0);
     print("Score: ");
-    print_uint(score);
+    uprint(score);
 
     set_text_color(COLOR_BLACK, COLOR_BLACK);
 }
@@ -237,14 +237,14 @@ static void handle_input() {
 
 static void game_over() {
     set_text_color(COLOR_RED, COLOR_BLACK);
-    vga_set_cursor(GAME_HEIGHT / 2, (GAME_WIDTH - 10) / 2);
+    set_cursor(GAME_HEIGHT / 2, (GAME_WIDTH - 10) / 2);
     print("GAME OVER!");
 
-    vga_set_cursor(GAME_HEIGHT / 2 + 2, (GAME_WIDTH - 15) / 2);
+    set_cursor(GAME_HEIGHT / 2 + 2, (GAME_WIDTH - 15) / 2);
     print("Final Score: ");
-    print_uint(score);
+    uprint(score);
 
-    vga_set_cursor(GAME_HEIGHT / 2 + 4, (GAME_WIDTH - 20) / 2);
+    set_cursor(GAME_HEIGHT / 2 + 4, (GAME_WIDTH - 20) / 2);
     print("Press any key to exit");
 
     beep(60, 100);
@@ -257,40 +257,40 @@ static void game_over() {
 void snk(const char* *unused) {
     (void)unused;
     uint8_t old_row, old_col;
-    vga_get_cursor(&old_row, &old_col);
+    get_cursor(&old_row, &old_col);
 
     clear_screen();
-    vga_hide_cursor(true);
+    hide_cursor(true);
 
-    vga_disable_scroll(true);
+    disable_scroll(true);
 
     init_game();
 
     set_text_color(COLOR_YELLOW, COLOR_BLACK);
-    vga_set_cursor(0, (GAME_WIDTH - 3) / 2);
+    set_cursor(0, (GAME_WIDTH - 3) / 2);
     print("snk");
 
     set_text_color(COLOR_WHITE, COLOR_BLACK);
     for (int y = 1; y < GAME_HEIGHT; y++) {
         for (int x = 0; x < GAME_WIDTH; x++) {
-            vga_set_cursor(y, x);
-            vga_putchar(EMPTY);
+            set_cursor(y, x);
+            putchar(EMPTY);
         }
     }
 
     set_text_color(COLOR_GREEN, COLOR_BLACK);
     for (int i = 0; i < snake.length; i++) {
-        vga_set_cursor(snake.body[i].y + 1, snake.body[i].x);
+        set_cursor(snake.body[i].y + 1, snake.body[i].x);
         if (i == 0) {
-            vga_putchar(SNAKE_HEAD);
+            putchar(SNAKE_HEAD);
         } else {
-            vga_putchar(SNAKE_BODY);
+            putchar(SNAKE_BODY);
         }
     }
 
     set_text_color(COLOR_RED, COLOR_BLACK);
-    vga_set_cursor(food.y + 1, food.x);
-    vga_putchar(FOOD);
+    set_cursor(food.y + 1, food.x);
+    putchar(FOOD);
 
     uint32_t last_move_time = timer_millis();
     const uint32_t move_delay = 150;
@@ -320,15 +320,15 @@ void snk(const char* *unused) {
         if (current_time - last_scroll_time >= GUIDE_SCROLL_DELAY) {
             set_text_color(COLOR_LIGHT_GREY, COLOR_BLACK);
 
-            vga_set_cursor(GUIDE_SCROLL_ROW, 0);
+            set_cursor(GUIDE_SCROLL_ROW, 0);
             for (int i = 0; i < GAME_WIDTH; i++) {
-                vga_putchar(' ');
+                putchar(' ');
             }
 
             for (int i = 0; i < GAME_WIDTH; i++) {
                 char ch = GUIDE_TEXT[(scroll_offset + i) % kstrlen(GUIDE_TEXT)];
-                vga_set_cursor(GUIDE_SCROLL_ROW, i);
-                vga_putchar(ch);
+                set_cursor(GUIDE_SCROLL_ROW, i);
+                putchar(ch);
             }
             scroll_offset = (scroll_offset + 1) % kstrlen(GUIDE_TEXT);
             last_scroll_time = current_time;
@@ -337,9 +337,9 @@ void snk(const char* *unused) {
 
     game_over();
 
-    vga_disable_scroll(false);
-    vga_hide_cursor(false);
-    vga_set_cursor(old_row, old_col);
+    disable_scroll(false);
+    hide_cursor(false);
+    set_cursor(old_row, old_col);
     set_text_color(COLOR_WHITE, COLOR_BLACK);
     clear_screen();
 }

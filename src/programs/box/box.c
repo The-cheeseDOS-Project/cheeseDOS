@@ -24,8 +24,8 @@
 void box(const char* *unused) {
     (void)unused;
     uint8_t orig_row, orig_col;
-    vga_get_cursor(&orig_row, &orig_col);
-    vga_set_cursor(25, 80);
+    get_cursor(&orig_row, &orig_col);
+    set_cursor(25, 80);
     for (volatile int i = 0; i < 2000000; i++);
     while (inb(0x64) & 1) inb(0x60);
 
@@ -59,7 +59,7 @@ void box(const char* *unused) {
         clear_screen();
         x += vx;
         y += vy;
-        vga_set_cursor(25, 80);
+        set_cursor(25, 80);
 
         int collided = 0;
 
@@ -101,6 +101,6 @@ void box(const char* *unused) {
     }
 
     while (inb(0x64) & 1) inb(0x60);
-    vga_set_cursor(orig_row, orig_col);
+    set_cursor(orig_row, orig_col);
     clear_screen();
 }

@@ -41,7 +41,7 @@
 extern unsigned char default_text_fg_color;
 extern unsigned char default_text_bg_color;
 
-void vga_putchar(char c);
+void putchar(char c);
 void print(const char *str);
 void clear_screen(void);
 void backspace(void);
@@ -50,13 +50,13 @@ unsigned short get_cursor(void);
 void set_text_color(unsigned char fg, unsigned char bg);
 unsigned char get_screen_width(void);
 unsigned char get_screen_height(void);
-void vga_clear_chars(unsigned short start_pos, unsigned short count);
+void clear_chars(unsigned short start_pos, unsigned short count);
 void putchar(char ch);
-void vga_set_cursor(unsigned char row, unsigned char col);
-void vga_get_cursor(unsigned char *row, unsigned char *col);
-void vga_move_cursor(unsigned char row, unsigned char col);
-void vga_hide_cursor(int hide);
-void print_uint(unsigned int num);
-void vga_disable_scroll(int disable);
+void set_cursor(unsigned char row, unsigned char col);
+void get_cursor(unsigned char *row, unsigned char *col);
+void move_cursor(unsigned char row, unsigned char col);
+void hide_cursor(int hide);
+void uprint(unsigned int num);
+void disable_scroll(int disable);
 
 #endif

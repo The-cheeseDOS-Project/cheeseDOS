@@ -36,7 +36,7 @@ void ban(const char *unused) {
     const int sw = 80, sh = 25;
     uint16_t *vga = (uint16_t *)0xB8000;
 
-    vga_set_cursor(25, 0);
+    set_cursor(25, 0);
 
     int x[count], y[count];
     int vx[count], vy[count];
@@ -64,7 +64,7 @@ void ban(const char *unused) {
     static int scroll_bottom = 0;
 
     while (1) {
-        vga_set_cursor(25, 0);
+        set_cursor(25, 0);
 
         if ((inb(0x64) & 1) && inb(0x60) == 0x01) break;
 

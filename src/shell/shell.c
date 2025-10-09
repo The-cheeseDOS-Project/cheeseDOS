@@ -66,7 +66,7 @@ static void add_history(const char *cmd) {
 }
 
 static void clear_input_line(int len) {
-    vga_clear_chars(prompt_start_vga_pos, len);
+    clear_chars(prompt_start_vga_pos, len);
     set_cursor_pos(prompt_start_vga_pos);
 }
 
@@ -257,11 +257,11 @@ void shell_run() {
         }
         if (c == KEY_ENTER) {
             input[idx] = '\0';
-            vga_putchar('\n');
+            putchar('\n');
             add_history(input);
             shell_execute(input);
             if (get_cursor() % get_screen_width() != 0) {
-                vga_putchar('\n');
+                putchar('\n');
             }
             idx = 0;
             cursor_index = 0;

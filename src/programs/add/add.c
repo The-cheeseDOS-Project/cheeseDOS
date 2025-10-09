@@ -129,7 +129,7 @@ void add(const char* args) {
     if (content_length + text_len >= RAMDISK_DATA_SIZE_BYTES) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Error: Out of Ramdisk space.");
-        print_uint(RAMDISK_DATA_SIZE_BYTES);
+        uprint(RAMDISK_DATA_SIZE_BYTES);
         print(" bytes).\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;

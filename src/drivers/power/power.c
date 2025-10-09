@@ -40,7 +40,7 @@ void shutdown(void) {
     clear_screen();
     sprint("Halting and Catching Fire...\n\n");
     print("It is now safe to turn off your computer.\n");
-    vga_move_cursor(80, 25);
+    move_cursor(80, 25);
     __asm__ volatile (
         "cli\n\t"
         "hlt\n\t"

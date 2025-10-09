@@ -81,7 +81,7 @@ void bit(const char* args) {
 
         for (int i = pos - 1; i >= 0; i--) {
             char c = size_str[i];
-            vga_putchar(c);
+            putchar(c);
         }
     }
 

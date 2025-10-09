@@ -158,10 +158,10 @@ static void setup_ui(const char *filename, bool is_new, const char* buffer, size
     print(is_new ? "[NEW FILE] " : "");
     print(filename);
     set_text_color(COLOR_WHITE, COLOR_BLACK);
-    vga_move_cursor(1, 0);
+    move_cursor(1, 0);
 
     for (size_t i = 0; buffer[i] != '\0' && i < TXT_BUFFER_SIZE; i++) {
-        vga_putchar(buffer[i]);
+        putchar(buffer[i]);
     }
 
     uint8_t row = 1, col = 0;
@@ -177,7 +177,7 @@ static void setup_ui(const char *filename, bool is_new, const char* buffer, size
             }
         }
     }
-    vga_move_cursor(row, col);
+    move_cursor(row, col);
 }
 
 void txt(const char *filename) {
@@ -197,7 +197,7 @@ void txt(const char *filename) {
     }
 
     setup_ui(filename, is_new, buffer, index);
-    vga_move_cursor(1, 0);
+    move_cursor(1, 0);
 
     uint8_t row = 1, col = 0;
     for (size_t i = 0; i < index; i++) {
@@ -212,7 +212,7 @@ void txt(const char *filename) {
             }
         }
     }
-    vga_move_cursor(row, col);
+    move_cursor(row, col);
 
     while (1) {
         int ch = keyboard_getchar();
@@ -279,12 +279,12 @@ void txt(const char *filename) {
                     }
                 }
             }
-            vga_move_cursor(row, col);
+            move_cursor(row, col);
         }
     }
 
 end_loop:
-    vga_move_cursor(get_screen_height() - 1, 0);
+    move_cursor(get_screen_height() - 1, 0);
     if (saved) {
         memcpy(file->data, buffer, index);
         file->size = index;
