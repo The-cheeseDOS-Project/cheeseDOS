@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef HI_H
-#define HI_H
+#ifndef HIW_H
+#define HIW_H
 
-void hi(const char*);
+void hiw(const char*);
 
 #endif

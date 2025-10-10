@@ -20,10 +20,11 @@
 #include "string.h"
 #include "serial.h"
 #include "stdbool.h"
+
 #include "ver.h"
 #include "hlp.h"
 #include "shw.h"
-#include "hi.h"
+#include "hiw.h"
 #include "cls.h"
 #include "say.h"
 #include "sum.h"
@@ -37,7 +38,7 @@
 #include "txt.h"
 #include "mkd.h"
 #include "ban.h"
-#include "cd.h"
+#include "cif.h"
 #include "tme.h"
 #include "clr.h"
 #include "cpy.h"
@@ -62,7 +63,7 @@ typedef struct {
 static shell_command_t commands[] = {
     {"hlp", hlp},
     {"ver", ver},
-    {"hi", hi},
+    {"hiw", hiw},
     {"cls", cls},
     {"say", say},
     {"sum", sum},
@@ -70,7 +71,7 @@ static shell_command_t commands[] = {
     {"see", see},
     {"del", del},
     {"mkd", mkd},
-    {"cd", cd},
+    {"cif", cif},
     {"tme", tme},
     {"clr", clr},
     {"ban", ban},

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CD_H
-#define CD_H
+#include "vga.h"
 
-void cd(const char* args);
-
-#endif
+void hiw(const char* *unused) {
+    (void)unused;
+    print("hello, world\n");
+}

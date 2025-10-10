@@ -25,7 +25,7 @@ extern uint32_t current_dir_inode_no;
 extern uint8_t default_text_fg_color;
 extern uint8_t default_text_bg_color;
 
-void cd(const char *args) {
+void cif(const char *args) {
     if (!args || args[0] == '\0') {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Usage: cd <dirname>\n");

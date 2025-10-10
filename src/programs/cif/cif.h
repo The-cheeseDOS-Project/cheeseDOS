@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
+#ifndef CIF_H
+#define CIF_H
 
-void hi(const char* *unused) {
-    (void)unused;
-    print("hello, world\n");
-}
+void cif(const char* args);
+
+#endif
