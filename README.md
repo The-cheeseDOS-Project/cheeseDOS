@@ -1,5 +1,3 @@
-## Thank you for visiting the cheeseDOS GitHub page!
-
 ![Lines of Code](https://tokei.rs/b1/github/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)
 [![Repo Size](https://img.shields.io/github/repo-size/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS)
 [![Last Commit](https://img.shields.io/github/last-commit/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge)](https://github.com/The-cheeseDOS-Project/cheeseDOS/commits/main)
