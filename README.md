@@ -59,6 +59,3 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 - **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
 - **GPLv3 License**: [LICENSE](./LICENSE)
 - **Security Policy**: [SECURITY.md](./SECURITY.md)
-
-## Legacy GRUB Build
-You can find a older build of cheeseDOS that uses GRUB instead of its own bootloader, you can find it [here](https://github.com/The-cheeseDOS-Project/cheeseDOS-GRUB). NOTE: It hit its EOL on Augest 2, 2025.
