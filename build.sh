@@ -19,7 +19,7 @@
 if [ -f config.conf ]; then
     . ./config.conf
   else
-      echo "Error: config.conf not found. Run ./configure.sh first."
+      printf "Error: config.conf not found. Run ./configure.sh first.\n"
       exit 1
 fi
 
@@ -55,15 +55,15 @@ OUTPUT="$BUILD_DIR/$ELF"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc strip objcopy as ld cpp sh echo mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
+  required_tools="gcc strip objcopy as ld printf mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
     printf "Checking for %s..." "$tool"
     if command -v "$tool" > /dev/null 2>&1; then
-      echo " Found!"
+      printf " Found!\n"
     else
-      echo " Not Found!"
+      printf " Not Found!\n"
       if [ -z "$missing_tools" ]; then
         missing_tools="$tool"
       else
@@ -73,11 +73,11 @@ check_dependencies() {
   done
 
   if [ -n "$missing_tools" ]; then
-    echo
-    echo "SOME TOOLS ARE NOT FOUND!"
+    printf "\n"
+    printf "SOME TOOLS ARE NOT FOUND!"
     i=1
     for tool in $missing_tools; do
-      echo "$i. $tool"
+      printf "$i. $tool"
       i=$((i+1))
     done
     exit 1
@@ -89,7 +89,7 @@ get_includes() {
   for dir in $(find "$SRC_DIR" -type d | sort); do
     includes="$includes -I$dir"
   done
-  echo "$includes"
+  printf "$includes"
 }
 
 INCLUDES=$(get_includes)
@@ -129,7 +129,7 @@ get_object_files() {
     fi
   done
   
-  echo "$objs"
+  printf "$objs"
 }
 
 CFLAGS="-m$BITS \
@@ -151,9 +151,7 @@ build_asm_object() {
 }
 
 all() {
-  echo "Building cheeseDOS..."
-
-  echo
+  printf "Building cheeseDOS...\n\n"
 
   check_dependencies
 
@@ -161,7 +159,7 @@ all() {
 
   printf "Making directory: %s..." "$BUILD_DIR"
     mkdir -p "$BUILD_DIR"
-  echo " Done!"
+  printf " Done!\n"
 
   build_pids=""
   
@@ -169,7 +167,7 @@ all() {
     src="$1"
     obj="$2"
 
-    echo "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
+    printf "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
@@ -193,7 +191,7 @@ all() {
     src="$1"
     obj="$2"
 
-    echo "$CC $ASMFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
+    printf "$CC $ASMFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
@@ -234,11 +232,11 @@ all() {
 
   printf "Assembling bootloader..."
     $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
-  echo " Done!"
+  printf " Done!\n"
   
   printf "Linking bootloader..."
     $CC $LDFLAGS -Wl,-T,"$BOOT_DIR/boot.ld" -Wl,--oformat=binary -o "$BUILD_DIR/boot.bin" "$BUILD_DIR/boot.o"
-  echo " Done!"
+  printf " Done!\n"
       
   OBJS=$(get_object_files)
   
@@ -249,19 +247,19 @@ all() {
   
   printf "Linking cheeseDOS with %d object files..." "$obj_count"
     $CC $LDFLAGS -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
-  echo " Done!"
+  printf " Done!\n"
 
   printf "Stripping %s..." "$OUTPUT"
     objcopy --strip-all --remove-section=.rel.dyn --remove-section=.got.plt $OUTPUT
-  echo " Done!"
+  printf " Done!\n"
 
   printf "Building %s..." "$FLOPPY"
     cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
-  echo " Done!"
+  printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
     truncate -s 1474560 "$FLOPPY"
-  echo " Done!"
+  printf " Done!\n"
 
   exit 0
 }
@@ -270,7 +268,7 @@ make_hdd_image() {
   printf "Creating %sB disk image to %s..." "$HDD_SIZE" "$HDD"
     dd if=/dev/zero of="$HDD" bs="$HDD_SIZE" count=1 \
       > /dev/null 2>&1
-  echo " Done!"
+  printf " Done!\n"
 }
 
 MEM=1M
@@ -278,15 +276,8 @@ CPU=486
 CPU_FLAGS="-fpu,-mmx,-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2"
 
 run() {
-  if [ -f config.conf ]; then
-    . ./config.conf
-  else
-    echo "Error: config.conf not found. Run ./configure.sh first."
-    exit 1
-  fi
-
   if [ ! -f "$FLOPPY" ]; then
-    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
+    printf "Error: Floppy image $FLOPPY not found. Run 'build' first.\n"
     exit 1
   fi
   
@@ -310,7 +301,7 @@ run() {
 
 run_kvm() {
   if [ ! -f "$FLOPPY" ]; then
-    echo "Error: Floppy image $FLOPPY not found. Run 'build' first."
+    printf "Error: Floppy image $FLOPPY not found. Run 'build' first.\n"
     exit 1
   fi
   
@@ -337,13 +328,13 @@ run_kvm() {
 clean() {
   printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
     rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
-  echo " Done!"
+  printf " Done!\n"
 }
 
 distclean() {
   printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
     rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
-  echo " Done!"
+  printf " Done!\n"
 }
 
 case "$1" in
@@ -353,5 +344,5 @@ case "$1" in
   run-kvm) run_kvm ;;
   clean) clean ;;
   distclean) distclean ;;
-  *) echo "Usage: $0 {all|run|run-kvm|clean|distclean}" ; exit 1 ;;
+  *) printf "Usage: $0 {all|run|run-kvm|clean|distclean}\n" ; exit 1 ;;
 esac
