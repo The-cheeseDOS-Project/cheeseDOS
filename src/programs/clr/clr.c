@@ -21,6 +21,7 @@
 #include "stdint.h"
 
 void clr(const char** unused) {
+   (void)unused;
    set_text_color(COLOR_DARKBLUE, COLOR_BLACK);        print("darkblue\n");
    set_text_color(COLOR_DARKGREEN, COLOR_BLACK);       print("darkgreen\n");
    set_text_color(COLOR_DARKCYAN, COLOR_BLACK);        print("darkcyan\n");

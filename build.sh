@@ -55,7 +55,7 @@ OUTPUT="$BUILD_DIR/$ELF"
 BOOT_DIR="$SRC_DIR/boot"
 
 check_dependencies() {
-  required_tools="gcc strip objcopy as ld printf mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
+  required_tools="gcc as ld objcopy mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -140,7 +140,8 @@ CFLAGS="-m$BITS \
         $FLAGS \
         $INCLUDES"
 
-ASMFLAGS="-m$BITS $INCLUDES"
+ASMFLAGS="-m$BITS \
+          $INCLUDES"
 
 build_c_object() {
   $CC $CFLAGS -c "$1" -o "$2"
@@ -151,8 +152,6 @@ build_asm_object() {
 }
 
 all() {
-  printf "Building cheeseDOS...\n\n"
-
   check_dependencies
 
   clean
@@ -167,7 +166,7 @@ all() {
     src="$1"
     obj="$2"
 
-    printf "$CC $CFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
+    printf "$CC $CFLAGS -c $src -o $obj\n" | awk '{$1=$1; print}'
 
     {
       output=$(mktemp)
@@ -326,13 +325,13 @@ run_kvm() {
 }
 
 clean() {
-  printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
+  printf "Cleaning up..."
     rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
   printf " Done!\n"
 }
 
 distclean() {
-  printf "Cleaning up: %s %s %s..." "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
+  printf "Cleaning up..."
     rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "config.conf"
   printf " Done!\n"
 }
