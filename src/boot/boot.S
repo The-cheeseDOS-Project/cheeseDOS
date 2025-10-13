@@ -89,7 +89,7 @@ mov si, drives                                                                  
 scan_floppy:                                                                                 # Floppy scan loop
     lodsb                                                                                    # Grab next drive from list
     test al, al                                                                              # Check if drive ID is empty
-    jz err                                                                                   # Error out if there is no drives
+    jz no_drives                                                                             # Error out if there is no drives
     mov dl, al                                                                               # Tell BIOS what drive to read
                                                                                              #
     mov ax, 0x0201                                                                           # Ask BIOS to read one sector
@@ -221,7 +221,7 @@ print:                                                                          
 .ret:                                                                                        # Return label
     ret                                                                                      # Return from function
                                                                                              #
-err:                                                                                         # Error handler
+no_drives:                                                                                   # No drives error handler
     mov ds, bx                                                                               # Set DS to zero
     mov si, offset msg_failed                                                                # Load error message
     call print                                                                               # Print error message
@@ -234,8 +234,8 @@ drives:                                                                         
                                                                                              #
 msg_loading:                                                                                 # Loading message
     .ascii "Starting cheeseDOS...\r\0"                                                       # Loading message text
-msg_failed:                                                                                  # Failed message
-    .ascii "Starting cheeseDOS... Failed!\0"                                                 # Error message text
+msg_no_drives:                                                                               # No drives message
+    .ascii "Error [19]: cheeseDOS could not find any bootable devices!"                      # No drives message text
                                                                                              #
 gdt_code:                                                                                    # Code segment descriptor
     .word 0xFFFF                                                                             # Limit low
