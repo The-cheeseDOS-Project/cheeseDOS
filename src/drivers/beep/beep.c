@@ -21,8 +21,6 @@
 #include "io.h"
 
 void beep(uint32_t frequency, uint32_t duration_ms) {
-    if (frequency < 20 || frequency > 20000 || duration_ms == 0) return;
-
     uint32_t divisor = 1193180 / frequency;
 
     outb(0x43, 0xB6);
