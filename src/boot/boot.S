@@ -223,7 +223,7 @@ print:                                                                          
                                                                                              #
 no_drives:                                                                                   # No drives error handler
     mov ds, bx                                                                               # Set DS to zero
-    mov si, offset msg_failed                                                                # Load error message
+    mov si, offset msg_no_drives                                                             # Load error message
     call print                                                                               # Print error message
     jmp halt_loop                                                                            # Halt system
                                                                                              #
