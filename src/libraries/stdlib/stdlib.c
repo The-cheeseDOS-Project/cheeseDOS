@@ -16,9 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
-
-void hlp(const char* *unused) {
-    (void)unused;
-    print("Commands: hlp, cls, say, ver, hiw, shw, see, add, del, mkd, cif, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, &, mus, ide, box, hey, snk, key, rep, bla.\n");
+int abs(int x) {
+    return x < 0 ? -x : x;
 }

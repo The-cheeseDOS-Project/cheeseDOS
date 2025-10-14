@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
+#ifndef BLA_H
+#define BLA_H
 
-void hlp(const char* *unused) {
-    (void)unused;
-    print("Commands: hlp, cls, say, ver, hiw, shw, see, add, del, mkd, cif, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, &, mus, ide, box, hey, snk, key, rep, bla.\n");
-}
+void bla(const char*);
+
+#endif
