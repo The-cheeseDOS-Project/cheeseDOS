@@ -144,7 +144,7 @@ load_segment:                                                                   
     mov ah, 0x02                                                                             # BIOS read sectors function
     xor bx, bx                                                                               # Set offset to zero
     int 0x13                                                                                 # Call BIOS interrupt
-    jc err                                                                                   # Error out if read failed
+#    jc err                                                                                   # Error out if read failed
                                                                                              #
 skip_seg:                                                                                    # Skip segment label
     pop cx                                                                                   # Restore CX
@@ -235,7 +235,9 @@ drives:                                                                         
 msg_loading:                                                                                 # Loading message
     .ascii "Starting cheeseDOS...\r\0"                                                       # Loading message text
 msg_no_drives:                                                                               # No drives message
-    .ascii "Error [19]: cheeseDOS could not find any bootable devices!"                      # No drives message text
+    .ascii "Error: cheeseDOS could not find any bootable devices!"                           # No drives message text
+msg_load_seg_fail:                                                                           # <PLACEHOLDER>
+    .ascii "Error: <PLACEHOLDER>"                                                            # <PLACEHOLDER>
                                                                                              #
 gdt_code:                                                                                    # Code segment descriptor
     .word 0xFFFF                                                                             # Limit low
