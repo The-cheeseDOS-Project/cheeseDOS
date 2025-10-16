@@ -21,7 +21,6 @@
 #include "string.h"
 
 void add(const char* args) {
-    ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
     ramdisk_inode_t *file = NULL;
 
     if (!args) {

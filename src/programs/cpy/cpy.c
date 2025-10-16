@@ -64,9 +64,5 @@ void cpy(const char* args) {
         return;
     }
 
-    int create_result = (src_inode->type == RAMDISK_INODE_TYPE_FILE)
-        ? ramdisk_create_file(current_dir_inode_no, dst)
-        : ramdisk_create_dir(current_dir_inode_no, dst);
-
     copy_inode(src_inode, dst_inode);
 }
