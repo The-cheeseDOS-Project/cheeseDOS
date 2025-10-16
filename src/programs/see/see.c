@@ -28,12 +28,6 @@ void see(const char* args) {
     }
     const char *filename = args;
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
-    if (!dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get current directory\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
     ramdisk_inode_t *file = ramdisk_find_inode_by_name(dir, filename);
     if (!file) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -47,17 +41,7 @@ void see(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-
     char buf[2048];
-    int read = ramdisk_readfile(file, 0, sizeof(buf) - 1, buf);
-    if (read < 0) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Error reading file\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-    buf[read] = 0;
-
     print(buf);
     print("\n");
 }

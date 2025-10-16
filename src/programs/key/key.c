@@ -24,7 +24,7 @@
 #include "string.h"
 
 #define NUM_KEYS 10
-#define POLL_DELAY 100
+#define POLL_DELAY 10
 
 typedef struct {
     char key_char;

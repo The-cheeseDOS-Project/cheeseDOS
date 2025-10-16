@@ -31,6 +31,6 @@ void mus(const char* args) {
     if (kstrcmp(args, "free_software_song") == 0) {
         free_software_song();
     } else {
-        print("Unknown song. Try: free_software_song\n");
+        print("Unknown song, Run mus for help.\n");
     }
 }

@@ -48,14 +48,7 @@ void mve(const char* args) {
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
-
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
-    if (!dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get current directory\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
     ramdisk_inode_t *src_inode = ramdisk_find_inode_by_name(dir, src);
     if (!src_inode) {
         set_text_color(COLOR_RED, COLOR_BLACK);

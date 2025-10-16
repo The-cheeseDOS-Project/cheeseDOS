@@ -18,7 +18,7 @@
 
 #include "vga.h"
 
-void hiw(const char* *unused) {
+void hiw(const char** unused) {
     (void)unused;
     print("hello, world\n");
 }

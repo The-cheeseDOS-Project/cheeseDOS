@@ -22,7 +22,7 @@
 void mkd(const char* args) {
     if (!args) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: mkd <dirname>\n");
+        print("Usage: mkd <folder>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
@@ -30,7 +30,7 @@ void mkd(const char* args) {
     if (res == 0) {
     } else {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to create directory\n");
+        print("Error: Folder already exists\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
     }
 }

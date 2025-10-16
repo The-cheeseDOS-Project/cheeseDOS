@@ -68,44 +68,10 @@ void add(const char* args) {
         text_to_add = NULL;
     }
 
-    if (!dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get current directory\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-
-    file = ramdisk_find_inode_by_name(dir, filename);
-    if (!file) {
-        if (ramdisk_create_file(current_dir_inode_no, filename) != 0) {
-            set_text_color(COLOR_RED, COLOR_BLACK);
-            print("Failed to create file\n");
-            set_text_color(default_text_fg_color, default_text_bg_color);
-            return;
-        }
-        file = ramdisk_find_inode_by_name(dir, filename);
-        if (!file) {
-            set_text_color(COLOR_RED, COLOR_BLACK);
-            print("Error: Could not retrieve newly created file.\n");
-            set_text_color(default_text_fg_color, default_text_bg_color);
-            return;
-        }
-    }
-
     if (file->type == RAMDISK_INODE_TYPE_DIR) {
         set_text_color(COLOR_RED, COLOR_BLACK);
         print("Cannot add text to a directory.\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-
-    if (!text_to_add) {
-        char empty[1] = { '\0' };
-        if (ramdisk_writefile(file, 0, 0, empty) < 0) {
-            set_text_color(COLOR_RED, COLOR_BLACK);
-            print("Failed to write empty file\n");
-            set_text_color(default_text_fg_color, default_text_bg_color);
-        }
         return;
     }
 
@@ -137,11 +103,4 @@ void add(const char* args) {
 
     kstrcpy(new_content + content_length, text_to_add);
     content_length += text_len;
-
-    if (ramdisk_writefile(file, 0, content_length, new_content) < 0) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to write to file\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
 }

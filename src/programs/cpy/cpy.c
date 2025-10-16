@@ -47,13 +47,7 @@ void cpy(const char* args) {
     }
 
     ramdisk_inode_t *dir = ramdisk_iget(current_dir_inode_no);
-    if (!dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get current directory\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-
+    
     ramdisk_inode_t *src_inode = ramdisk_find_inode_by_name(dir, src);
     if (!src_inode) {
         set_text_color(COLOR_RED, COLOR_BLACK);
@@ -73,21 +67,6 @@ void cpy(const char* args) {
     int create_result = (src_inode->type == RAMDISK_INODE_TYPE_FILE)
         ? ramdisk_create_file(current_dir_inode_no, dst)
         : ramdisk_create_dir(current_dir_inode_no, dst);
-
-    if (create_result != 0) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to create destination\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
-
-    dst_inode = ramdisk_find_inode_by_name(dir, dst);
-    if (!dst_inode) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get destination inode\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
 
     copy_inode(src_inode, dst_inode);
 }

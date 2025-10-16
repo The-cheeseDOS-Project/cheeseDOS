@@ -28,23 +28,17 @@ extern uint8_t default_text_bg_color;
 void cif(const char *args) {
     if (!args || args[0] == '\0') {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Usage: cd <dirname>\n");
+        print("Usage: cif <folder>\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }
 
     ramdisk_inode_t *cur_dir = ramdisk_iget(current_dir_inode_no);
-    if (!cur_dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get current directory\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
 
     ramdisk_inode_t *target = ramdisk_find_inode_by_name(cur_dir, args);
     if (!target || target->type != RAMDISK_INODE_TYPE_DIR) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Directory not found\n");
+        print("Folder not found\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }

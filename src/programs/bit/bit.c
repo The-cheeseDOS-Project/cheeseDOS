@@ -36,10 +36,6 @@ void bit(const char* args) {
     }
 
     char fname[64];
-    if (filename_len >= 64) {
-        print("Filename too long\n");
-        return;
-    }
 
     for (int i = 0; i < filename_len; i++) {
         fname[i] = filename[i];
@@ -58,12 +54,6 @@ void bit(const char* args) {
     if (file->type == RAMDISK_INODE_TYPE_DIR) {
         print(fname);
         print(" is a directory\n");
-        return;
-    }
-
-    if (file->type != RAMDISK_INODE_TYPE_FILE) {
-        print(fname);
-        print(" is not a regular file\n");
         return;
     }
 
@@ -87,3 +77,4 @@ void bit(const char* args) {
 
     print("B\n");
 }
+

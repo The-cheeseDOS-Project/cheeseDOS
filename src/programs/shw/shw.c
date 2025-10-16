@@ -43,23 +43,17 @@ void shw(const char* args) {
             target_inode_no = found_inode_no;
         } else {
             set_text_color(COLOR_RED, COLOR_BLACK);
-            print("Directory not found\n");
+            print("Error: Folder not found\n");
             set_text_color(default_text_fg_color, default_text_bg_color);
             return;
         }
     }
 
     ramdisk_inode_t *dir = ramdisk_iget(target_inode_no);
-    if (!dir) {
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Failed to get directory inode\n");
-        set_text_color(default_text_fg_color, default_text_bg_color);
-        return;
-    }
 
     if (dir->type != RAMDISK_INODE_TYPE_DIR) {
         set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Not a directory\n");
+        print("Not a folder\n");
         set_text_color(default_text_fg_color, default_text_bg_color);
         return;
     }

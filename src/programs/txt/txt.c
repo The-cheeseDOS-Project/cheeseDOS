@@ -130,24 +130,12 @@ static void handle_down_arrow(size_t *index, const char *buffer) {
 static ramdisk_inode_t* init_editor(const char *filename, char *buffer, size_t *index, bool *is_new) {
     uint32_t parent_inode = current_dir_inode_no;
     ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
-    if (!file) {
-        if (ramdisk_create_file(parent_inode, filename) < 0) {
-            print("Error: Failed to create file.\n");
-            return NULL;
-        }
-        file = ramdisk_iget_by_name(parent_inode, filename);
-        if (!file) {
-            print("Error: File creation succeeded, but lookup failed.\n");
-            return NULL;
-        }
-        *is_new = true;
-    } else {
-        size_t copy_bytes = file->size;
-        if (copy_bytes > TXT_BUFFER_SIZE - 1) copy_bytes = TXT_BUFFER_SIZE - 1;
-        memcpy(buffer, file->data, copy_bytes);
-        buffer[copy_bytes] = '\0';
-        *index = copy_bytes;
-    }
+    size_t copy_bytes = file->size;
+    if (copy_bytes > TXT_BUFFER_SIZE - 1) copy_bytes = TXT_BUFFER_SIZE - 1;
+    memcpy(buffer, file->data, copy_bytes);
+    buffer[copy_bytes] = '\0';
+    *index = copy_bytes;
+    
     return file;
 }
 
