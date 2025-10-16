@@ -1,4 +1,4 @@
-Rolling release alpha builds.⠀⠀⠀⠀⠀⠀⠀⠀⠀
+Continuous alpha builds.⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣴⣶⣶⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣄⡀⠀⠀
