@@ -125,13 +125,12 @@ void print(const char *str) {
 
 void clear_screen(void) {
     uint16_t blank = ' ' | (get_vga_color() << 8);
-    __asm__ volatile (
-        "cld\n\t"
-        "rep stosw"
-        :
-        : "a"(blank), "D"(VGA_MEMORY), "c"(SCREEN_SIZE)
-        : "memory"
-    );
+    uint16_t *video = (uint16_t *)VGA_MEMORY;
+    
+    for (int i = 0; i < SCREEN_SIZE; i++) {
+        video[i] = blank;
+    }
+    
     vga_cursor_x = 0;
     vga_cursor_y = 0;
     set_cursor(0);
