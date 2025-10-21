@@ -56,6 +56,8 @@ OUTPUT="$BUILD_DIR/$ELF"
 
 BOOT_DIR="$SRC_DIR/boot"
 
+CPU_DIR="$SRC_DIR/cpu"
+
 check_dependencies() {
   required_tools="gcc as ld objcopy mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
@@ -230,6 +232,10 @@ all() {
   for pid in $build_pids; do
     wait "$pid"
   done
+
+  printf "Assembling cpu.o..."
+    $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$CPU_DIR/cpu.S"
+  printf " Done!\n"
 
   printf "Assembling bootloader..."
     $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"

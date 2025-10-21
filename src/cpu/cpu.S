@@ -16,30 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "cpu.h"
-#include "io.h"
-#include "vga.h"
-#include "serial.h"
-
-void reboot(void) {
-    clear_screen();
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
-    print("Rebooting...\n");
-    sprint("\n");
-    sprint("Waiting for keyboard controller...");
-    while (inb(0x64) & 0x02);
-    sprint(" Done!\nSending reset command...\n\n");
-    outb(0x64, 0xFE);
-}
-
-void shutdown(void) {
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
-    print("Shutting down...\n");
-    sprint("\n");
-    set_text_color(COLOR_YELLOW, COLOR_BLACK);
-    clear_screen();
-    sprint("Halting and Catching Fire...\n\n");
-    print("It is now safe to turn off your computer.\n");
-    vga_move_cursor(80, 25);
-    halt();
-}
+.intel_syntax noprefix  # Use intel syntax
+.global halt            # Export halt to linker
+                        #
+halt:                   # halt();
+    cli                 # Disable interrupts
+1:                      # Loop label
+    hlt                 # Halt CPU
+    jmp 1b              # Halt again if CPU unhalts
