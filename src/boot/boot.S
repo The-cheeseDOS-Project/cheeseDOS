@@ -55,7 +55,7 @@
 .section .text                                                                               # Start of code section
 .global start                                                                                # Export entry point
 start:                                                                                       # Entry point
-                                                                                             #
+                                                                                             #	
 cli                                                                                          # Disable interrupts
 jmp 0:start2                                                                                 # Far jump to flush prefetch queue
 start2:                                                                                      # The "real" stuff begins here
@@ -144,7 +144,7 @@ load_segment:                                                                   
     mov ah, 0x02                                                                             # BIOS read sectors function
     xor bx, bx                                                                               # Set offset to zero
     int 0x13                                                                                 # Call BIOS interrupt
-#    jc err                                                                                   # Error out if read failed
+    jc load_seg_fail                                                                         # Error out if read failed
                                                                                              #
 skip_seg:                                                                                    # Skip segment label
     pop cx                                                                                   # Restore CX
@@ -225,19 +225,27 @@ no_drives:                                                                      
     mov ds, bx                                                                               # Set DS to zero
     mov si, offset msg_no_drives                                                             # Load error message
     call print                                                                               # Print error message
-    jmp halt_loop                                                                            # Halt system
+    cli                                                                                      # Disable interrupts
+    hlt                                                                                      # Halt CPU
                                                                                              #
 drives:                                                                                      # Drive list
     .byte 0x00                                                                               # First floppy drive
     .byte 0x01                                                                               # Second floppy drive
     .byte 0x00                                                                               # End of list
                                                                                              #
+load_seg_fail:                                                                               # Segment loading error handler
+    mov ds, bx                                                                               # Set DS to zero
+    mov si, offset msg_load_seg_fail                                                         # Load error message
+    call print                                                                               # Print errpr message
+    cli                                                                                      # Disable interrupts
+    hlt                                                                                      # Halt CPU
+                                                                                             #
 msg_loading:                                                                                 # Loading message
     .ascii "Starting cheeseDOS...\r\0"                                                       # Loading message text
 msg_no_drives:                                                                               # No drives message
     .ascii "Error: cheeseDOS could not find any bootable devices!"                           # No drives message text
-msg_load_seg_fail:                                                                           # <PLACEHOLDER>
-    .ascii "Error: <PLACEHOLDER>"                                                            # <PLACEHOLDER>
+msg_load_seg_fail:                                                                           # Segment loading error
+    .ascii "Error: cheeseDOS failed to load one or more segemnts!"                           # Segment loading error text
                                                                                              #
 gdt_code:                                                                                    # Code segment descriptor
     .word 0xFFFF                                                                             # Limit low
@@ -246,10 +254,6 @@ gdt_code:                                                                       
     .byte gdt_a_present | gdt_a_nosys | gdt_a_dpl0 | gdt_a_exec | gdt_a_rw | gdt_a_accessed  # Access byte
     .byte gdt_fl_32b | gdt_fl_pglimit | 0xF                                                  # Flags and limit high
     .byte 0x0                                                                                # Base high
-                                                                                             #
-halt_loop:                                                                                   # Halt loop
-    hlt                                                                                      # Halt CPU
-    jmp halt_loop                                                                            # Loop forever
                                                                                              #
 .space 0x200 - 2 - (. - start)                                                               # Pad to 510B
 .word 0xaa55                                                                                 # Make it bootable
