@@ -18,9 +18,17 @@
 
 #include "timer.h"
 #include "stdint.h"
+#include "vga.h"
 
 void dly(const char* args) {
-    uint32_t ms = 1000;
+    if (args == 0) {
+        set_text_color(COLOR_RED, COLOR_BLACK);
+        print("Usage: dly <ms>\n");
+        set_text_color(COLOR_WHITE, COLOR_BLACK);
+        return;
+    }
+    
+    uint32_t ms = 0;
 
     char buf[16];
     int i = 0;
@@ -29,10 +37,12 @@ void dly(const char* args) {
         buf[i] = args[i];
         i++;
     }
-
+    buf[i] = '\0';
+    
     ms = 0;
     for (i = 0; buf[i]; ++i)
         ms = ms * 10 + (buf[i] - '0');
 
     delay(ms);
 }
+
