@@ -44,7 +44,7 @@ void init() {
     // Print " Done!\n" as green to serial
     sprint(" \033[92mDone!\033[0m\n");
 
-    bprint("Looking for IDE master... "); // Print out "Looking for IDE master... " on both screen and serial
+    bprint("Looking for IDE master..."); // Print out "Looking for IDE master... " on both screen and serial
     // Check if the IDE driver finds a drive, if so run this loop
     if (ide_detect()) {
         // Print " Found!\n" as green
