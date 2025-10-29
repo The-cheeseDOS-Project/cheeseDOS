@@ -18,8 +18,30 @@
 
 #include "ide.h"
 #include "vga.h"
+#include "string.h"
 
 void wsz(const char* args) {
+  if (!args) {
+      set_text_color(COLOR_RED, COLOR_BLACK);
+      print("Usage: wsz <TEXT>\n");
+      set_text_color(default_text_fg_color, default_text_bg_color);
+      return;
+  }
+  
+  if (!ide_detect()) {
+      set_text_color(COLOR_RED, COLOR_BLACK);  
+      print("Error: No IDE Master detected!\n");
+      set_text_color(default_text_fg_color, default_text_bg_color);  
+      return;
+  }
+
+  if (kstrlen(args) > 510) {
+      set_text_color(COLOR_RED, COLOR_BLACK);
+      print("Error: 510 max bytes!\n");
+      set_text_color(default_text_fg_color, default_text_bg_color);
+      return;
+  }
+  
   print("Writing... ");
 
   string_write_sector_zero(args);
