@@ -55,6 +55,7 @@
 #include "key.h"
 #include "rep.h"
 #include "bla.h"
+#include "wsz.h"
 
 typedef struct {
     const char* name;
@@ -96,6 +97,7 @@ static shell_command_t commands[] = {
     {"key", key},
     {"rep", rep},
     {"bla", bla},
+    {"wsz", wsz},
     {NULL, NULL}
 };
 

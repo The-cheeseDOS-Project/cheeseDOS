@@ -21,7 +21,6 @@
 #include "ide.h"
 
 uint16_t identify_buffer[256];
-
 static uint8_t ide_status = 0;
 
 void ide_wait_ready() {
@@ -58,8 +57,37 @@ void ide_load_identify() {
 }
 
 int ide_drive_present(void) {
-    if (ide_status == 0) {
-        return 0;
-    }
-    return 1;
+    return ide_status != 0;
 }
+
+static void write_sector_zero(uint8_t *buf) {
+    outb(IDE_DRIVE_HEAD, IDE_DRIVE_MASTER);
+    outb(IDE_SECTOR_COUNT, 1);
+    outb(IDE_SECTOR_NUMBER, 1);
+    outb(IDE_CYLINDER_LOW, 0);
+    outb(IDE_CYLINDER_HIGH, 0);
+    outb(IDE_COMMAND, IDE_CMD_WRITE);
+
+    ide_wait_ready();
+
+    for (int i = 0; i < 256; i++) {
+        outw(IDE_DATA, ((uint16_t)buf[i * 2 + 1] << 8) | buf[i * 2]);
+    }
+}
+
+void string_write_sector_zero(const char *msg) {
+    uint8_t sector[512];
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 512; j++) {
+            sector[j] = 0;
+        }
+
+        for (int j = 0; msg[j] != '\0' && j < 512; j++) {
+            sector[j] = (uint8_t)msg[j];
+        }
+
+        write_sector_zero(sector);
+    }
+}
+

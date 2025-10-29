@@ -16,28 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef IDE_H
-#define IDE_H
+#ifndef SZR_H
+#define SZR_H
 
-#define IDE_DATA           0x1F0
-#define IDE_DRIVE_HEAD     0x1F6
-#define IDE_STATUS         0x1F7
-#define IDE_COMMAND        0x1F7
-#define IDE_CMD_IDENTIFY   0xEC
-#define IDE_DRIVE_MASTER   0xA0
-#define IDE_SECTOR_COUNT   0x1F2
-#define IDE_SECTOR_NUMBER  0x1F3
-#define IDE_CYLINDER_LOW   0x1F4
-#define IDE_CYLINDER_HIGH  0x1F5
-#define IDE_CMD_WRITE      0x30
-
-extern unsigned short identify_buffer[256];
-
-int ide_init(void);
-int ide_detect(void);
-void ide_load_identify(void);
-void ide_wait_ready(void);
-int ide_drive_present(void);
-void string_write_sector_zero(const char *msg);
+void wsz(const char*);
 
 #endif
