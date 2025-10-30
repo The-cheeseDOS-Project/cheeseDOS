@@ -193,15 +193,16 @@ void shell_run() {
     print_prompt();
     prompt_start_vga_pos = get_cursor();
 
-    beep(523, 90);
-    beep(587, 90);
-    beep(659, 90);
-    delay(90);
-    beep(659, 90);
-    delay(90);
-    beep(587, 90);
-    delay(90);
-    beep(698, 90);
+    beep(280, 100);
+    beep(200, 200);
+    beep(340, 100);
+    delay(100);
+    beep(200, 200);
+    beep(400, 100);
+    delay(100);
+    beep(420, 100);
+    beep(480, 100);
+    beep(420, 200);
 
     while (1) {
         int c = keyboard_getchar();
