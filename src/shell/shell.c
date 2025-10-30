@@ -193,13 +193,6 @@ void shell_run() {
     print_prompt();
     prompt_start_vga_pos = get_cursor();
 
-    beep(280, 100);
-    beep(200, 200);
-    beep(340, 100);
-    delay(100);
-    beep(200, 200);
-    beep(400, 100);
-    delay(100);
     beep(420, 100);
     beep(480, 100);
     beep(420, 200);
