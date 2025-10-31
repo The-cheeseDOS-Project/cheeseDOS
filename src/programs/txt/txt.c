@@ -127,7 +127,8 @@ static void handle_down_arrow(size_t *index, const char *buffer) {
     }
 }
 
-static ramdisk_inode_t* init_editor(const char *filename, char *buffer, size_t *index, bool *is_new) {
+static ramdisk_inode_t* init_editor(const char *filename, char *buffer, size_t *index, bool *unused) {
+    (void)unused;
     uint32_t parent_inode = current_dir_inode_no;
     ramdisk_inode_t *file = ramdisk_iget_by_name(parent_inode, filename);
     size_t copy_bytes = file->size;
