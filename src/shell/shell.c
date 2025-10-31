@@ -178,6 +178,8 @@ void shell_execute(const char* cmd) {
 }
 
 void shell_run() {
+    bprint("Loading Shell...");
+
     char input[INPUT_BUF_SIZE];
     int idx = 0;
     int cursor_index = 0;

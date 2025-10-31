@@ -62,8 +62,6 @@ void init() {
         error("Not Found!\n");
     }
 
-    // Print "Loading shell..." to both screen and serial
-    bprint("Loading Shell...");
     // Run shell
     shell_run();
 }
