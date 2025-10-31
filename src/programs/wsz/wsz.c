@@ -27,13 +27,14 @@ void wsz(const char* args) {
       set_text_color(default_text_fg_color, default_text_bg_color);
       return;
   }
-  
-  if (!ide_detect()) {
-      set_text_color(COLOR_RED, COLOR_BLACK);  
-      print("Error: No IDE Master detected!\n");
-      set_text_color(default_text_fg_color, default_text_bg_color);  
-      return;
-  }
+
+  // TODO: fix this
+  //  if (!ide_detect()) {
+  //      set_text_color(COLOR_RED, COLOR_BLACK);  
+  //      print("Error: No IDE Master detected!\n");
+  //      set_text_color(default_text_fg_color, default_text_bg_color);  
+  //      return;
+  //  }
 
   if (kstrlen(args) > 510) {
       set_text_color(COLOR_RED, COLOR_BLACK);
