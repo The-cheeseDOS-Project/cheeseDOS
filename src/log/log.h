@@ -20,5 +20,6 @@
 #define LOG_H
 
 void error(const char *msg);
+void success(const char *msg);
 
 #endif
