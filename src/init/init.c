@@ -37,37 +37,22 @@ void init() {
 
     ramdisk_init(); // Start the RAM Disk
 
-    // Print " Done!\n" as green
-    set_text_color(COLOR_GREEN, COLOR_BLACK);
-    print(" Done!\n");
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-    // Print " Done!\n" as green to serial
-    sprint(" \033[92mDone!\033[0m\n");
-
+    // Success " Done!\n"
+    success(" Done!\n");
+    
     bprint("Looking for IDE master..."); // Print out "Looking for IDE master... " on both screen and serial
     // Check if the IDE driver finds a drive, if so run this loop
     if (ide_detect()) {
-        // Print " Found!\n" as green
-        set_text_color(COLOR_GREEN, COLOR_BLACK);
-        print(" Found!\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-        // Print " Found!\n" as green to serial
-        sprint(" \033[92mFound!\033[0m\n");
+        // Success " Found!\n"
+        success(" Found!\n");
 
         // Print "Loading IDE Drive..." on screen and serial
         bprint("Loading IDE Drive...");
 
         // Check if the IDE drive has been loaded successfully, if so then run this loop
         if (ide_init()) {
-            // Print " Done!\n" as green
-            set_text_color(COLOR_GREEN, COLOR_BLACK);
-            print(" Done!\n");
-            set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-            // Print " Done!\n" as green to serial
-            sprint(" \033[92mDone!\033[0m\n");
+            // Success " Done!\n"
+            success(" Done!\n");
         } else { // If IDE driver failed, run this loop
             // Error " Failed!\n"
             error(" Failed!\n");
