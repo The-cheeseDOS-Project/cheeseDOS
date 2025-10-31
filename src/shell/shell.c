@@ -184,7 +184,9 @@ void shell_run() {
     int idx = 0;
     int cursor_index = 0;
     
-    print("\ncheeseDOS is free software: you may redistribute and/or modify it under the \nterms of the GNU GPLv3. It comes with ABSOLUTELY NO WARRANTY, to the extent \npermitted by law.\n\n");
+    print("\n\ncheeseDOS is free software: you may redistribute and/or modify it under the \nterms of the GNU GPLv3. It comes with ABSOLUTELY NO WARRANTY, to the extent \npermitted by law.\n\n");
+
+    sprint("\n");
 
     print_prompt();
     prompt_start_vga_pos = get_cursor();
