@@ -183,13 +183,7 @@ void shell_run() {
     char input[INPUT_BUF_SIZE];
     int idx = 0;
     int cursor_index = 0;
-
-    set_text_color(COLOR_GREEN, COLOR_BLACK);
-    print(" Done!\n");
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-    sprint(" \033[92mDone!\033[0m\n");
-
+    
     print("\ncheeseDOS is free software: you may redistribute and/or modify it under the \nterms of the GNU GPLv3. It comes with ABSOLUTELY NO WARRANTY, to the extent \npermitted by law.\n\n");
 
     print_prompt();
