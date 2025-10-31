@@ -22,6 +22,7 @@
 #include "shell.h"   // For "shell_run()"
 #include "ramdisk.h" // For "ramdisk_init()" and "RAMDISK_DATA_SIZE_BYTES"
 #include "ide.h"     // For "ide_detect()" and "ide_init()"
+#include "log.h"     // For "error()"
 
 void init() {
     char buf[16]; // Buffer for converting numbers to strings
@@ -68,22 +69,12 @@ void init() {
             // Print " Done!\n" as green to serial
             sprint(" \033[92mDone!\033[0m\n");
         } else { // If IDE driver failed, run this loop
-            // Print " Failed!\n" as red
-            set_text_color(COLOR_RED, COLOR_BLACK);
-            print(" Failed!\n");
-            set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-            // Print " Failed!\n" as red to serial
-            sprint(" \033[91mFailed!\033[0m\n");
+            // Error " Failed!\n"
+            error(" Failed!\n");
         }
     } else { // If IDE driver can not find drive, run this loop
-        // Print " Not Found!\n" as red
-        set_text_color(COLOR_RED, COLOR_BLACK);
-        print("Not Found!\n");
-        set_text_color(COLOR_WHITE, COLOR_BLACK);
-
-        // Print " Not Found!\n" as red to serial
-        sprint("\033[91mNot Found!\033[0m\n");
+        // Error " Not Found!\n"
+        error("Not Found!\n");
     }
 
     // Print "Loading shell..." to both screen and serial
