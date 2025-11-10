@@ -25,7 +25,7 @@ if [ -f config.conf ]; then
       exit 1
 fi
 
-HDD_SIZE="1024" # in bytes
+HDD_SIZE="512" # in bytes (a sector is 512 bytes)
 
 CC=gcc
 CVER=c99
