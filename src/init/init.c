@@ -33,29 +33,29 @@ void init() {
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     bprint(buf);
-    bprint("B RAM Disk...");
+    bprint("B RAM Disk... ");
 
     ramdisk_init(); // Start the RAM Disk
 
     // Success " Done!\n"
-    success(" Done!\n");
+    success("Done!\n");
     
-    bprint("Looking for IDE master..."); // Print out "Looking for IDE master... " on both screen and serial
+    bprint("Looking for IDE master... "); // Print out "Looking for IDE master... " on both screen and serial
     // Check if the IDE driver finds a drive, if so run this loop
     if (ide_detect()) {
         // Success " Found!\n"
-        success(" Found!\n");
+        success("Found!\n");
 
         // Print "Loading IDE Drive..." on screen and serial
-        bprint("Loading IDE Drive...");
+        bprint("Loading IDE Drive... ");
 
         // Check if the IDE drive has been loaded successfully, if so then run this loop
         if (ide_init()) {
             // Success " Done!\n"
-            success(" Done!\n");
+            success("Done!\n");
         } else { // If IDE driver failed, run this loop
             // Error " Failed!\n"
-            error(" Failed!\n");
+            error("Failed!\n");
         }
     } else { // If IDE driver can not find drive, run this loop
         // Error " Not Found!\n"
