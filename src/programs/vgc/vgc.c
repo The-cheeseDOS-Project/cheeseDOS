@@ -17,8 +17,32 @@
  */
 
 #include "vga.h"
+#include "stdint.h"
+#include "serial.h"
+#include "cpu.h"
 
-void hlp(const char* *unused) {
+void vgc(const char** unused) {
     (void)unused;
-    print("Commands: hlp, cls, say, ver, hiw, shw, see, add, del, mkd, cif, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, &, mus, chs, box, hey, snk, key, rep, bla, wsz, vgc.\n");
+
+    sprint("\nNOTE: This is super slow and you need to reboot the computer to exit.\n");
+
+    graphics_mode();
+    
+    int center_x = 320;
+    int center_y = 240;
+    int radius = 100;
+    
+    for (int y = 0; y < 480; y++) {
+        for (int x = 0; x < 640; x++) {
+            int dx = x - center_x;
+            int dy = y - center_y;
+            int dist_sq = dx * dx + dy * dy;
+            int radius_sq = radius * radius;
+            
+            if (dist_sq <= radius_sq) {
+                put_pixel(x, y, 1);
+            }
+        }
+    }
+    halt();
 }

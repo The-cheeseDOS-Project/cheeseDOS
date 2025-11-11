@@ -253,7 +253,7 @@ all() {
   done
   
   printf "Linking cheeseDOS with %d object files..." "$obj_count"
-    $CC $LDFLAGS -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
+    $CC $LDFLAGS -no-pie -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
   printf " Done!\n"
 
   printf "Stripping %s..." "$OUTPUT"

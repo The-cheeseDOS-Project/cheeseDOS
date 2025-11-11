@@ -56,6 +56,7 @@
 #include "rep.h"
 #include "bla.h"
 #include "wsz.h"
+#include "vgc.h"
 
 typedef struct {
     const char* name;
@@ -98,6 +99,7 @@ static shell_command_t commands[] = {
     {"rep", rep},
     {"bla", bla},
     {"wsz", wsz},
+    {"vgc", vgc},
     {NULL, NULL}
 };
 

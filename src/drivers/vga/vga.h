@@ -58,5 +58,8 @@ void vga_move_cursor(unsigned char row, unsigned char col);
 void vga_hide_cursor(int hide);
 void print_uint(unsigned int num);
 void vga_disable_scroll(int disable);
+void graphics_mode(void);
+void set_plane(int plane);
+void put_pixel(int x, int y, int color);
 
 #endif
