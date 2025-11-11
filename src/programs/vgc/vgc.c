@@ -17,32 +17,38 @@
  */
 
 #include "vga.h"
-#include "stdint.h"
-#include "serial.h"
-#include "cpu.h"
+#include "timer.h"
 
 void vgc(const char** unused) {
     (void)unused;
 
-    sprint("\nNOTE: This is super slow and you need to reboot the computer to exit.\n");
-
     graphics_mode();
-    
-    int center_x = 320;
-    int center_y = 240;
-    int radius = 100;
-    
-    for (int y = 0; y < 480; y++) {
-        for (int x = 0; x < 640; x++) {
-            int dx = x - center_x;
-            int dy = y - center_y;
-            int dist_sq = dx * dx + dy * dy;
-            int radius_sq = radius * radius;
-            
-            if (dist_sq <= radius_sq) {
-                put_pixel(x, y, 1);
-            }
+
+    int cx = 160;
+    int cy = 100;
+    int radius = 50;
+    int color = 1;
+
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (x <= y) {
+        for (int i = cx - x; i <= cx + x; i++) {
+            put_pixel(i, cy + y, color);
+            put_pixel(i, cy - y, color);
+        }
+        for (int i = cx - y; i <= cx + y; i++) {
+            put_pixel(i, cy + x, color);
+            put_pixel(i, cy - x, color);
+        }
+
+        x++;
+        if (d < 0) {
+            d += 2 * x + 1;
+        } else {
+            y--;
+            d += 2 * (x - y) + 1;
         }
     }
-    halt();
 }

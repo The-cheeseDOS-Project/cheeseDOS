@@ -59,9 +59,6 @@ void vga_hide_cursor(int hide);
 void print_uint(unsigned int num);
 void vga_disable_scroll(int disable);
 void graphics_mode(void);
-void set_plane(int plane);
 void put_pixel(int x, int y, int color);
-void graphics_mode_x(void);
-void put_pixel_x(int x, int y, int color);
 
 #endif
