@@ -19,7 +19,7 @@
 #include "vga.h"
 #include "timer.h"
 #include "io.h"
-#include "serial.h"
+#include "beep.h"
 
 static void draw_circle(unsigned char* buffer, int cx, int cy, int radius, int color, int width) {
     int x = 0;
@@ -72,14 +72,14 @@ void vgc(const char** unused) {
 
     static unsigned char back_buffer[320 * 200];
 
-    int intro_radius = 250;
+    int intro_radius = 200;
     int target_radius = 50;
     int shrink_complete = 0;
 
     if (inb(0x64) & 1) {
         inb(0x60);
     }
-    
+
     while (!shrink_complete) {
         for (int i = 0; i < screen_width * screen_height; i++) {
             back_buffer[i] = 0;
@@ -95,11 +95,13 @@ void vgc(const char** unused) {
         intro_radius -= 5;
 
         if (intro_radius <= target_radius) {
-            intro_radius = target_radius;
-            shrink_complete = 1;
+           intro_radius = target_radius;
+           shrink_complete = 1;
         }
 
-        delay(20);
+        int hz = 2000 - (250 - intro_radius) * 5;
+        if (hz < 100) hz = 100;
+        beep(hz, 100);
     }
 
     while (1) {
@@ -123,20 +125,24 @@ void vgc(const char** unused) {
             cx = radius;
             dx = -dx;
             color_change = 1;
+	    beep(500, 20);
         } else if (cx + radius >= screen_width) {
             cx = screen_width - radius;
             dx = -dx;
             color_change = 1;
+	    beep(500, 20);
         }
 
         if (cy - radius <= 0) {
             cy = radius;
             dy = -dy;
             color_change = 1;
+	    beep(500, 20);
         } else if (cy + radius >= screen_height) {
             cy = screen_height - radius;
             dy = -dy;
             color_change = 1;
+            beep(500, 20);
         }
 
         if (color_change) {
