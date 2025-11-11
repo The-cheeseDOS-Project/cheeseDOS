@@ -26,7 +26,7 @@ SECTIONS
         *(.rodata*)
     }
 
-    . = 0x10000;
+    . = ALIGN(0x10000);
     .data : AT(0x10000) {
         *(.data*)
     }
