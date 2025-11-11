@@ -61,7 +61,7 @@ void vgc(const char** unused) {
 
     int cx = 160;
     int cy = 100;
-    int radius = 50;
+    int radius = 30;
     int color = 1;
 
     int dx = 2;  
@@ -73,7 +73,7 @@ void vgc(const char** unused) {
     static unsigned char back_buffer[320 * 200];
 
     int intro_radius = 200;
-    int target_radius = 50;
+    int target_radius = 30;
     int shrink_complete = 0;
 
     if (inb(0x64) & 1) {
