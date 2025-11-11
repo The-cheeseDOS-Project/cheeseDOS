@@ -18,6 +18,7 @@
 
 #include "vga.h"
 #include "timer.h"
+#include "cpu.h"
 
 void vgc(const char** unused) {
     (void)unused;
@@ -51,4 +52,6 @@ void vgc(const char** unused) {
             d += 2 * (x - y) + 1;
         }
     }
+
+    halt();
 }
