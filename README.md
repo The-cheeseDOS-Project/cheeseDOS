@@ -34,9 +34,9 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 
 | Component   | Requirement                                     |
 |-------------|--------------------------------------------------|
-| Processor   | i386 class or newer x86-compatible processor     |
+| Processor   | i386-class or newer x86-compatible processor     |
 | Storage     | 3.5" 1.44MB Floppy Diskette and a IDE Hard Drive |
-| Graphics    | VGA Compatible Graphics Adapter                  |
+| Graphics    | VGA-compatible graphics adapter                  |
 | Display     | Color Monitor or Television (640×400 or better)  |
 | Audio       | PC Speaker (Piezoelectric BIOS Beeper)           |
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                  |
