@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "vga.h"
+#include "ide.h"
 
-void hlp(const char* *unused) {
-    (void)unused;
-    print("Commands: hlp, cls, say, ver, hiw, shw, see, add, del, mkd, cif, sum, tme, clr, ban, bep, off, res, dly, run, txt, cpy, mve, die, pth, bit, &, mus, chs, box, hey, snk, key, rep, bla, wrt, vgc.\n");
+void wrt(const char* args) {
+    write_file(0, "file", args);
 }

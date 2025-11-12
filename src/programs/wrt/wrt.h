@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SZR_H
-#define SZR_H
+#ifndef WRT_H
+#define WRT_H
 
-void wsz(const char*);
+void wrt(const char*);
 
 #endif

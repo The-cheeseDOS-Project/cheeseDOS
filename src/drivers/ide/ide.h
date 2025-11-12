@@ -38,6 +38,6 @@ int ide_detect(void);
 void ide_load_identify(void);
 void ide_wait_ready(void);
 int ide_drive_present(void);
-void string_write_sector_zero(const char *msg);
+void write_file(const char *path, const char *file, const char *data);
 
 #endif

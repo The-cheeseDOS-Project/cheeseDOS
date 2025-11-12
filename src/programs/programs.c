@@ -55,7 +55,7 @@
 #include "key.h"
 #include "rep.h"
 #include "bla.h"
-#include "wsz.h"
+#include "wrt.h"
 #include "vgc.h"
 
 typedef struct {
@@ -98,7 +98,7 @@ static shell_command_t commands[] = {
     {"key", key},
     {"rep", rep},
     {"bla", bla},
-    {"wsz", wsz},
+    {"wrt", wrt},
     {"vgc", vgc},
     {NULL, NULL}
 };
