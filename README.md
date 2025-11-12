@@ -17,7 +17,7 @@ cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, li
 > cheeseDOS isn't "DOS-like" — it follows its own philosophy. The "DOS" in the name simply means it's a **D**isk **O**perating **S**ystem (as in, it's stored on and boots from a disk… not a punch card).
 
 > [!WARNING]
-> On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible hardware damage**. While no such incidents have occurred, cheeseDOS comes **"AS IS" WITHOUT WARRANTY OF ANY KIND TO THE EXTENT PERMITTED BY APPLICABLE LAW**. See section 15 and 16 in [LICENSE.md](./LICENSE.md) for more information.
+> On real hardware, cheeseDOS has direct access to low-level components and **may cause irreversible hardware damage**. While no such incidents have occurred, cheeseDOS comes **"AS IS" WITHOUT WARRANTY OF ANY KIND TO THE EXTENT PERMITTED BY APPLICABLE LAW**. See section 15, 16, and 17 in [LICENSE.md](./LICENSE.md) for more information.
 
 > [!NOTE]
 > If you have any problems, please open an issue, you **WILL** get help!
