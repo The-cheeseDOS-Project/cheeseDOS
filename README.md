@@ -58,5 +58,5 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 ## Project Guidelines
 
 - **Contributing Guide**: [CONTRIBUTING.md](./CONTRIBUTING.md)
-- **GPLv3 License**: [LICENSE](./LICENSE.md)
+- **GPLv3 License**: [LICENSE.md](./LICENSE.md)
 - **Security Policy**: [SECURITY.md](./SECURITY.md)
