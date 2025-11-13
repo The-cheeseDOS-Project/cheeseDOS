@@ -21,8 +21,6 @@
 #include "ide.h"
 #include "string.h"
 
-#include "vga.h"
-
 uint16_t identify_buffer[256];
 static uint8_t ide_status = 0;
 
