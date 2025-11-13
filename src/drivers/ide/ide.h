@@ -39,5 +39,6 @@ void ide_load_identify(void);
 void ide_wait_ready(void);
 int ide_drive_present(void);
 void write_file(const char *path, const char *file, const char *data);
+char* list_files(const char *path);
 
 #endif

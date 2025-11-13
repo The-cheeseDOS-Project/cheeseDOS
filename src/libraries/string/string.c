@@ -166,3 +166,14 @@ char *kstrcat(char *dest, const char *src) {
     *d = '\0';
     return dest;
 }
+
+char* kstrrchr(const char *s, int c) {
+    const char *last = NULL;
+    while (*s) {
+        if (*s == (char)c) {
+            last = s;
+        }
+        s++;
+    }
+    return (char*)last;
+}

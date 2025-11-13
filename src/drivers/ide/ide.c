@@ -21,6 +21,8 @@
 #include "ide.h"
 #include "string.h"
 
+#include "vga.h"
+
 uint16_t identify_buffer[256];
 static uint8_t ide_status = 0;
 
@@ -90,7 +92,7 @@ static void write(const char *buffer, int cylinder, int head, int sector) {
     for (int i = 0; i < 256; i++) {
         outw(0x1F0, ((uint16_t*)buffer)[i]);
     }
-    ide_wait_ready();
+    //    ide_wait_ready();
 }
 
 void write_file(const char *path, const char *file, const char *data) {
@@ -103,7 +105,7 @@ void write_file(const char *path, const char *file, const char *data) {
 
     if (path && path[0] != '\0') {
         kstrcpy(entry, path);
-        kstrcat(entry, " ");
+        kstrcat(entry, "\0");
     } else {
         kstrcpy(entry, "");
     }
@@ -113,10 +115,10 @@ void write_file(const char *path, const char *file, const char *data) {
     kstrcat(entry, size_str);
     kstrcat(entry, " data=");
     kstrcat(entry, data);
-    kstrcat(entry, " ");
+    kstrcat(entry, "\0");
 
     int written = kstrlen(entry);
-
+    
     if ((unsigned int)(disk_offset + written) >= sizeof(disk_buffer)) {
         write(disk_buffer, 0, 0, 1);
         disk_offset = 0;
@@ -126,4 +128,60 @@ void write_file(const char *path, const char *file, const char *data) {
     memcpy(disk_buffer + disk_offset, entry, written);
     disk_offset += written;
     write(disk_buffer, 0, 0, 1);
+}
+
+static void read(char *buffer, int cylinder, int head, int sector) {
+    outb(0x1F2, 1);
+    outb(0x1F3, sector);
+    outb(0x1F4, cylinder & 0xFF);
+    outb(0x1F5, (cylinder >> 8) & 0xFF);
+    outb(0x1F6, 0xA0 | (head & 0x0F));
+    outb(0x1F7, 0x20); 
+    ide_wait_ready();
+    for (int i = 0; i < 256; i++) {
+        ((uint16_t*)buffer)[i] = inw(0x1F0);
+    }
+    //    ide_wait_ready();
+}
+
+char* list_files(const char *path) {
+    static char result[1024]; 
+    memset(result, 0, sizeof(result));
+
+    char buffer[512];
+    memset(buffer, 0, sizeof(buffer));
+
+    read(buffer, 0, 0, 1);
+
+    char *ptr = buffer;
+    while (*ptr) {
+        char entry[256];
+        int i = 0;
+        while (*ptr && *ptr != ' ' && i < sizeof(entry)-1) {
+            entry[i++] = *ptr++;
+        }
+        entry[i] = '\0';
+        ptr++; 
+
+        if (i > 0) {
+            if (path && path[0] != '\0') {
+                if (kstrncmp(entry, path, kstrlen(path)) == 0) {
+                    char *filename = kstrrchr(entry, '/');
+                    if (filename) filename++; else filename = entry;
+                    kstrcat(result, filename);
+                    kstrcat(result, " ");
+                }
+            } else {
+                char *filename = kstrrchr(entry, '/');
+                if (filename) filename++; else filename = entry;
+                kstrcat(result, filename);
+                kstrcat(result, " ");
+            }
+        }
+
+        while (*ptr && *ptr != '\n') ptr++;
+        if (*ptr == '\n') ptr++;
+    }
+
+    return result;
 }

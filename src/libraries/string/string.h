@@ -36,5 +36,6 @@ void *memset(void *s, int c, size_t n);
 void itoa(int value, char *str, int base);
 int memcmp(const void *s1, const void *s2, size_t n);
 char *kstrcat(char *dest, const char *src);
+char* kstrrchr(const char *s, int c);
 
 #endif
