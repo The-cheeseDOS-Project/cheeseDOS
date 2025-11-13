@@ -16,52 +16,47 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "string.h"  // For "itoa()"
-#include "vga.h"     // For "print()" and "set_text_color()"
-#include "serial.h"  // For "bprint()" and "sprint()"
-#include "shell.h"   // For "shell_run()"
-#include "ramdisk.h" // For "ramdisk_init()" and "RAMDISK_DATA_SIZE_BYTES"
-#include "ide.h"     // For "ide_detect()" and "ide_init()"
-#include "log.h"     // For "error()"
+#include "string.h"  
+#include "vga.h"     
+#include "serial.h"  
+#include "shell.h"   
+#include "ramdisk.h" 
+#include "ide.h"     
+#include "log.h"     
 
 void init() {
-    char buf[16]; // Buffer for converting numbers to strings
+    char buf[16]; 
 
-    bprint("Starting cheeseDOS...\n"); // Retain bootloader message and print it out on serial
+    sprint("Switching to graphics mode... ");
+    graphics_mode();
+    sprint("Done!\n");
 
-    // Print out "Loading <SIZE>B RAM Disk..." on both screen and serial
+    gprint("Starting cheeseDOS...\n");
+
     bprint("Loading ");
     itoa(RAMDISK_DATA_SIZE_BYTES, buf, 10);
     bprint(buf);
     bprint("B RAM Disk... ");
 
-    ramdisk_init(); // Start the RAM Disk
+    ramdisk_init(); 
 
-    // Success " Done!\n"
     success("Done!\n");
-    
-    bprint("Looking for IDE master... "); // Print out "Looking for IDE master... " on both screen and serial
-    // Check if the IDE driver finds a drive, if so run this loop
+
+    bprint("Looking for IDE master... "); 
+
     if (ide_detect()) {
-        // Success " Found!\n"
         success("Found!\n");
 
-        // Print "Loading IDE Drive..." on screen and serial
         bprint("Loading IDE Drive... ");
 
-        // Check if the IDE drive has been loaded successfully, if so then run this loop
         if (ide_init()) {
-            // Success " Done!\n"
             success("Done!\n");
-        } else { // If IDE driver failed, run this loop
-            // Error " Failed!\n"
+        } else { 
             error("Failed!\n");
         }
-    } else { // If IDE driver can not find drive, run this loop
-        // Error " Not Found!\n"
+    } else { 
         error("Not Found!\n");
     }
 
-    // Run shell
     shell_run();
 }

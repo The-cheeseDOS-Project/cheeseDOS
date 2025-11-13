@@ -60,5 +60,6 @@ void print_uint(unsigned int num);
 void vga_disable_scroll(int disable);
 void graphics_mode(void);
 void put_pixel(int x, int y, int color);
+void gprint(const char *text);
 
 #endif

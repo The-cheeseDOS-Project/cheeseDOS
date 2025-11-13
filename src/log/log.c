@@ -20,9 +20,7 @@
 #include "serial.h"
 
 void error(const char *msg) {
-    set_text_color(COLOR_RED, COLOR_BLACK);
-    print(msg);
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
+    gprint(msg);
 
     sprint("\033[91m");
     sprint(msg);
@@ -30,9 +28,7 @@ void error(const char *msg) {
 }
 
 void success(const char *msg) {
-    set_text_color(COLOR_GREEN, COLOR_BLACK);
-    print(msg);
-    set_text_color(COLOR_WHITE, COLOR_BLACK);
+    gprint(msg);
 
     sprint("\033[92m");
     sprint(msg);

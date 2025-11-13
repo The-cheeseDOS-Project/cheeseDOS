@@ -17,7 +17,7 @@
  */
 
 #include "vga.h"
-#include <stdint.h>
+#include "stdint.h"
 #include <stddef.h>
 
 #define SERIAL_COM1_BASE 0x3F8
@@ -69,6 +69,6 @@ void bprint(const char *fmt, ...) {
     va_start(args, fmt);
     vsnprintf(buffer, sizeof(buffer), fmt, args);
     va_end(args);
-    print(buffer);
+    gprint(buffer);
     sprint(buffer);
 }
