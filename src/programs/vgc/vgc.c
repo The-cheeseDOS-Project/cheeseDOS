@@ -180,7 +180,7 @@ void vgc(const char** unused) {
             note_progress = 0;
             note_index = (note_index + 1) % num_notes;
 
-            if (notes[note_index] == 55) {
+            if (notes[note_index] == 50) {
                 allow_shake = 1;
             }
         }
