@@ -20,6 +20,7 @@
 #include "timer.h"
 #include "io.h"
 #include "beep.h"
+#include "random.h"
 
 static void draw_circle(unsigned char* buffer, int cx, int cy, int radius, int color, int width) {
     int x = 0;
@@ -35,6 +36,7 @@ static void draw_circle(unsigned char* buffer, int cx, int cy, int radius, int c
                 buffer[(cy - y) * width + i] = color;
             }
         }
+
         for (int i = cx - y; i <= cx + y; i++) {
             if (i >= 0 && i < width && cy + x >= 0 && cy + x < 200) {
                 buffer[(cy + x) * width + i] = color;
@@ -64,8 +66,8 @@ void vgc(const char** unused) {
     int radius = 30;
     int color = 1;
 
-    int dx = 2;  
-    int dy = 2;  
+    int dx = 2;
+    int dy = 2;
 
     int screen_width = 320;
     int screen_height = 200;
@@ -95,8 +97,8 @@ void vgc(const char** unused) {
         intro_radius -= 5;
 
         if (intro_radius <= target_radius) {
-           intro_radius = target_radius;
-           shrink_complete = 1;
+            intro_radius = target_radius;
+            shrink_complete = 1;
         }
 
         int hz = 2000 - (250 - intro_radius) * 5;
@@ -104,12 +106,36 @@ void vgc(const char** unused) {
         beep(hz, 100);
     }
 
+    int notes[] = {
+        293, 329, 349, 55, 329, 220, 261, 55, 220, 329, 329, 55,
+    };
+
+    int num_notes = sizeof(notes) / sizeof(notes[0]);
+    int note_index = 0;
+    int note_progress = 0;
+
+    int shake_x = 0;
+    int shake_y = 0;
+    int allow_shake = 1;
+
     while (1) {
         for (int i = 0; i < screen_width * screen_height; i++) {
             back_buffer[i] = 0;
         }
 
-        draw_circle(back_buffer, cx, cy, radius, color, screen_width);
+        int current_note = notes[note_index];
+
+        if (current_note == 55 && allow_shake) {
+            random();
+            shake_x = (int)(random_get() % 11) - 5;
+            random();
+            shake_y = (int)(random_get() % 11) - 5;
+        } else {
+            shake_x = 0;
+            shake_y = 0;
+        }
+
+        draw_circle(back_buffer, cx + shake_x, cy + shake_y, radius, color, screen_width);
 
         unsigned char* vga = (unsigned char*)0xA0000;
         for (int i = 0; i < screen_width * screen_height; i++) {
@@ -125,31 +151,38 @@ void vgc(const char** unused) {
             cx = radius;
             dx = -dx;
             color_change = 1;
-	    beep(500, 20);
+            allow_shake = 0;
         } else if (cx + radius >= screen_width) {
             cx = screen_width - radius;
             dx = -dx;
             color_change = 1;
-	    beep(500, 20);
-        }
-
-        if (cy - radius <= 0) {
+            allow_shake = 0;
+        } else if (cy - radius <= 0) {
             cy = radius;
             dy = -dy;
             color_change = 1;
-	    beep(500, 20);
+            allow_shake = 0;
         } else if (cy + radius >= screen_height) {
             cy = screen_height - radius;
             dy = -dy;
             color_change = 1;
-            beep(500, 20);
+            allow_shake = 0;
         }
 
         if (color_change) {
-            color = (color % 15) + 1;  
+            color = (color % 15) + 1;
         }
-	
-        delay(20);
+
+        beep(current_note, 20);
+        note_progress++;
+
+        if (note_progress >= 10) {
+            note_progress = 0;
+            note_index = (note_index + 1) % num_notes;
+
+            if (notes[note_index] == 55) {
+                allow_shake = 1;
+            }
+        }
     }
 }
-
