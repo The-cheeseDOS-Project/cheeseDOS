@@ -107,7 +107,7 @@ void vgc(const char** unused) {
     }
 
     int notes[] = {
-        293, 329, 349, 55, 329, 220, 261, 55, 220, 329, 329, 55,
+        290, 330, 350, 50, 330, 220, 260, 50, 220, 330, 330, 50,
     };
 
     int num_notes = sizeof(notes) / sizeof(notes[0]);
@@ -125,7 +125,7 @@ void vgc(const char** unused) {
 
         int current_note = notes[note_index];
 
-        if (current_note == 55 && allow_shake) {
+        if (current_note == 50 && allow_shake) {
             random();
             shake_x = (int)(random_get() % 11) - 5;
             random();
