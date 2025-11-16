@@ -1,15 +1,4 @@
 # cheeseDOS
-
-![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FThe-cheeseDOS-Project%2FcheeseDOSstyle=for-the-badge&color=0000AA)
-[![Repo Size](https://img.shields.io/github/repo-size/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=00AA00)](https://github.com/The-cheeseDOS-Project/cheeseDOS)
-[![Last Commit](https://img.shields.io/github/last-commit/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=00AAAA)](https://github.com/The-cheeseDOS-Project/cheeseDOS/commits/main)
-[![Open Issues](https://img.shields.io/github/issues/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=AA0000)](https://github.com/The-cheeseDOS-Project/cheeseDOS/issues)
-[![Open PRs](https://img.shields.io/github/issues-pr/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=AA00AA)](https://github.com/The-cheeseDOS-Project/cheeseDOS/pulls)
-[![Contributors](https://img.shields.io/github/contributors/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=5555FF)](https://github.com/The-cheeseDOS-Project/cheeseDOS/graphs/contributors)
-[![Stargazers](https://img.shields.io/github/stars/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge&color=55FF55)](https://github.com/The-cheeseDOS-Project/cheeseDOS/stargazers)
-[![Forks](https://img.shields.io/github/forks/The-cheeseDOS-Project/cheeseDOS.svg?style=for-the-badge&color=55FFFF)](https://github.com/The-cheeseDOS-Project/cheeseDOS/network/members)
-[![Build](https://img.shields.io/github/actions/workflow/status/The-cheeseDOS-Project/cheeseDOS/release.yml?style=for-the-badge&color=FF5555)](https://github.com/The-cheeseDOS-Project/cheeseDOS/actions)
-
 cheeseDOS is an x86, fully GNU GPLed, custom C99 written, 1.44MB, monolithic, live, Single Address Space Diskette Operating System that loads into RAM.
 
 > [!NOTE]
