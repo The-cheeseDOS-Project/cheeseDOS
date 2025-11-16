@@ -1,6 +1,6 @@
 # cheeseDOS
 
-![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FThe-cheeseDOS-Project%2FcheeseDOS&countColor=%23263759?style=for-the-badge&color=0000AA)
+![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FThe-cheeseDOS-Project%2FcheeseDOSstyle=for-the-badge&color=0000AA)
 [![Repo Size](https://img.shields.io/github/repo-size/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=00AA00)](https://github.com/The-cheeseDOS-Project/cheeseDOS)
 [![Last Commit](https://img.shields.io/github/last-commit/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=00AAAA)](https://github.com/The-cheeseDOS-Project/cheeseDOS/commits/main)
 [![Open Issues](https://img.shields.io/github/issues/The-cheeseDOS-Project/cheeseDOS?style=for-the-badge&color=AA0000)](https://github.com/The-cheeseDOS-Project/cheeseDOS/issues)
