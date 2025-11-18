@@ -25,7 +25,7 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 | Processor   | i386-class or newer x86-compatible processor     |
 | Storage     | 3.5" 1.44MB Floppy Diskette and a IDE Hard Drive |
 | Graphics    | VGA-compatible graphics adapter                  |
-| Display     | Color Monitor or Television (640×400 or better)  |
+| Display     | Color Monitor or Television (640×480 or better)  |
 | Audio       | PC Speaker (Piezoelectric BIOS Beeper)           |
 | Keyboard    | PS/2 or USB HID QWERTY keyboard                  |
 | Firmware    | CHS-capable BIOS                                 |
