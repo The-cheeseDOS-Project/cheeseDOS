@@ -344,6 +344,11 @@ distclean() {
   printf " Done!\n"
 }
 
+docs() {
+  rm -rf docs
+  git clone --depth=1 https://github.com/The-cheeseDOS-Project/docs
+}
+
 case "$1" in
   "") all ;;
   all) all ;;
@@ -351,5 +356,6 @@ case "$1" in
   run-kvm) run_kvm ;;
   clean) clean ;;
   distclean) distclean ;;
-  *) printf "Usage: $0 {all|run|run-kvm|clean|distclean}\n" ; exit 1 ;;
+  docs) docs ;;
+  *) printf "Usage: $0 {all|run|run-kvm|clean|docs|distclean}\n" ; exit 1 ;;
 esac
