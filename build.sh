@@ -30,6 +30,9 @@ HDD_SIZE="512" # in bytes (a sector is 512 bytes)
 CC=gcc
 CVER=c99
 
+AS=nasm
+FORMAT=bin
+
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
@@ -59,7 +62,7 @@ BOOT_DIR="$SRC_DIR/boot"
 CPU_DIR="$SRC_DIR/cpu"
 
 check_dependencies() {
-  required_tools="gcc as ld objcopy mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
+  required_tools="gcc as nasm ld objcopy mkdir rm find basename truncate awk printf test command exit cat sort wait mktemp"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -234,13 +237,9 @@ all() {
   done
 
   printf "Assembling bootloader..."
-    $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
+    $AS -f $FORMAT -o "$BUILD_DIR/boot.bin" "$BOOT_DIR/boot.asm"
   printf " Done!\n"
-  
-  printf "Linking bootloader..."
-    $CC $LDFLAGS -Wl,-T,"$BOOT_DIR/boot.ld" -Wl,--oformat=binary -o "$BUILD_DIR/boot.bin" "$BUILD_DIR/boot.o"
-  printf " Done!\n"
-      
+        
   OBJS=$(get_object_files)
   
   obj_count=0
@@ -292,11 +291,13 @@ run() {
     -audiodev pa,id=snd0 \
     -machine pcspk-audiodev=snd0 \
     -serial stdio \
+    -display gtk \
     -drive file="$FLOPPY",format=raw,if=floppy \
     -m "$MEM" \
     -cpu "$CPU","$CPU_FLAGS" \
     -vga std \
-    -display gtk \
+    -chardev vc,id=mon0 \
+    -mon chardev=mon0,mode=readline \
     -rtc base=localtime \
     -nodefaults \
     -drive file="$HDD",format=raw,if=ide,media=disk
@@ -312,16 +313,17 @@ run_kvm() {
     make_hdd_image
   fi
 
-  $SU \
   qemu-system-i386 \
     -audiodev pa,id=snd0 \
     -machine pcspk-audiodev=snd0 \
     -serial stdio \
+    -display gtk \
     -drive file="$FLOPPY",format=raw,if=floppy \
     -m "$MEM" \
     -cpu "$CPU","$CPU_FLAGS" \
     -vga std \
-    -display gtk \
+    -chardev vc,id=mon0 \
+    -mon chardev=mon0,mode=readline \
     -rtc base=localtime \
     -nodefaults \
     -drive file="$HDD",format=raw,if=ide,media=disk \
