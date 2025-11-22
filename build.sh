@@ -22,10 +22,10 @@ CONFIG=build.conf
 
 HDD_SIZE="512"
 
-CC=gcc
+CC=clang
 CVER=c99
 
-LD=ld
+LD=ld.lld
 
 AS=nasm
 FORMAT=bin
@@ -63,7 +63,7 @@ CPU_DIR="$SRC_DIR/cpu"
 CONFIGURE_COUNT=0
 
 check_dependencies() {
-  required_tools="gcc as nasm ld objcopy mkdir rm find basename dd sed printf test type exit cat sort wait"
+  required_tools="clang ld.lld nasm mkdir rm find basename dd sed printf test type exit cat sort wait"
   missing_tools=""
 
   for tool in $required_tools; do
@@ -155,7 +155,7 @@ configure() {
 
     BITS=32
     MARCH=i386
-    OPT=s
+    OPT=fast
     FLOPPY=cheeseDOS.img
     SU=sudo
 

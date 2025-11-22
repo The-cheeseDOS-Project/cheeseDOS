@@ -1,18 +1,18 @@
-; TODO: "Entering Real Mode..." message
-
-ORG 0x7E00
+RG 0x7E00
 BITS 16
 stage2:
     cli
     xor ax, ax
     mov ds, ax
     mov ss, ax
+    mov si, setting_stack
+    call print
     mov sp, 0x7C00
     sti
     
     mov ah, 0x02
     mov bh, 0x00
-    mov dh, 0x02
+    mov dh, 0x01
     mov dl, 0x00
     int 0x10
     
@@ -35,6 +35,8 @@ pmode:
     mov fs, bx
     mov gs, bx
     mov ss, bx
+    mov si, back_rmode
+    call print
     mov eax, cr0
     and eax, 0xFFFFFFFE
     mov cr0, eax
