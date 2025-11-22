@@ -265,7 +265,7 @@ all() {
     obj="$2"
     log="$BUILD_DIR/$(basename "$obj").log"
 
-    printf "Compiling %s...\n" "$(basename "$obj")"
+    printf "Compiling %s... Done!\n" "$(basename "$obj")"
 
     {
 	if build_c_object "$src" "$obj" >"$log" 2>&1; then
@@ -333,7 +333,7 @@ all() {
     obj_count=$((obj_count + 1))
   done
   
-  printf "Linking %d objects to kernel.bin..." "$obj_count"
+  printf "Linking %d objects to %s..." "$obj_count" "$(basename $OUTPUT)"
     $LD $LDFLAGS -e init -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" --oformat=binary $OBJS
   printf " Done!\n"
 
