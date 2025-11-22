@@ -1,144 +1,134 @@
-BITS 16
 ORG 0x7C00
-
-%define SEL_CODE 0x08
-%define SEL_DATA 0x10
+BITS 16
 
 start:
-  cli
-  xor ax, ax
-  mov ds, ax
-  mov es, ax
-  mov ss, ax
-  mov sp, 0x7C00
+    cli
+    xor ax, ax
+    mov ds, ax
+    mov ss, ax
+    mov sp, 0x7C00
 
-  ; clear screen
-  mov ax, 0x0600
-  mov bh, 0x07
-  mov cx, 0x0000
-  mov dx, 0x184F
-  int 0x10
+    mov ah, 0x00
+    mov al, 0x03
+    int 0x10
 
-  ; cursor top-left
-  mov ah, 0x02
-  mov bh, 0x00
-  mov dh, 0x00
-  mov dl, 0x00
-  int 0x10
+    mov si, bootmsg
+    call bios_print
 
-  ; print boot messages
-  mov si, banner1
-.print1:
-  lodsb
-  test al, al
-  jz .after1
-  mov ah, 0x0E
-  mov bh, 0x00
-  mov bl, 0x07
-  int 0x10
-  jmp .print1
-.after1:
-  mov al, 0x0D
-  mov ah, 0x0E
-  int 0x10
-  mov al, 0x0A
-  int 0x10
+    mov [BootDrive], dl
+    mov si, 0x8000
+    mov bx, si
+    mov ah, 0x02
+    mov al, 1
+    mov ch, 0
+    mov cl, 2
+    mov dh, 0
+    mov dl, [BootDrive]
+    int 0x13
+    cmp dword [si], 0x464C457F
+    jne $
 
-  mov si, banner2
-.print2:
-  lodsb
-  test al, al
-  jz .after2
-  mov ah, 0x0E
-  mov bh, 0x00
-  mov bl, 0x07
-  int 0x10
-  jmp .print2
-.after2:
-  mov al, 0x0D
-  mov ah, 0x0E
-  int 0x10
-  mov al, 0x0A
-  int 0x10
+    mov eax, [si+0x18]
+    mov [ElfEntry], eax
+    mov eax, [si+0x1C]
+    mov [PhOff], eax
+    mov cx, [si+0x2C]
+    mov dx, [si+0x2A]
+    mov bx, si
+    add bx, [PhOff]
 
-  ; print GDT setup message
-  mov si, banner3
-.print3:
-  lodsb
-  test al, al
-  jz .after3
-  mov ah, 0x0E
-  mov bh, 0x00
-  mov bl, 0x07
-  int 0x10
-  jmp .print3
-.after3:
+seg_loop:
+    cmp cx, 0
+    je seg_done
+    cmp dword [bx], 1
+    jne seg_skip
+    mov eax, [bx+0x08]
+    mov edx, [bx+0x0C]
+    mov esi, [bx+0x14]
+    mov edi, eax
+    mov ecx, edx
+    rep movsb
+seg_skip:
+    add bx, dx
+    dec cx
+    jmp seg_loop
 
-  ; enable A20
-  in   al, 0x92
-  or   al, 0x02
-  out  0x92, al
+seg_done:
+    push ds
+    lgdt [gdtinfo]
 
-  ; set flat GDT and enter protected mode
-  lgdt [gdtinfo]
-  mov eax, cr0
-  or  eax, 1
-  mov cr0, eax
-  jmp dword SEL_CODE:pmode
+    mov eax, cr0
+    or eax, 1
+    mov cr0, eax
+    jmp 0x08:pmode
 
-BITS 32
+[BITS 32]
 pmode:
-  ; set data segment
-  mov ax, SEL_DATA
-  mov ds, ax
+    mov bx, 0x10
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    mov ss, bx
 
-  ; print "[boot] Entering real mode..." directly to VGA text memory
-  mov edi, 0xB8000
-  mov esi, banner4
-  mov ah, 0x07
+    mov eax, cr0
+    and eax, 0xFFFFFFFE
+    mov cr0, eax
+    jmp 0x0:huge_unreal
 
-.print4:
-  lodsb
-  test al, al
-  jz .after4
-  mov [edi], al
-  mov [edi+1], ah
-  add edi, 2
-  jmp .print4
-.after4:
+[BITS 16]
+huge_unreal:
+    pop ds
+    xor ax, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    sti
 
-  ; leave protected mode safely
-  mov eax, cr0
-  and eax, ~1
-  mov cr0, eax
-  jmp 0x0000:unreal
+    mov si, success_msg
+    call bios_print
 
-BITS 16
-unreal:
-  sti
-.hang:
-  hlt
-  jmp .hang
+    mov eax, [ElfEntry]
+    jmp eax
 
-banner1 db '[boot] Starting cheeseDOS...',0
-banner2 db '[boot] Entering protected mode...',0
-banner3 db '[boot] Setting flat GDT...',0
-banner4 db '[boot] Entering real mode...',0
+bios_print:
+    lodsb
+    or al, al
+    jz .done
+    mov ah, 0x0E
+    mov bh, 0x00
+    mov bl, 0x07
+    int 0x10
+    jmp bios_print
+.done:
+    ret
 
-; ----------------------------
-; GDT setup (exactly as you gave)
-; ----------------------------
-gdtinfo:
-   dw gdt_end - gdt - 1   ; last byte in table
-   dd gdt                 ; start of table
+bootmsg:
+    db "Starting cheeseDOS...",0x0D,0x0A,0
 
-gdt:        dd 0,0        ; entry 0 is always unused
-codedesc:   db 0xff, 0xff, 0, 0, 0, 10011010b, 00000000b, 0
-flatdesc:   db 0xff, 0xff, 0, 0, 0, 10010010b, 11001111b, 0
+success_msg:
+    db "Hello, unreal mode!",0x0D,0x0A,0
+
+BootDrive db 0
+ElfEntry dd 0
+PhOff dd 0
+
+align 8
+gdt:
+    dd 0,0
+
+flatcode:
+    db 0xff,0xff,0,0,0,10011010b,10001111b,0
+
+flatdata:
+    db 0xff,0xff,0,0,0,10010010b,11001111b,0
+
 gdt_end:
 
-; ----------------------------
-; Boot signature
-; ----------------------------
+gdtinfo:
+    dw gdt_end - gdt - 1
+    dd gdt
+
 times 510-($-$$) db 0
 dw 0xAA55
