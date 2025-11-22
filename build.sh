@@ -337,8 +337,16 @@ all() {
     $LD $LDFLAGS -e init -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" --oformat=binary $OBJS
   printf " Done!\n"
 
-  printf "Building %s..." "$FLOPPY"
-    cat "$BUILD_DIR/stage1.bin" "$BUILD_DIR/stage2.bin" "$OUTPUT" > "$FLOPPY"
+  printf "Adding stage1.bin to %s..." "$FLOPPY"
+    dd if=$BUILD_DIR/stage1.bin of=$FLOPPY bs=512 seek=0 conv=notrunc >/dev/null 2>&1
+  printf " Done!\n"
+
+  printf "Adding stage2.bin to %s..." "$FLOPPY"
+    dd if=$BUILD_DIR/stage2.bin of=$FLOPPY bs=512 seek=1 conv=notrunc >/dev/null 2>&1
+  printf " Done!\n"
+
+  printf "Adding kernel.bin to %s..." "$FLOPPY"
+    dd if=$BUILD_DIR/kernel.bin of=$FLOPPY bs=512 seek=3 conv=notrunc >/dev/null 2>&1
   printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
