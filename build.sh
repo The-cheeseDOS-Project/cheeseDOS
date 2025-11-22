@@ -236,10 +236,14 @@ all() {
     wait "$pid"
   done
 
-  printf "Assembling bootloader..."
-    $AS -f $FORMAT -o "$BUILD_DIR/boot.bin" "$BOOT_DIR/boot.asm"
+  printf "Assembling stage 1 bootloader..."
+    $AS -f $FORMAT -o "$BUILD_DIR/stage1.bin" "$BOOT_DIR/stage1.asm"
   printf " Done!\n"
-        
+
+  printf "Assembling stage 2 bootloader..."
+    $AS -f $FORMAT -o "$BUILD_DIR/stage2.bin" "$BOOT_DIR/stage2.asm"
+  printf " Done!\n"
+
   OBJS=$(get_object_files)
   
   obj_count=0
@@ -256,7 +260,7 @@ all() {
   printf " Done!\n"
 
   printf "Building %s..." "$FLOPPY"
-    cat "$BUILD_DIR/boot.bin" "$OUTPUT" > "$FLOPPY"
+    cat "$BUILD_DIR/stage1.bin" "$BUILD_DIR/stage2.bin" "$OUTPUT" > "$FLOPPY"
   printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
