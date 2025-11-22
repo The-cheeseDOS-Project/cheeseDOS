@@ -30,6 +30,8 @@ LD=ld
 AS=nasm
 FORMAT=bin
 
+FLOPPY_SIZE=1474560
+
 FLAGS="-ffreestanding \
        -Wall \
        -Wextra \
@@ -61,12 +63,12 @@ CPU_DIR="$SRC_DIR/cpu"
 CONFIGURE_COUNT=0
 
 check_dependencies() {
-  required_tools="gcc as nasm ld objcopy mkdir rm find basename truncate sed printf test command exit cat sort wait mktemp"
+  required_tools="gcc as nasm ld objcopy mkdir rm find basename dd sed printf test type exit cat sort wait"
   missing_tools=""
 
   for tool in $required_tools; do
     printf "Checking for %s..." "$tool"
-    if command -v "$tool" > /dev/null 2>&1; then
+    if type "$tool" > /dev/null 2>&1; then
       printf " Found!\n"
     else
       printf " Not Found!\n"
@@ -257,52 +259,43 @@ all() {
 
   ASMFLAGS="-m$BITS \
           $INCLUDES"
-  
+
   build_c() {
     src="$1"
     obj="$2"
+    log="$BUILD_DIR/$(basename "$obj").log"
 
-    printf "Compiling $(basename $2)... Done!\n"
+    printf "Compiling %s...\n" "$(basename "$obj")"
 
     {
-      output=$(mktemp)
-      if build_c_object "$src" "$obj" > "$output" 2>&1; then
-        cat "$output"
-        rm -f "$output"
-      else
-        cat "$output"
-        rm -f "$output"
-        exit 1
-      fi
+	if build_c_object "$src" "$obj" >"$log" 2>&1; then
+            rm -f "$log"
+	else
+            cat "$log"
+            rm -f "$log"
+            exit 1
+	fi
     } &
-    if [ -z "$build_pids" ]; then
-      build_pids="$!"
-    else
-      build_pids="$build_pids $!"
-    fi
+    build_pids="$build_pids $!"
   }
   
   build_asm() {
     src="$1"
     obj="$2"
+    log="$BUILD_DIR/$(basename "$obj").log"
 
-    printf "Assembling $(basename $2)... Done!\n"
+    printf "Assembling %s...\n" "$(basename "$obj")"
 
     {
-      output=$(mktemp)
-      if build_asm_object "$src" "$obj" > "$output" 2>&1; then
-        rm -f "$output"
-      else
-        cat "$output"
-        rm -f "$output"
-        exit 1
-      fi
+	if build_asm_object "$src" "$obj" >"$log" 2>&1; then
+            rm -f "$log"
+        else
+            cat "$log"
+            rm -f "$log"
+            exit 1
+	fi
     } &
-    if [ -z "$build_pids" ]; then
-      build_pids="$!"
-    else
-      build_pids="$build_pids $!"
-    fi
+    build_pids="$build_pids $!"
   }
 
   for src in $(get_source_files); do
@@ -349,7 +342,7 @@ all() {
   printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
-    truncate -s 1474560 "$FLOPPY"
+    dd if=/dev/zero of=$FLOPPY bs=1 count=0 seek=$FLOPPY_SIZE 2>/dev/null
   printf " Done!\n"
 
   exit 0
@@ -426,13 +419,13 @@ run_kvm() {
 clean() {
   check_config
   printf "Cleaning up..."
-    rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT"
+    rm -rf "$BUILD_DIR" "$FLOPPY"
   printf " Done!\n"
 }
 
 distclean() {
   printf "Cleaning up..."
-    rm -rf "$BUILD_DIR" "$FLOPPY" "$ISO_ROOT" "build.conf"
+    rm -rf "$BUILD_DIR" "$FLOPPY" "build.conf"
   printf " Done!\n"
 }
 
