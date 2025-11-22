@@ -176,7 +176,7 @@ all() {
     src="$1"
     obj="$2"
 
-    printf "$CC $CFLAGS -c $src -o $obj\n" | awk '{$1=$1; print}'
+    printf "Compiling $(basename $2)... Done!\n"
 
     {
       output=$(mktemp)
@@ -200,7 +200,7 @@ all() {
     src="$1"
     obj="$2"
 
-    printf "$CC $ASMFLAGS -c $src -o $obj" | awk '{$1=$1; print}'
+    printf "Assembling $(basename $2)... Done!\n"
 
     {
       output=$(mktemp)
@@ -239,11 +239,11 @@ all() {
     wait "$pid"
   done
 
-  printf "Assembling stage 1 bootloader..."
+  printf "Assembling stage1.bin..."
     $AS -f $FORMAT -o "$BUILD_DIR/stage1.bin" "$BOOT_DIR/stage1.asm"
   printf " Done!\n"
 
-  printf "Assembling stage 2 bootloader..."
+  printf "Assembling stage2.bin..."
     $AS -f $FORMAT -o "$BUILD_DIR/stage2.bin" "$BOOT_DIR/stage2.asm"
   printf " Done!\n"
 
