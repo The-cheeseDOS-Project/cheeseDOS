@@ -16,12 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef VGA_H
-#define VGA_H
+#ifndef FLOPPY_H
+#define FLOPPY_H
 
-void graphics_mode(void);
-void put_pixel(int x, int y, int color);
-void draw_char(int x, int y, char c, int color);
-void print(const char *s);
+void floppy_irq_handler(void);
+void floppy_init(void);
+int floppy_read(uint32_t lba, uint32_t count, void *buffer);
 
 #endif

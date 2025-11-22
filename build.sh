@@ -233,10 +233,6 @@ all() {
     wait "$pid"
   done
 
-  printf "Assembling cpu.o..."
-    $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$CPU_DIR/cpu.S"
-  printf " Done!\n"
-
   printf "Assembling bootloader..."
     $CC -m$BITS -c -o "$BUILD_DIR/boot.o" "$BOOT_DIR/boot.S"
   printf " Done!\n"
