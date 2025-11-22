@@ -20,7 +20,7 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 
 ## System Requirements
 
-| Component   | Requirement                                     |
+| Component   | Requirement                                      |
 |-------------|--------------------------------------------------|
 | Processor   | i386-class or newer x86-compatible processor     |
 | Storage     | 3.5" 1.44MB Floppy Diskette and a IDE Hard Drive |
