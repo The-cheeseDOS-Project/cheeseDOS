@@ -333,7 +333,7 @@ all() {
     obj_count=$((obj_count + 1))
   done
   
-  printf "Linking cheeseDOS with %d object files..." "$obj_count"
+  printf "Linking %d objects to kernel.bin..." "$obj_count"
     $LD $LDFLAGS -e init -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" --oformat=binary $OBJS
   printf " Done!\n"
 
