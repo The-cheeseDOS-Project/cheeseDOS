@@ -30,6 +30,8 @@ HDD_SIZE="512" # in bytes (a sector is 512 bytes)
 CC=gcc
 CVER=c99
 
+LD=ld
+
 AS=nasm
 FORMAT=bin
 
@@ -42,19 +44,20 @@ FLAGS="-ffreestanding \
        -std=$CVER \
        -pedantic \
        -fno-common \
-       -pedantic-errors"
+       -pedantic-errors
+       -fno-pie"
 
-LDFLAGS="-m$BITS \
+LDFLAGS="-m elf_i386 \
          -z noexecstack
          -nostdlib \
-         -Wl,--build-id=none"
+         -build-id=none"
 
 HDD="build/hdd.img"
 
 SRC_DIR=src
 BUILD_DIR=build
 
-ELF="cheesedos.elf"
+ELF="kernel.bin"
 OUTPUT="$BUILD_DIR/$ELF"
 
 BOOT_DIR="$SRC_DIR/boot"
@@ -252,11 +255,7 @@ all() {
   done
   
   printf "Linking cheeseDOS with %d object files..." "$obj_count"
-    $CC $LDFLAGS -no-pie -Wl,-e,init -Wl,-T,"$SRC_DIR/link/link.ld" -o "$OUTPUT" $OBJS
-  printf " Done!\n"
-
-  printf "Stripping %s..." "$OUTPUT"
-    objcopy --strip-all --remove-section=.rel.dyn --remove-section=.got.plt $OUTPUT
+    $LD $LDFLAGS -e init -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" --oformat=binary $OBJS
   printf " Done!\n"
 
   printf "Building %s..." "$FLOPPY"
