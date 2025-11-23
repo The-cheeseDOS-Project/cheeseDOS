@@ -44,18 +44,16 @@ FLAGS="-ffreestanding \
        -pedantic-errors \
        -fno-pie"
 
-LDFLAGS="-m elf_i386 \
-         -z noexecstack
-         -nostdlib \
-         -build-id=none"
+LDFLAGS="-z noexecstack
+         -nostdlib"
 
 HDD="build/hdd.img"
 
 SRC_DIR=src
 BUILD_DIR=build
 
-ELF="kernel.bin"
-OUTPUT="$BUILD_DIR/$ELF"
+KERNEL="kernel.bin"
+OUTPUT="$BUILD_DIR/$KERNEL"
 
 BOOT_DIR="$SRC_DIR/boot"
 CPU_DIR="$SRC_DIR/cpu"
@@ -334,7 +332,7 @@ all() {
   done
   
   printf "Linking %d objects to %s..." "$obj_count" "$(basename $OUTPUT)"
-    $LD $LDFLAGS -e init -T "$SRC_DIR/link/link.ld" -o "$OUTPUT" --oformat=binary $OBJS
+    $LD $LDFLAGS -m elf_i386 -e kmain --oformat binary -Ttext=0x8000 -Tdata=0x10000 --image-base=0x0 -o $OUTPUT $OBJS
   printf " Done!\n"
 
   printf "Adding stage1.bin to %s..." "$FLOPPY"
@@ -345,8 +343,8 @@ all() {
     dd if=$BUILD_DIR/stage2.bin of=$FLOPPY bs=512 seek=1 conv=notrunc >/dev/null 2>&1
   printf " Done!\n"
 
-  printf "Adding kernel.bin to %s..." "$FLOPPY"
-    dd if=$BUILD_DIR/kernel.bin of=$FLOPPY bs=512 seek=3 conv=notrunc >/dev/null 2>&1
+  printf "Adding %s to %s..." "$ELF" "$FLOPPY"
+    dd if=$OUTPUT of=$FLOPPY bs=512 seek=3 conv=notrunc >/dev/null 2>&1
   printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
@@ -431,6 +429,67 @@ clean() {
   printf " Done!\n"
 }
 
+run_gdb() {
+  check_config
+
+  if [ ! -f "$FLOPPY" ]; then
+    printf "Error: Floppy image $FLOPPY not found. Run 'build' first.\n"
+    exit 1
+  fi
+  
+  if [ ! -f "$HDD" ]; then
+    make_hdd_image
+  fi
+
+  qemu-system-i386 \
+    -audiodev pa,id=snd0 \
+    -machine pcspk-audiodev=snd0 \
+    -serial stdio \
+    -display gtk \
+    -drive file="$FLOPPY",format=raw,if=floppy \
+    -m "$MEM" \
+    -cpu "$CPU","$CPU_FLAGS" \
+    -vga std \
+    -chardev vc,id=mon0 \
+    -mon chardev=mon0,mode=readline \
+    -rtc base=localtime \
+    -nodefaults \
+    -drive file="$HDD",format=raw,if=ide,media=disk \
+    -s \
+    -S
+}
+
+run_kvm_gdb() {
+  check_config
+
+  if [ ! -f "$FLOPPY" ]; then
+    printf "Error: Floppy image $FLOPPY not found. Run 'build' first.\n"
+    exit 1
+  fi
+  
+  if [ ! -f "$HDD" ]; then
+    make_hdd_image
+  fi
+
+  qemu-system-i386 \
+    -audiodev pa,id=snd0 \
+    -machine pcspk-audiodev=snd0 \
+    -serial stdio \
+    -display gtk \
+    -drive file="$FLOPPY",format=raw,if=floppy \
+    -m "$MEM" \
+    -cpu "$CPU","$CPU_FLAGS" \
+    -vga std \
+    -chardev vc,id=mon0 \
+    -mon chardev=mon0,mode=readline \
+    -rtc base=localtime \
+    -nodefaults \
+    -drive file="$HDD",format=raw,if=ide,media=disk \
+    -enable-kvm \
+    -s \
+    -S
+}
+
 distclean() {
   printf "Cleaning up..."
     rm -rf "$BUILD_DIR" "$FLOPPY" "build.conf"
@@ -464,8 +523,10 @@ case "$CMD" in
   all) all ;;
   run) run ;;
   run-kvm) run_kvm ;;
+  run-gdb) run_gdb ;;
+  run-kvm-gdb) run_kvm_gdb ;;
   clean) clean ;;
   distclean) distclean ;;
   docs) docs ;;
-  *) printf "Usage: $0 {all|run|run-kvm|clean|docs|distclean}\n" ; exit 1 ;;
+  *) printf "Usage: $0 {all|run|run-kvm|run-gdb|run-kvm-gdb|clean|docs|distclean|docs}\n" ; exit 1 ;;
 esac

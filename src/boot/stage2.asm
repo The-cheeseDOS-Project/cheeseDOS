@@ -1,5 +1,3 @@
-; TODO: "Entering Real Mode..." message
-
 ORG 0x7E00
 BITS 16
 stage2:

@@ -7,6 +7,10 @@ start:
     mov ax, 0x0003
     int 0x10
 
+    mov ah, 0x01
+    mov cx, 0x2000
+    int 0x10
+
     mov si, loading
     call print
     
