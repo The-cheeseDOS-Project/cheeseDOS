@@ -84,8 +84,8 @@ newline:
     popa
     ret
 
-loading db "Loading stage2...", 0x0D, 0x0A, 0
-success db "Starting stage2...", 0x0D, 0x0A, 0
+loading db "Loading Stage 2...", 0x0D, 0x0A, 0
+success db "Starting Stage 2...", 0x0D, 0x0A, 0
 error db "Disk error: 0x", 0
 
 BootDrive db 0
