@@ -52,8 +52,9 @@ HDD="build/hdd.img"
 SRC_DIR=src
 BUILD_DIR=build
 
-KERNEL="kernel.bin"
-OUTPUT="$BUILD_DIR/$KERNEL"
+ELF="kernel.bin"
+LINKER_SCRIPT="$SRC_DIR/link/link.ld"
+OUTPUT="$BUILD_DIR/$ELF"
 
 BOOT_DIR="$SRC_DIR/boot"
 CPU_DIR="$SRC_DIR/cpu"
@@ -330,10 +331,14 @@ all() {
   for obj in $OBJS; do
     obj_count=$((obj_count + 1))
   done
-  
+
   printf "Linking %d objects to %s..." "$obj_count" "$(basename $OUTPUT)"
-    $LD $LDFLAGS -m elf_i386 -e kmain --oformat binary -Ttext=0x8000 -Tdata=0x10000 --image-base=0x0 -o $OUTPUT $OBJS
+    $LD -T $LINKER_SCRIPT -o $OUTPUT $OBJS
   printf " Done!\n"
+
+#  printf "Stripping %s..." "$ELF"
+#    objcopy --strip-all $OUTPUT
+#  printf " Done!\n"
 
   printf "Adding stage1.bin to %s..." "$FLOPPY"
     dd if=$BUILD_DIR/stage1.bin of=$FLOPPY bs=512 seek=0 conv=notrunc >/dev/null 2>&1

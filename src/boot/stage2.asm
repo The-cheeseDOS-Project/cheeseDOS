@@ -9,13 +9,13 @@ stage2:
     sti
 
     mov [BootDrive], dl
-    
+
     mov ah, 0x02
     mov bh, 0x00
     mov dh, 0x02
     mov dl, 0x00
     int 0x10
-    
+
     push ds
     mov si, loading_gdt
     call print
@@ -26,7 +26,7 @@ stage2:
     or eax, 1
     mov cr0, eax
     jmp 0x08:pmode
-    
+
 [BITS 32]
 pmode:
     mov bx, 0x10
@@ -39,7 +39,7 @@ pmode:
     and eax, 0xFFFFFFFE
     mov cr0, eax
     jmp 0x0:unreal
-    
+
 [BITS 16]
 unreal:
     pop ds
@@ -52,8 +52,7 @@ unreal:
     mov si, entering_unreal
     call print
     jmp boot
-    jmp $
-    
+
 print:
     lodsb
     or al, al
@@ -70,42 +69,59 @@ boot:
     mov si, loading_disk
     call print
 
-    mov bx, 0
+    mov dl, [BootDrive]
+    xor ax, ax
+    int 0x13
+    jc disk_error
+
     mov ax, 0x1000
     mov es, ax
+    mov bx, 0
+    
     mov dl, [BootDrive]
     mov dh, 0
     mov ch, 0
-    mov cl, 2
-
-read:
-    mov ah, 2
-    mov al, 1
+    mov cl, 4
+    mov al, 16
+    mov ah, 0x02
+    
     int 0x13
-    jc done
-    mov ax, [es:bx]
+    jc disk_error
+    
+    cmp al, 0
+    je disk_error
+    
+    mov ax, [es:0]
     cmp ax, 0
-    je done
-    add bx, 512
-    inc cl
-    jmp read
+    je no_kernel
+            
+    jmp kernel
 
-done:
-    mov si, hello_msg
+disk_error:
+    mov si, error_disk_read
     call print
+    jmp halt
+
+no_kernel:
+    mov si, error_no_kernel
+    call print
+    jmp halt
+
+kernel:
+    cli
+    jmp 0x1000:0x0000
 
 halt:
     cli
     hlt
-
-.ret:
-    ret
+    jmp halt
 
 loading_disk db "Loading kernel...",0x0D, 0x0A, 0
 loading_gdt db "Loading GDT...", 0x0D, 0x0A, 0
 enter_pmode db "Entering Protected Mode...", 0x0D, 0x0A, 0
 entering_unreal db "Entering Unreal mode...", 0x0D, 0x0A, 0
-hello_msg db "hello, world!",0x0D,0x0A,0
+error_disk_read db "Disk read error!", 0x0D, 0x0A, 0
+error_no_kernel db "No kernel found!", 0x0D, 0x0A, 0
 
 BootDrive db 0
 

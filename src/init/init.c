@@ -1,26 +1,24 @@
-/*
- * cheeseDOS - My x86 DOS
- * Copyright (C) 2025  Connor Thomson
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+void kmain(void) {
+    __asm volatile (
+        "movl $msg, %esi\n"
+        "call print_string\n"
+        "jmp .\n"
 
-#include "vga.h"
+        "print_string:\n"
+        "movl %esi, %edi\n"
+        ".next_char:\n"
+        "movb (%edi), %al\n"
+        "cmpb $0, %al\n"
+        "je .done\n"
+        "movb $0x0E, %ah\n"
+        "int $0x10\n"
+        "incl %edi\n"
+        "jmp .next_char\n"
+        ".done:\n"
+        "cli\n"
+        "hlt\n"
 
-void init(void) {
-    graphics_mode();
-    while(1) {
-        print("Hello, world!\n");   
-    }
+        "msg:\n"
+        ".asciz \"Hello World\""
+    );
 }

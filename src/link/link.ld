@@ -16,47 +16,57 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-ENTRY(_start)
+ENTRY(kmain)
+OUTPUT_FORMAT(binary)
 
-SECTIONS
-{
-    . = 0x8000;
-    .text : AT(0x8000) {
-        *(.text*)
-        *(.rodata*)
+SECTIONS {
+    . = 0x10000;
+    
+    .text : ALIGN(16) {
+        *(.text)
+        *(.text)
+        *(.text.*)
     }
-
-    . = ALIGN(0x10000);
-    .data : AT(0x10000) {
-        *(.data*)
+    
+    .rodata : ALIGN(16) {
+        *(.rodata)
+        *(.rodata.*)
     }
-
-    .bss : {
-        *(.bss*)
+    
+    .data : ALIGN(16) {
+        *(.data)
+        *(.data.*)
+    }
+    
+    .bss : ALIGN(16) {
+        __bss_start = .;
+        *(.bss)
+        *(.bss.*)
         *(COMMON)
-        . = ALIGN(16);
-        _end = .;
+        __bss_end = .;
     }
-
+    
     /DISCARD/ : {
         *(.interp)
         *(.dynsym)
         *(.dynstr)
         *(.gnu.hash)
+        *(.hash)
         *(.note.gnu.property)
         *(.note.gnu.build-id)
+        *(.note.*)
         *(.rel.dyn)
+        *(.rela.dyn)
+        *(.rel.*)
+        *(.rela.*)
         *(.dynamic)
-        *(.debug_info)
-        *(.debug_abbrev)
-        *(.debug_loclists)
-        *(.debug_aranges)
-        *(.debug_rnglists)
-        *(.debug_line)
-        *(.debug_str)
-        *(.debug_line_str)
+        *(.got)
+        *(.got.plt)
+        *(.plt)
+        *(.debug_*)
         *(.comment)
         *(.eh_frame)
         *(.eh_frame_hdr)
+        *(.gnu.warning)
     }
 }
