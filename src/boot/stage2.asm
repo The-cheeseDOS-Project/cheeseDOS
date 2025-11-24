@@ -17,7 +17,7 @@ stage2:
     int 0x10
 
     push ds
-    mov si, loading_gdt
+    mov si, load_gdt
     call print
     lgdt [gdtinfo]
     mov si, enter_pmode
@@ -27,20 +27,6 @@ stage2:
     mov cr0, eax
     jmp 0x08:pmode
 
-[BITS 32]
-pmode:
-    mov bx, 0x10
-    mov ds, bx
-    mov es, bx
-    mov fs, bx
-    mov gs, bx
-    mov ss, bx
-    mov eax, cr0
-    and eax, 0xFFFFFFFE
-    mov cr0, eax
-    jmp 0x0:unreal
-
-[BITS 16]
 unreal:
     pop ds
     xor ax, ax
@@ -49,7 +35,7 @@ unreal:
     mov gs, ax
     mov ss, ax
     sti
-    mov si, entering_unreal
+    mov si, enter_unreal
     call print
     jmp boot
 
@@ -66,7 +52,7 @@ print:
     ret
 
 boot:
-    mov si, loading_disk
+    mov si, load_disk
     call print
 
     mov dl, [BootDrive]
@@ -108,21 +94,27 @@ no_kernel:
     jmp halt
 
 kernel:
-    cli
-    jmp 0x1000:0x0000
+    mov si, enter_pmode
+    call print
 
+    lgdt [gdtinfo]
+    mov eax, cr0
+    or eax, 1
+    mov cr0, eax
+    
+    jmp 0x08:kernel32
+    
 halt:
     cli
     hlt
     jmp halt
 
-loading_disk db "Loading kernel...",0x0D, 0x0A, 0
-loading_gdt db "Loading GDT...", 0x0D, 0x0A, 0
-enter_pmode db "Entering Protected Mode...", 0x0D, 0x0A, 0
-entering_unreal db "Entering Unreal mode...", 0x0D, 0x0A, 0
+load_disk db "Loading kernel...",0x0D, 0x0A, 0
+load_gdt db "Loading GDT...", 0x0D, 0x0A, 0
+enter_pmode db "Entering protected mode...", 0x0D, 0x0A, 0
+enter_unreal db "Entering unREAL mode...", 0x0D, 0x0A, 0
 error_disk_read db "Disk read error!", 0x0D, 0x0A, 0
 error_no_kernel db "No kernel found!", 0x0D, 0x0A, 0
-
 BootDrive db 0
 
 align 8
@@ -136,3 +128,28 @@ gdt_end:
 gdtinfo:
     dw gdt_end - gdt - 1
     dd gdt
+
+[BITS 32]
+pmode:
+    mov bx, 0x10
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    mov ss, bx
+    mov eax, cr0
+    and eax, 0xFFFFFFFE
+    mov cr0, eax
+    jmp 0x0:unreal
+
+kernel32:
+    jmp .hang
+
+.hang:
+    cli
+    jmp .loop
+.loop:
+    hlt
+    jmp .loop
+
+start_kernel db "Starting kernel...", 0
