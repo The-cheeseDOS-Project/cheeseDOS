@@ -121,7 +121,7 @@ align 8
 gdt:
     dd 0,0
 flatcode:
-    db 0xff,0xff,0,0,0,10011010b,10001111b,0
+    db 0xff,0xff,0,0,0,10011010b,11001111b,0
 flatdata:
     db 0xff,0xff,0,0,0,10010010b,11001111b,0
 gdt_end:
@@ -131,30 +131,41 @@ gdtinfo:
 
 [BITS 32]
 pmode:
-    mov bx, 0x10
+    os16 mov bx, 0x10
+    mov ebx, 0x10
     mov ds, bx
     mov es, bx
     mov fs, bx
     mov gs, bx
     mov ss, bx
-    mov eax, cr0
+    mov eax, cr0 
     and eax, 0xFFFFFFFE
     mov cr0, eax
     jmp 0x0:unreal
 
 kernel32:
-
     mov ax, 0x10
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov esp, 0x90000
 
     mov esi, start_kernel
     mov edi, 0xB8000
     mov ah, 0x0F  
+
+    mov esp, 0x90000
+
+    call 0x08:0x10000
+
+    mov esi, kernel_exit
+    mov edi, 0xB8000
+    mov ah, 0x0F  
+
+    cli
+    hlt
+
 .print_loop:
     lodsb
     or al, al
@@ -163,9 +174,5 @@ kernel32:
     jmp .print_loop
 .done:
 
-.hang:
-    cli
-    hlt
-    jmp .hang
-
-start_kernel db "Starting kernel...", 0
+start_kernel db "Starting kernel...", 0x0D, 0x0A, 0
+kernel_exit db "Kernel has exited!", 0x0D, 0x0A, 0
