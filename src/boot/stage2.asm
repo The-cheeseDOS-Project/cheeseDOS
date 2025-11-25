@@ -121,7 +121,7 @@ align 8
 gdt:
     dd 0,0
 flatcode:
-    db 0xff,0xff,0,0,0,10011010b,10001111b,0
+    db 0xff,0xff,0,0,0,10011010b,11001111b,0
 flatdata:
     db 0xff,0xff,0,0,0,10010010b,11001111b,0
 gdt_end:
@@ -131,19 +131,19 @@ gdtinfo:
 
 [BITS 32]
 pmode:
-    mov bx, 0x10
+    os16 mov bx, 0x10
+    mov ebx, 0x10
     mov ds, bx
     mov es, bx
     mov fs, bx
     mov gs, bx
     mov ss, bx
-    mov eax, cr0
+    mov eax, cr0 
     and eax, 0xFFFFFFFE
     mov cr0, eax
     jmp 0x0:unreal
 
 kernel32:
-
     mov ax, 0x10
     mov ds, ax
     mov es, ax
