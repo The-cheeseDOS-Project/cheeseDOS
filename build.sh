@@ -249,12 +249,12 @@ all() {
   printf " Done!\n"
 
   printf "Generating compile info..."
-    printf "#ifndef INFO_H\n"                                                                                 >> $BUILD_DIR/info.h
-    printf "#define INFO_H\n"                                                                                 >> $BUILD_DIR/info.h
-    printf "#define CC \"%s\"\n" "$(clang --version | awk '/clang/{print $1, $3}')"                           >> $BUILD_DIR/info.h
-    printf "#define BUILD_TIME __TIME__\n"                                                                    >> $BUILD_DIR/info.h
-    printf "#define BUILD_DATE __DATE__\n"                                                                    >> $BUILD_DIR/info.h
-    printf "#endif\n"                                                                                         >> $BUILD_DIR/info.h
+    printf "#ifndef INFO_H\n"                                                  >> $BUILD_DIR/info.h
+    printf "#define INFO_H\n"                                                  >> $BUILD_DIR/info.h
+    printf '#define CC "%s"\n' "$($CC --version | awk 'NR==1 {print $1, $3}')" >> $BUILD_DIR/info.h
+    printf "#define BUILD_TIME __TIME__\n"                                     >> $BUILD_DIR/info.h
+    printf "#define BUILD_DATE __DATE__\n"                                     >> $BUILD_DIR/info.h
+    printf "#endif\n"                                                          >> $BUILD_DIR/info.h
   printf " Done!\n"
 
   build_pids=""
