@@ -14,28 +14,5 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-*.o
-init.elf
-*.img
-/build/
-*~
-*.swp
-tmp/
-temp/
-.cache/
-logs/
-*.log
-System Volume Information/
-*.ini
-.DS_Store
-Thumbs.db
-core
-.idea/
-notes*
-todo*
-NOTES*
-*.iso
-NULL
-*.conf
-.vscode/
+build/
 docs/
