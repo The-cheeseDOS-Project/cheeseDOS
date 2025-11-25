@@ -20,24 +20,12 @@ stage2:
     mov si, load_gdt
     call print
     lgdt [gdtinfo]
-    mov si, enter_pmode
+    mov si, enter_unreal
     call print
     mov eax, cr0
     or eax, 1
     mov cr0, eax
     jmp 0x08:pmode
-
-unreal:
-    pop ds
-    xor ax, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
-    sti
-    mov si, enter_unreal
-    call print
-    jmp boot
 
 print:
     lodsb
@@ -141,7 +129,7 @@ pmode:
     mov eax, cr0 
     and eax, 0xFFFFFFFE
     mov cr0, eax
-    jmp 0x0:unreal
+    jmp 0x0:boot
 
 kernel32:
     mov ax, 0x10
