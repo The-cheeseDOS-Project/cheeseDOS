@@ -18,8 +18,15 @@
 [bits 16]
 
 start:
-    push cs
-    pop ds
+    cli
+    mov [BootDrive], dl
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov sp, 0x9C00
+    sti
+    
     mov ax, 0x0003
     int 0x10
 
@@ -34,7 +41,7 @@ start:
     mov es, ax
     mov bx, 0x7E00
     mov ah, 0x02
-    mov al, 1
+    mov al, 8
     mov ch, 0
     mov cl, 2
     mov dh, 0
@@ -44,11 +51,13 @@ start:
     
     mov si, success
     call print
+    mov dl, [BootDrive]
     jmp 0x0000:0x7E00
 
 disk_error:
     mov si, error
     call print
+    mov al, ah
     call print_hex
     call newline
 

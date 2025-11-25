@@ -69,8 +69,8 @@ boot:
     mov dl, [BootDrive]
     mov dh, 0
     mov ch, 0
-    mov cl, 4
-    mov al, 16
+    mov cl, 10
+    mov al, 8
     mov ah, 0x02
     int 0x13
     jc disk_error
@@ -215,3 +215,5 @@ start_kernel db "Starting kernel...",0
 align 8
 idt:
    times (256 * 8) db 0
+
+times 4096-($-$$) db 0
