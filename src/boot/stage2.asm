@@ -33,7 +33,6 @@ stage2:
     mov dl, 0x00
     int 0x10
 
-    push ds
     mov si, load_gdt
     call print
     lgdt [gdtinfo]
@@ -142,7 +141,6 @@ pmode:
     mov es, bx
     mov fs, bx
     mov gs, bx
-    mov ss, bx
     mov eax, cr0 
     and eax, 0xFFFFFFFE
     mov cr0, eax
