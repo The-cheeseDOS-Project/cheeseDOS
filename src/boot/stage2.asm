@@ -19,6 +19,7 @@ ORG 0x7E00
 [BITS 16]
 stage2:   
    cli
+   mov [BootDrive], dl
    xor ax, ax       
    mov ds, ax             
    mov ss, ax             
@@ -50,14 +51,39 @@ stage2:
    mov si, enter_unreal
    call print
    cli                     
-   mov si, enter_pmode
-   call print
-   lidt [idtinfo]
-   lgdt [gdtinfo]
-   mov eax, cr0
-   or al, 1
-   mov cr0, eax
-   jmp 0x08:pmode32
+   jmp boot
+
+boot:
+    mov si, load_disk
+    call print
+    mov dl, [BootDrive]
+    xor ax, ax
+    int 0x13
+    jc disk_error
+    mov ax, 0x1000
+    mov es, ax
+    mov bx, 0
+    mov dl, [BootDrive]
+    mov dh, 0
+    mov ch, 0
+    mov cl, 4
+    mov al, 16
+    mov ah, 0x02
+    int 0x13
+    jc disk_error
+    cmp al, 0
+    je disk_error
+    mov ax, [es:0]
+    cmp ax, 0
+    je no_kernel
+    mov si, enter_pmode
+    call print
+    lidt [idtinfo]
+    lgdt [gdtinfo]
+    mov eax, cr0
+    or al, 1
+    mov cr0, eax
+    jmp 0x08:pmode32
 
 setup_idt:
    push ax
@@ -133,17 +159,21 @@ set_idt db "Setting IDT...", 0x0D, 0x0A, 0
 enter_pmode db "Entering protected mode...", 0x0D, 0x0A, 0
 set_gdt db "Setting GDT...", 0x0D, 0x0A, 0
 enter_unreal db "Entering unreal mode...", 0x0D, 0x0A, 0
+load_disk db "Loading kernel...",0x0D, 0x0A, 0
+no_kernel db "No kernel found!", 0x0D, 0x0A, 0
+disk_error db "Disk read error!", 0x0D, 0x0A, 0
+BootDrive db 0
 
 [BITS 32]
 pmode32:
-   mov ax, 0x10           
-   mov ds, ax
-   mov es, ax
-   mov fs, ax
-   mov gs, ax
-   mov ss, ax
-   mov esp, 0x9c00        
-   jmp $                   
+    mov ax, 0x10           
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    mov esp, 0x9c00
+    jmp 0x08:0x10000
 
 default_isr:
    iretd
