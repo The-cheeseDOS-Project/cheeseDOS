@@ -54,11 +54,8 @@ There are many ways to contribute, including:
 5.  Features must be (mostly) working before a [PR](https://en.wikipedia.org/wiki/Distributed_version_control#Pull_requests).
 6.  Use [C99](https://en.wikipedia.org/wiki/C99), no C11 or later.
 7.  Uses 100% custom code and [libraries](https://en.wikipedia.org/wiki/Library_(computing)) (besides the [toolchain](https://en.wikipedia.org/wiki/Toolchain))
-8.  Only needs one command to [compile](https://en.wikipedia.org/wiki/Command_(computing)) (including installing [dependencies](https://www.sonatype.com/resources/articles/what-are-software-dependencies))
-9.  [Compiles](https://en.wikipedia.org/wiki/Compiler) the same exact way on every system
-10. Super simple to use
-11. Uses Ring 0
- 
+10. Simple to use
+
 ## Reporting Issues
 If you find bugs or have feature requests, please submit them in the GitHub Issues section. Include detailed descriptions and steps to reproduce the issue.
 
