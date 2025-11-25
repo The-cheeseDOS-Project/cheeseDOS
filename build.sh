@@ -351,7 +351,7 @@ all() {
   printf " Done!\n"
 
   printf "Adding %s to %s..." "$ELF" "$FLOPPY"
-    dd if=$OUTPUT of=$FLOPPY bs=512 seek=3 conv=notrunc >/dev/null 2>&1
+    dd if=$OUTPUT of=$FLOPPY bs=512 seek=9 conv=notrunc >/dev/null 2>&1
   printf " Done!\n"
 
   printf "Padding %s..." "$FLOPPY"
