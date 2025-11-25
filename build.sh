@@ -205,8 +205,6 @@ EOF
     printf "  OPT=$OPT\n"
     printf "  FLOPPY=$FLOPPY\n"
     printf "  SUDO=$SU\n"
-
-    return 0
 }
 
 SCRIPT_ARGS=""
@@ -233,8 +231,6 @@ check_config() {
     OPT=$(sed -n 's/^OPT=//p' "$CONFIG")
     FLOPPY=$(sed -n 's/^FLOPPY=//p' "$CONFIG")
     SUDO=$(sed -n 's/^SUDO=//p' "$CONFIG")
-   
-    return 0
 }
 
 all() {
