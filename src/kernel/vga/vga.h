@@ -3,5 +3,6 @@
 
 void print(const char* msg);
 void putchar(char c);
+void clear(void);
 
 #endif

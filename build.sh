@@ -93,7 +93,7 @@ check_dependencies() {
 
 get_includes() {
   includes=""
-  for dir in $(find "$SRC_DIR" -type d | sort); do
+  for dir in $(find . -type d | sort); do
     includes="$includes -I$dir"
   done
   printf "$includes"
@@ -246,6 +246,15 @@ all() {
 
   printf "Making directory: %s..." "$BUILD_DIR"
     mkdir -p "$BUILD_DIR"
+  printf " Done!\n"
+
+  printf "Generating compile info..."
+    printf "#ifndef INFO_H\n"                                                                                 >> $BUILD_DIR/info.h
+    printf "#define INFO_H\n"                                                                                 >> $BUILD_DIR/info.h
+    printf "#define CC \"%s\"\n" "$(clang --version | awk '/clang/{print $1, $3}')"                           >> $BUILD_DIR/info.h
+    printf "#define BUILD_TIME __TIME__\n"                                                                    >> $BUILD_DIR/info.h
+    printf "#define BUILD_DATE __DATE__\n"                                                                    >> $BUILD_DIR/info.h
+    printf "#endif\n"                                                                                         >> $BUILD_DIR/info.h
   printf " Done!\n"
 
   build_pids=""
