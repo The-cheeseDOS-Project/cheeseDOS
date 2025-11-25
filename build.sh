@@ -336,10 +336,6 @@ all() {
     $LD -T $LINKER_SCRIPT -o $OUTPUT $OBJS
   printf " Done!\n"
 
-#  printf "Stripping %s..." "$ELF"
-#    objcopy --strip-all $OUTPUT
-#  printf " Done!\n"
-
   printf "Adding stage1.bin to %s..." "$FLOPPY"
     dd if=$BUILD_DIR/stage1.bin of=$FLOPPY bs=512 seek=0 conv=notrunc >/dev/null 2>&1
   printf " Done!\n"
