@@ -24,6 +24,9 @@ stage2:
    mov ds, ax             
    mov ss, ax             
    mov sp, 0x9c00
+   mov si, enable_a20
+   call print
+   call a20
    mov si, set_idt
    call print
    call setup_idt
@@ -126,6 +129,24 @@ print:
 .done:
     ret
 
+a20:
+    in al, 0x64
+    test al, 2
+    jnz a20
+    mov al, 0xD1
+    out 0x64, al
+.wait1:
+    in al, 0x64
+    test al, 2
+    jnz .wait1
+    mov al, 0xDF
+    out 0x60, al
+.wait2:
+    in al, 0x64
+    test al, 2
+    jnz .wait2
+    ret
+
 gdtinfo:
    dw gdt_end - gdt - 1   
    dd gdt                 
@@ -162,6 +183,7 @@ enter_unreal db "Entering unreal mode...", 0x0D, 0x0A, 0
 load_disk db "Loading kernel...",0x0D, 0x0A, 0
 no_kernel db "No kernel found!", 0x0D, 0x0A, 0
 disk_error db "Disk read error!", 0x0D, 0x0A, 0
+enable_a20 db "Enabling A20...", 0x0D, 0x0A, 0
 BootDrive db 0
 
 [BITS 32]
