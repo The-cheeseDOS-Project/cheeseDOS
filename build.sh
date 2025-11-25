@@ -53,7 +53,7 @@ SRC_DIR=src
 BUILD_DIR=build
 
 ELF="kernel.bin"
-LINKER_SCRIPT="$SRC_DIR/link/link.ld"
+LINKER_SCRIPT="$SRC_DIR/kernel/kernel.ld"
 OUTPUT="$BUILD_DIR/$ELF"
 
 BOOT_DIR="$SRC_DIR/boot"

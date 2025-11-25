@@ -172,11 +172,23 @@ pmode32:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov esp, 0x9c00
+    mov esp, 0x9c00    
+    mov edi, 0xB8000 + (8 * 160)
+    mov esi, start_kernel
+    mov ah, 0x07
+.loop:
+    lodsb
+    test al, al
+    jz .done
+    stosw
+    jmp .loop
+.done:
     jmp 0x08:0x10000
 
 default_isr:
-   iretd
+    iretd
+
+start_kernel db "Starting kernel...",0
 
 align 8
 idt:
