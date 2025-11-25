@@ -1,7 +1,18 @@
-#include "text_mode_print.h"
+#include "vga.h"
+#include "keyboard.h"
+#include "cpu.h"
 
 int kmain(void) {
-    text_mode_print("Kernel started!");
-    return 0;
-}
+    print("Kernel started!");
+    keyboard_init(key_pressed);
 
+    sti();
+
+    while (1) {
+        if (last_key) {
+            char c = last_key;
+            last_key = 0;
+            putchar(c);
+        }
+    }
+}
