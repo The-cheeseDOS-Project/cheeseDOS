@@ -16,5 +16,5 @@
 
 build/
 docs/
-cheeseDOS.img
-config.conf
+*.img
+*.conf
