@@ -23,40 +23,70 @@ stage2:
    mov ds, ax             
    mov ss, ax             
    mov sp, 0x9c00
-
-   mov si, load_gdt
+   mov si, set_idt
+   call print
+   call setup_idt
+   mov si, set_gdt
    call print
    lgdt [gdtinfo]         
-
    mov si, enter_pmode
    call print
-
    mov eax, cr0          
    or al, 1
    mov cr0, eax
-
    mov bx, 0x10
    mov ds, bx
    mov es, bx
    mov fs, bx
    mov gs, bx
    mov ss, bx
-
    and al, 0xFE            
    mov cr0, eax
-
    xor ax, ax
    mov ds, ax
    mov ss, ax
    mov sp, 0x9c00
-
    sti                     
-
    mov si, enter_unreal
    call print
+   cli                     
+   mov si, enter_pmode
+   call print
+   lidt [idtinfo]
+   lgdt [gdtinfo]
+   mov eax, cr0
+   or al, 1
+   mov cr0, eax
+   jmp 0x08:pmode32
 
-   cli
-   hlt
+setup_idt:
+   push ax
+   push cx
+   push di
+   push es
+   xor ax, ax
+   mov es, ax
+   mov di, idt
+   mov cx, 256
+.loop:
+   mov eax, default_isr
+   mov [es:di], ax
+   add di, 2
+   mov word [es:di], 0x08
+   add di, 2
+   mov byte [es:di], 0
+   inc di
+   mov byte [es:di], 0x8E
+   inc di
+   shr eax, 16
+   mov [es:di], ax
+   add di, 2
+   loop .loop
+   pop es
+   pop di
+   pop cx
+   pop ax
+   ret
 
 print:
     lodsb
@@ -77,15 +107,47 @@ gdtinfo:
 gdt:	
    dd 0,0                 
 
-codedesc:
-   db 0xff,0xff,0,0,0,10011010b,11001111b,0
+codedesc:                 
+   dw 0xFFFF              
+   dw 0x0000              
+   db 0x00                
+   db 10011010b           
+   db 11001111b           
+   db 0x00                
 
-flatdesc:
-   db 0xff,0xff,0,0,0,10010010b,11001111b,0
+flatdesc:                 
+   dw 0xFFFF              
+   dw 0x0000              
+   db 0x00                
+   db 10010010b           
+   db 11001111b           
+   db 0x00                
 
 gdt_end:
 
+idtinfo:
+   dw (256 * 8) - 1       
+   dd idt                 
+
+set_idt db "Setting IDT...", 0x0D, 0x0A, 0
 enter_pmode db "Entering protected mode...", 0x0D, 0x0A, 0
-load_gdt db "Loading GDT...", 0x0D, 0x0A, 0
+set_gdt db "Setting GDT...", 0x0D, 0x0A, 0
 enter_unreal db "Entering unreal mode...", 0x0D, 0x0A, 0
 
+[BITS 32]
+pmode32:
+   mov ax, 0x10           
+   mov ds, ax
+   mov es, ax
+   mov fs, ax
+   mov gs, ax
+   mov ss, ax
+   mov esp, 0x9c00        
+   jmp $                   
+
+default_isr:
+   iretd
+
+align 8
+idt:
+   times (256 * 8) db 0
