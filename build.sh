@@ -106,7 +106,9 @@ get_source_files() {
 }
 
 get_asm_files() {
-  find "$SRC_DIR" -name "*.S" -not -path "$BOOT_DIR/*" | sort
+  find "$SRC_DIR" -name "*.asm" \
+       -not -path "$BOOT_DIR/stage1.asm" \
+       -not -path "$BOOT_DIR/stage2.asm" | sort
 }
 
 get_object_files() {
@@ -144,7 +146,7 @@ build_c_object() {
 }
 
 build_asm_object() {
-  $CC $ASMFLAGS -c "$1" -o "$2"
+  $AS $ASMFLAGS "$1" -o "$2"
 }
 
 configure() {
@@ -256,8 +258,7 @@ all() {
         $FLAGS \
         $INCLUDES"
 
-  ASMFLAGS="-m$BITS \
-          $INCLUDES"
+  ASMFLAGS="-f elf32"
 
   build_c() {
     src="$1"
