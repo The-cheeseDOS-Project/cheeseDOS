@@ -2,6 +2,6 @@
 #include "cpu.h"
 
 int kmain(void) {
-    print("Kernel started!");
+    print("hello, world!");
     hlt();
 }
