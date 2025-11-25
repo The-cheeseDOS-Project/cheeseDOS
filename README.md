@@ -39,7 +39,6 @@ You can build from source, refer to the [Build and Run Guide](https://github.com
 - Uses 100% custom code and clib
 - Compiles identically across all Linux systems
 - Mostly made in C99
-- Runs in a single address space
 
 ## Documentation
 
