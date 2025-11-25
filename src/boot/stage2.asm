@@ -69,8 +69,8 @@ boot:
     mov dl, [BootDrive]
     mov dh, 0
     mov ch, 0
-    mov cl, 4
-    mov al, 16
+    mov cl, 10
+    mov al, 8
     mov ah, 0x02
     int 0x13
     jc disk_error
@@ -197,31 +197,23 @@ pmode32:
     mov esp, 0x9c00    
     mov edi, 0xB8000 + (8 * 160)
     mov esi, start_kernel
-    call print32
-    jmp 0x08:0x10000
-    mov esi, kernel_exit
-    call print32
-    cli    
-.loop:
-    hlt
-    jmp .loop
-
-print32:
     mov ah, 0x07
+.loop:
     lodsb
     test al, al
     jz .done
     stosw
-    jmp print32
+    jmp .loop
 .done:
-    ret
+    jmp 0x08:0x10000
 
 default_isr:
     iretd
 
-start_kernel db "Starting kernel...", 0x0D, 0x0A, 0
-kernel_exit db "Kernel has exited!", 0
+start_kernel db "Starting kernel...",0
 
 align 8
 idt:
    times (256 * 8) db 0
+
+times 4096-($-$$) db 0
