@@ -197,20 +197,30 @@ pmode32:
     mov esp, 0x9c00    
     mov edi, 0xB8000 + (8 * 160)
     mov esi, start_kernel
-    mov ah, 0x07
+    call print32
+    jmp 0x08:0x10000
+    mov esi, kernel_exit
+    call print32
+    cli    
 .loop:
+    hlt
+    jmp .loop
+
+print32:
+    mov ah, 0x07
     lodsb
     test al, al
     jz .done
     stosw
-    jmp .loop
+    jmp print32
 .done:
-    jmp 0x08:0x10000
+    ret
 
 default_isr:
     iretd
 
-start_kernel db "Starting kernel...",0
+start_kernel db "Starting kernel...", 0x0D, 0x0A, 0
+kernel_exit db "Kernel has exited!", 0
 
 align 8
 idt:
