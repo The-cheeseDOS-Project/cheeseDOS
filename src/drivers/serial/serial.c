@@ -17,6 +17,7 @@
  */
 
 #include "vga.h"
+#include "io.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -26,16 +27,6 @@ typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
 #define va_arg(ap, type)   __builtin_va_arg(ap, type)
 #define va_end(ap)         __builtin_va_end(ap)
-
-static inline void outb(uint16_t port, uint8_t val) {
-    __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
-}
-
-static inline uint8_t inb(uint16_t port) {
-    uint8_t ret;
-    __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
 
 int serial_is_transmit_ready(void) {
     return inb(SERIAL_COM1_BASE + 5) & 0x20;
